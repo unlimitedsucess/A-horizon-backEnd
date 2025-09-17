@@ -25,6 +25,10 @@ const userSchema: Schema = new Schema(
       type: String,
       required: true,
     },
+    zipCode: {
+      type: String,
+      required: true,
+    },
     ssn: {
       type: String,
       required: true,

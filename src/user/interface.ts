@@ -12,6 +12,7 @@ export interface IUser extends Document {
   address: string;
   country: string;
   city: string;
+  zipCode: string;
   accountType: AccountType;
   userName: string;
   password: string;
