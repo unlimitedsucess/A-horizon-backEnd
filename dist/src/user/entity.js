@@ -46,6 +46,10 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    zipCode: {
+        type: String,
+        required: true,
+    },
     ssn: {
         type: String,
         required: true,
