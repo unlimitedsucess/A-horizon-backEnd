@@ -125,6 +125,32 @@ class AuthValidator {
     const passport = req.files["passport"][0];
     const driversLicence = req.files["driversLicence"][0];
 
+    if (
+      !passport ||
+      typeof passport !== "object" ||
+      !("mimetype" in passport) ||
+      !("buffer" in passport)
+    ) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Please upload a valid passport file image",
+        data: null,
+      });
+    }
+
+    if (
+      !driversLicence ||
+      typeof driversLicence !== "object" ||
+      !("mimetype" in driversLicence) ||
+      !("buffer" in driversLicence)
+    ) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+         description: "Please upload a valid driver's licence file image",
+        data: null,
+      });
+    }
+
     if (!["image/jpeg", "image/png"].includes(passport.mimetype)) {
       return res.status(400).json({
         message: MessageResponse.Error,
