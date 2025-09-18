@@ -26,5 +26,39 @@ class AuthService {
             return otp;
         });
     }
+    validateOtp(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ email, otp }) {
+            const otpValidity = yield entity_1.default.findOne({
+                email: email,
+                emailVerificationOtp: otp,
+            });
+            return otpValidity;
+        });
+    }
+    verifyEmail(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield entity_1.default.findOne({ email });
+            if (user) {
+                user.emailVerified = true;
+                user.emailVerificationOtp = undefined;
+                user.emailVerificationOtpExpiration = undefined;
+                user = yield user.save();
+            }
+            return user;
+        });
+    }
+    saveOtp(input) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { otp, email } = input;
+            const user = yield entity_1.default.findOne({
+                email: email,
+            });
+            user.emailVerificationOtp = otp;
+            //3600000 is in milisecs and this is 1hr, so the token is valid for 1 hour
+            user.emailVerificationOtpExpiration = new Date(Date.now() + 3600000);
+            yield user.save();
+            return user;
+        });
+    }
 }
 exports.authService = new AuthService();

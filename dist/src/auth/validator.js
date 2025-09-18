@@ -95,12 +95,26 @@ class AuthValidator {
                     "string.min": "Password must be at least 8 characters long",
                     "string.pattern.base": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
                 }),
+                confirmPassword: joi_1.default.string()
+                    .valid(joi_1.default.ref("password"))
+                    .required()
+                    .messages({
+                    "any.required": "Confirm Password is required.",
+                    "any.only": "Passwords do not match",
+                }),
                 pin: joi_1.default.string()
                     .pattern(/^\d{4,6}$/)
                     .required()
                     .messages({
                     "string.pattern.base": "PIN must be a 4-6 digit number (no letters allowed)",
                     "any.required": "PIN is required",
+                }),
+                confirmPin: joi_1.default.string()
+                    .valid(joi_1.default.ref("pin"))
+                    .required()
+                    .messages({
+                    "any.required": "Confirm Pin is required.",
+                    "any.only": "Pins do not match",
                 }),
             });
             const { error } = schema.validate(req.body);
@@ -166,17 +180,57 @@ class AuthValidator {
                 });
             }
             return next();
-            // if (!error) {
-            //   return next();
-            // } else {
-            //   return utils.customResponse({
-            //     status: 400,
-            //     res,
-            //     message: MessageResponse.Error,
-            //     description: error.details[0].message,
-            //     data: null,
-            //   });
-            // }
+        });
+    }
+    emailVerifyOtp(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schema = joi_1.default.object({
+                email: joi_1.default.string().email().required().messages({
+                    "string.base": "Email must be text",
+                    "strig.email": "Invalid email format",
+                    "any.required": "Email is required.",
+                }),
+                otp: joi_1.default.string().required().messages({
+                    "any.required": "OTP is required.",
+                }),
+            });
+            const { error } = schema.validate(req.body);
+            if (!error) {
+                return next();
+            }
+            else {
+                return utils_1.utils.customResponse({
+                    status: 400,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: error.details[0].message,
+                    data: null,
+                });
+            }
+        });
+    }
+    validateEmail(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schema = joi_1.default.object({
+                email: joi_1.default.string().email().required().messages({
+                    "string.base": "Email must be text",
+                    "strig.email": "Invalid email format",
+                    "any.required": "Email is required.",
+                }),
+            });
+            const { error } = schema.validate(req.body);
+            if (!error) {
+                return next();
+            }
+            else {
+                return utils_1.utils.customResponse({
+                    status: 400,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: error.details[0].message,
+                    data: null,
+                });
+            }
         });
     }
 }

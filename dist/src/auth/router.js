@@ -17,3 +17,7 @@ const upload = (0, multer_1.default)({ storage: storage }).fields([
 ]);
 //Create account
 exports.AuthRouter.post("/signup", [upload, validator_1.authValidator.registerUser], utils_1.utils.wrapAsync(controller_1.authController.registerUser));
+// Verify Email
+exports.AuthRouter.post("/verify/email", [validator_1.authValidator.emailVerifyOtp], utils_1.utils.wrapAsync(controller_1.authController.emailVerifyOtp));
+//Resend email verification otp
+exports.AuthRouter.post("/resend/email/verification/otp", [validator_1.authValidator.validateEmail], utils_1.utils.wrapAsync(controller_1.authController.resendEmailVerificationOtp));

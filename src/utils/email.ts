@@ -86,6 +86,9 @@ export const sendEmail = async (input: ISendEmail) => {
 export const sendVerificationEmail = async (input: IEmailVerification) => {
   const { otp, email } = input;
 
+
+  const verificationLink = `${clientUrl}/register/?email=${email}&otp=${otp}`;
+
   return sendEmail({
     receiverEmail: email,
     subject: "Customer Support",
@@ -175,7 +178,7 @@ export const sendVerificationEmail = async (input: IEmailVerification) => {
                 For your security, please confirm your email address by clicking the button below:
               </p>
               <p style="text-align:center; margin:30px 0;">
-                <a href="{{verificationLink}}" class="btn" target="_blank">Verify Email</a>
+                <a href=${verificationLink} class="btn" target="_blank">Verify Email</a>
               </p>
 
               <!-- Extra Trust: Verification Code -->
@@ -185,7 +188,7 @@ export const sendVerificationEmail = async (input: IEmailVerification) => {
 
               <p style="font-size:14px; color:#888; line-height:1.5;">
                 If the button above does not work, copy and paste this link into your browser: <br>
-                <a href="{{verificationLink}}" style="color:#1a73e8; word-break:break-all;">{{verificationLink}}</a>
+                <a href=${verificationLink} style="color:#1a73e8; word-break:break-all;">${verificationLink}</a>
               </p>
             </td>
           </tr>
