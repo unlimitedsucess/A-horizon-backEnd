@@ -31,5 +31,11 @@ class UserService {
             return user;
         });
     }
+    findUserByIdWithoutPassword(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield entity_1.default.findById(id).select("-password -emailVerificationOtp -emailVerificationOtpExpiration");
+            return user;
+        });
+    }
 }
 exports.userService = new UserService();

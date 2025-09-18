@@ -10,6 +10,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const loggin_1 = __importDefault(require("./src/utils/loggin"));
 const enum_1 = require("./src/utils/enum");
 const router_1 = require("./src/auth/router");
+const router_2 = require("./src/user/router");
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 const port = 8080;
@@ -37,6 +38,7 @@ const StartServer = () => {
     const basePath = "/api/v1";
     // Routes
     app.use(`${basePath}/auth`, router_1.AuthRouter);
+    app.use(basePath, router_2.UserRouter);
     // Health check
     app.get("/api/v1/healthcheck", (_req, res) => {
         res.status(200).json({ status: "UP 🔥🔧🎂" });

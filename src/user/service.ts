@@ -21,6 +21,13 @@ class UserService {
     return user;
   }
 
+   public async findUserByIdWithoutPassword(id: string) {
+    const user = await User.findById(id).select(
+      "-password -emailVerificationOtp -emailVerificationOtpExpiration"
+    );
+
+    return user;
+  }
 }
 
 export const userService = new UserService();

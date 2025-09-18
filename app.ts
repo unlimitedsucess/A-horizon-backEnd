@@ -7,6 +7,7 @@ import { Server as HttpServer } from "http";
 import Logging from "./src/utils/loggin";
 import { MessageResponse } from "./src/utils/enum";
 import { AuthRouter } from "./src/auth/router";
+import { UserRouter } from "./src/user/router";
 const app: Express = express();
 
 dotenv.config();
@@ -48,6 +49,7 @@ const StartServer = () => {
   const basePath = "/api/v1";
   // Routes
   app.use(`${basePath}/auth`, AuthRouter);
+    app.use(basePath, UserRouter);
 
   // Health check
   app.get("/api/v1/healthcheck", (_req: Request, res: Response) => {
