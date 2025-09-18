@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs/promises";
 
-
 import { utils } from "../utils";
 import { ISignUp } from "./enum";
 import { userService } from "../user/service";
@@ -20,24 +19,40 @@ dotenv.config();
 const jwtSecret = process.env.JWT_SECRET || "";
 
 class AuthController {
- public async registerUser(req: Request, res: Response) {
+  public async createAccount(req: Request, res: Response) {
+    const email = req.body.email;
+
+    const emailExists = await userService.findUserByEmail(email);
+
+    if (emailExists) {
+      return utils.customResponse({
+        status: 400,
+        res,
+        message: MessageResponse.Error,
+        description: "Email already exist!",
+        data: null,
+      });
+    }
+
+    const otp = await authService.createUser(email);
+
+    sendVerificationEmail({ email, otp });
+
+    return utils.customResponse({
+      status: 200,
+      res,
+      message: MessageResponse.Success,
+      description: "Verification OTP resent!",
+      data: null,
+    });
+  }
+
+  public async registerUser(req: Request, res: Response) {
     try {
       const body: ISignUp = req.body;
       const email = body.email;
       const userName = body.userName;
       const files = req.files as MulterFiles;
-
-      // check if email exists
-      const emailExists = await userService.findUserByEmail(email);
-      if (emailExists) {
-        return utils.customResponse({
-          status: 400,
-          res,
-          message: MessageResponse.Error,
-          description: "Email already exists!",
-          data: null,
-        });
-      }
 
       // check if username exists
       const userNameExists = await userService.findUserByUserName(userName);
@@ -63,18 +78,29 @@ class AuthController {
       let driversLicence: string | null = null;
       if (files?.["driversLicence"]?.[0]) {
         const buffer = files["driversLicence"][0].buffer;
-        const uploadRes = await utils.uploadFromBuffer(buffer, "driversLicence");
+        const uploadRes = await utils.uploadFromBuffer(
+          buffer,
+          "driversLicence"
+        );
         driversLicence = uploadRes.secure_url;
       }
 
       // create user (with OTP, etc.)
-      const otp = await authService.createUser({
+      const user = await authService.registerUser({
         ...body,
         passportUrl: passportUrl!,
-        driversLicence: driversLicence!
+        driversLicence: driversLicence!,
       });
 
-       sendVerificationEmail({ email, otp });
+      if (!user) {
+        return utils.customResponse({
+          status: 404,
+          res,
+          message: MessageResponse.Error,
+          description: "User not found!",
+          data: null,
+        });
+      }
 
       return utils.customResponse({
         status: 201,
@@ -95,14 +121,13 @@ class AuthController {
     }
   }
 
-
-    public async emailVerifyOtp(req: Request, res: Response) {
+  public async emailVerifyOtp(req: Request, res: Response) {
     const body: IVerifyEmail = req.body;
 
     const email = body.email;
     const otp = body.otp;
 
-    const userOtpValidity = await authService.validateOtp({email, otp});
+    const userOtpValidity = await authService.validateOtp({ email, otp });
 
     if (!userOtpValidity) {
       return utils.customResponse({
@@ -143,13 +168,9 @@ class AuthController {
         });
       }
 
-      const token = jwt.sign(
-        { userId: userExists._id },
-        jwtSecret,
-        {
-          expiresIn: "30d",
-        }
-      );
+      const token = jwt.sign({ userId: userExists._id }, jwtSecret, {
+        expiresIn: "30d",
+      });
 
       return utils.customResponse({
         status: 200,
@@ -157,7 +178,7 @@ class AuthController {
         message: MessageResponse.Success,
         description: "Verification successful",
         data: {
-          token
+          token,
         },
       });
     } else {
@@ -171,7 +192,7 @@ class AuthController {
     }
   }
 
-    public async resendEmailVerificationOtp(req: Request, res: Response) {
+  public async resendEmailVerificationOtp(req: Request, res: Response) {
     const body: IVerifyEmail = req.body;
 
     const user = await userService.findUserByEmail(body.email);
@@ -190,9 +211,9 @@ class AuthController {
 
     const otp = utils.generateOtp();
 
-    await authService.saveOtp({ email, otp });
+    await authService.saveOtp({ email: email!, otp });
 
-    sendVerificationEmail({ email, otp });
+    sendVerificationEmail({ email: email!, otp });
 
     return utils.customResponse({
       status: 200,

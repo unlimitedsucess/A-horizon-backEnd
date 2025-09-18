@@ -28,31 +28,31 @@ const enum_1 = require("./enum");
 const userSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
-        required: true,
+        default: null,
     },
     lastName: {
         type: String,
-        required: true,
+        default: null,
     },
     email: {
         type: String,
-        required: true,
+        requrired: true,
     },
     phoneNo: {
         type: String,
-        required: true,
+        default: null,
     },
     dob: {
         type: String,
-        required: true,
+        default: null,
     },
     zipCode: {
         type: String,
-        required: true,
+        default: null,
     },
     ssn: {
         type: String,
-        required: true,
+        default: null,
     },
     initialDeposit: {
         type: mongoose_1.default.Schema.Types.Decimal128,
@@ -65,40 +65,40 @@ const userSchema = new mongoose_1.Schema({
     },
     address: {
         type: String,
-        required: true,
+        default: null,
     },
     country: {
         type: String,
-        required: true,
+        default: null,
     },
     city: {
         type: String,
-        required: true,
+        default: null,
     },
     accountType: {
         type: String,
-        required: true,
+        default: null,
         enum: Object.values(enum_1.AccountType),
     },
     userName: {
         type: String,
-        required: true,
+        default: null,
     },
     password: {
         type: String,
-        required: true,
+        default: null,
     },
     pin: {
         type: String,
-        required: true,
+        default: null,
     },
     passportUrl: {
         type: String,
-        required: true,
+        default: null,
     },
     driversLicence: {
         type: String,
-        required: true,
+        default: null,
     },
     emailVerified: {
         type: Boolean,

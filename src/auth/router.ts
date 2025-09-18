@@ -14,8 +14,15 @@ const upload = multer({ storage: storage }).fields([
   { name: "passport", maxCount: 1 },
 ]);
 
-//Create account
+//Send Email Registration OTP
 AuthRouter.post(
+  "/send/email/otp",
+  [upload, authValidator.validateEmail ],
+ utils.wrapAsync(authController.createAccount)
+);
+
+//Create account
+AuthRouter.patch(
   "/signup",
   [upload, authValidator.registerUser ],
  utils.wrapAsync(authController.registerUser)

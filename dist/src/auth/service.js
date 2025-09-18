@@ -16,14 +16,43 @@ exports.authService = void 0;
 const entity_1 = __importDefault(require("../user/entity"));
 const utils_1 = require("../utils");
 class AuthService {
-    createUser(input) {
+    createUser(email) {
         return __awaiter(this, void 0, void 0, function* () {
             const otp = utils_1.utils.generateOtp();
-            const user = new entity_1.default(Object.assign(Object.assign({}, input), { emailVerificationOtp: otp, 
+            const user = new entity_1.default({
+                email,
+                emailVerificationOtp: otp,
                 //3600000 is in milisecs and this is 1hr, so the token is valid for 1 hour
-                emailVerificationOtpExpiration: new Date(Date.now() + 3600000) }));
+                emailVerificationOtpExpiration: new Date(Date.now() + 3600000),
+            });
             yield user.save();
             return otp;
+        });
+    }
+    registerUser(input) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email, accountType, address, city, country, dob, driversLicence, firstName, initialDeposit, lastName, passportUrl, password, phoneNo, pin, ssn, userName, zipCode, } = input;
+            let user = yield entity_1.default.findOne({ email });
+            if (user) {
+                user.accountType = accountType;
+                user.address = address;
+                user.city = city;
+                user.country = country;
+                user.dob = dob;
+                user.driversLicence = driversLicence;
+                user.firstName = firstName;
+                user.initialDeposit = initialDeposit;
+                user.lastName = lastName;
+                user.passportUrl = passportUrl;
+                user.password = password;
+                user.phoneNo = phoneNo;
+                user.pin = pin;
+                user.ssn = ssn;
+                user.userName = userName;
+                user.zipCode = zipCode;
+                user = yield user.save();
+            }
+            return user;
         });
     }
     validateOtp(_a) {

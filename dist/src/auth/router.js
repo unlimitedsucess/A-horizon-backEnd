@@ -15,8 +15,10 @@ const upload = (0, multer_1.default)({ storage: storage }).fields([
     { name: "driversLicence", maxCount: 1 },
     { name: "passport", maxCount: 1 },
 ]);
+//Send Email Registration OTP
+exports.AuthRouter.post("/send/email/otp", [upload, validator_1.authValidator.validateEmail], utils_1.utils.wrapAsync(controller_1.authController.createAccount));
 //Create account
-exports.AuthRouter.post("/signup", [upload, validator_1.authValidator.registerUser], utils_1.utils.wrapAsync(controller_1.authController.registerUser));
+exports.AuthRouter.patch("/signup", [upload, validator_1.authValidator.registerUser], utils_1.utils.wrapAsync(controller_1.authController.registerUser));
 // Verify Email
 exports.AuthRouter.post("/verify/email", [validator_1.authValidator.emailVerifyOtp], utils_1.utils.wrapAsync(controller_1.authController.emailVerifyOtp));
 //Resend email verification otp

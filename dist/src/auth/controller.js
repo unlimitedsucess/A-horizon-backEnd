@@ -23,6 +23,30 @@ const email_1 = require("../utils/email");
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET || "";
 class AuthController {
+    createAccount(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const email = req.body.email;
+            const emailExists = yield service_1.userService.findUserByEmail(email);
+            if (emailExists) {
+                return utils_1.utils.customResponse({
+                    status: 400,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: "Email already exist!",
+                    data: null,
+                });
+            }
+            const otp = yield service_2.authService.createUser(email);
+            (0, email_1.sendVerificationEmail)({ email, otp });
+            return utils_1.utils.customResponse({
+                status: 200,
+                res,
+                message: enum_1.MessageResponse.Success,
+                description: "Verification OTP resent!",
+                data: null,
+            });
+        });
+    }
     registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b;
@@ -31,17 +55,6 @@ class AuthController {
                 const email = body.email;
                 const userName = body.userName;
                 const files = req.files;
-                // check if email exists
-                const emailExists = yield service_1.userService.findUserByEmail(email);
-                if (emailExists) {
-                    return utils_1.utils.customResponse({
-                        status: 400,
-                        res,
-                        message: enum_1.MessageResponse.Error,
-                        description: "Email already exists!",
-                        data: null,
-                    });
-                }
                 // check if username exists
                 const userNameExists = yield service_1.userService.findUserByUserName(userName);
                 if (userNameExists) {
@@ -68,8 +81,16 @@ class AuthController {
                     driversLicence = uploadRes.secure_url;
                 }
                 // create user (with OTP, etc.)
-                const otp = yield service_2.authService.createUser(Object.assign(Object.assign({}, body), { passportUrl: passportUrl, driversLicence: driversLicence }));
-                (0, email_1.sendVerificationEmail)({ email, otp });
+                const user = yield service_2.authService.registerUser(Object.assign(Object.assign({}, body), { passportUrl: passportUrl, driversLicence: driversLicence }));
+                if (!user) {
+                    return utils_1.utils.customResponse({
+                        status: 404,
+                        res,
+                        message: enum_1.MessageResponse.Error,
+                        description: "User not found!",
+                        data: null,
+                    });
+                }
                 return utils_1.utils.customResponse({
                     status: 201,
                     res,
@@ -136,7 +157,7 @@ class AuthController {
                     message: enum_1.MessageResponse.Success,
                     description: "Verification successful",
                     data: {
-                        token
+                        token,
                     },
                 });
             }
@@ -166,8 +187,8 @@ class AuthController {
             }
             const email = user.email;
             const otp = utils_1.utils.generateOtp();
-            yield service_2.authService.saveOtp({ email, otp });
-            (0, email_1.sendVerificationEmail)({ email, otp });
+            yield service_2.authService.saveOtp({ email: email, otp });
+            (0, email_1.sendVerificationEmail)({ email: email, otp });
             return utils_1.utils.customResponse({
                 status: 200,
                 res,
