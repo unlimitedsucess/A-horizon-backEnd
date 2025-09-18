@@ -55,6 +55,16 @@ class AuthController {
                 const email = body.email;
                 const userName = body.userName;
                 const files = req.files;
+                const emailExists = yield service_1.userService.findUserByEmail(email);
+                if (!emailExists) {
+                    return utils_1.utils.customResponse({
+                        status: 404,
+                        res,
+                        message: enum_1.MessageResponse.Error,
+                        description: "User not found!",
+                        data: null,
+                    });
+                }
                 // check if username exists
                 const userNameExists = yield service_1.userService.findUserByUserName(userName);
                 if (userNameExists) {
