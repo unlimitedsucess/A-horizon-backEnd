@@ -1,7 +1,6 @@
 import User from "../user/entity";
 import { utils } from "../utils";
-import { ISignUp } from "./enum";
-import { IVerifyEmail } from "./interface";
+import { ISignUp, IVerifyEmail } from "./interface";
 
 class AuthService {
   public async createUser(email: string) {

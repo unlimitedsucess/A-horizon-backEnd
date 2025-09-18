@@ -5,14 +5,13 @@ import { v4 as uuidv4 } from "uuid";
 import fs from "fs/promises";
 
 import { utils } from "../utils";
-import { ISignUp } from "./enum";
 import { userService } from "../user/service";
 import { MessageResponse } from "../utils/enum";
 import { authService } from "./service";
 import { MulterFiles } from "../utils/interface";
 import cloudinary from "../../config/cloudnairy";
 import { sendVerificationEmail } from "../utils/email";
-import { ISignIn, IVerifyEmail } from "./interface";
+import { ISignIn, ISignUp, IVerifyEmail } from "./interface";
 
 dotenv.config();
 

@@ -1,11 +1,46 @@
 import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
+import multer from "multer";
 
 import { MessageResponse } from "../utils/enum";
 import { utils } from "../utils";
 import { AccountType } from "../user/enum";
 
+const storage = multer.memoryStorage();
+
+const upload = multer({ storage: storage }).fields([
+  { name: "driversLicence", maxCount: 1 },
+  { name: "passport", maxCount: 1 },
+]);
+
+
 class AuthValidator {
+   public handleFileUpload(req: any, res: any, next: any) {
+    upload(req, res, (err) => {
+      if (err instanceof multer.MulterError) {
+        if (err.code === "LIMIT_UNEXPECTED_FILE") {
+          return res.status(400).json({
+            message: "Error",
+            description: `Unexpected field: ${err.field}`,
+            data: null,
+          });
+        }
+        return res.status(400).json({
+          message: "Error",
+          description: err.message,
+          data: null,
+        });
+      } else if (err) {
+        return res.status(500).json({
+          message: "Error",
+          description: "File upload failed",
+          data: null,
+        });
+      }
+      next();
+    });
+  }
+
   public async registerUser(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       firstName: Joi.string().required().messages({
