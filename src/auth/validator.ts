@@ -13,26 +13,31 @@ const upload = multer({ storage: storage }).fields([
   { name: "passport", maxCount: 1 },
 ]);
 
-
 class AuthValidator {
-   public handleFileUpload(req: any, res: any, next: any) {
+  public handleFileUpload(req: any, res: any, next: any) {
     upload(req, res, (err) => {
       if (err instanceof multer.MulterError) {
         if (err.code === "LIMIT_UNEXPECTED_FILE") {
-          return res.status(400).json({
-            message: "Error",
+          return utils.customResponse({
+            status: 400,
+            res,
+            message: MessageResponse.Error,
             description: `Unexpected field: ${err.field}`,
             data: null,
           });
         }
-        return res.status(400).json({
-          message: "Error",
+        return utils.customResponse({
+          status: 400,
+          res,
+          message: MessageResponse.Error,
           description: err.message,
           data: null,
         });
       } else if (err) {
-        return res.status(500).json({
-          message: "Error",
+        return utils.customResponse({
+          status: 500,
+          res,
+          message: MessageResponse.Error,
           description: "File upload failed",
           data: null,
         });
@@ -125,7 +130,7 @@ class AuthValidator {
           "string.pattern.base":
             "Password must contain at least one uppercase letter, one lowercase letter, and one number",
         }),
-        confirmPassword: Joi.string()
+      confirmPassword: Joi.string()
         .valid(Joi.ref("password"))
         .required()
         .messages({
@@ -140,13 +145,10 @@ class AuthValidator {
             "PIN must be a 4-6 digit number (no letters allowed)",
           "any.required": "PIN is required",
         }),
-        confirmPin: Joi.string()
-        .valid(Joi.ref("pin"))
-        .required()
-        .messages({
-          "any.required": "Confirm Pin is required.",
-          "any.only": "Pins do not match",
-        }),
+      confirmPin: Joi.string().valid(Joi.ref("pin")).required().messages({
+        "any.required": "Confirm Pin is required.",
+        "any.only": "Pins do not match",
+      }),
     });
 
     const { error } = schema.validate(req.body);
@@ -227,7 +229,7 @@ class AuthValidator {
     return next();
   }
 
-    public async emailVerifyOtp(req: Request, res: Response, next: NextFunction) {
+  public async emailVerifyOtp(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       email: Joi.string().email().required().messages({
         "string.base": "Email must be text",
@@ -251,7 +253,7 @@ class AuthValidator {
       });
     }
   }
-    public async validateEmail(req: Request, res: Response, next: NextFunction) {
+  public async validateEmail(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       email: Joi.string().email().required().messages({
         "string.base": "Email must be text",
@@ -275,19 +277,19 @@ class AuthValidator {
     }
   }
 
-   public async signIn(req: Request, res: Response, next: NextFunction) {
+  public async signIn(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
       email: Joi.string().email().required().messages({
         "string.email": "Please enter a valid email address",
         "any.required": "Email address is required",
-      }),   
+      }),
       password: Joi.string().required().messages({
         "any.required": "Password is required.",
       }),
     });
 
     const { error } = schema.validate(req.body);
-    
+
     if (error) {
       return res.status(400).json({
         message: MessageResponse.Error,
