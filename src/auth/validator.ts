@@ -72,14 +72,10 @@ class AuthValidator {
         "string.isoDate": "Date of birth must be a valid ISO date (YYYY-MM-DD)",
         "any.required": "Date of birth is required",
       }),
-      zipCode: Joi.string()
-        .pattern(/^\d{5}(-\d{4})?$/)
-        .required()
-        .messages({
-          "string.pattern.base":
-            "Please enter a valid Zip Code (e.g., 12345 or 12345-6789)",
-          "any.required": "Zip Code is required",
-        }),
+      zipCode: Joi.string().required().messages({
+        "string.base": "Zipcode must be text",
+        "any.required": "Zipcode is required",
+      }),
       ssn: Joi.string()
         .pattern(
           /^(?!000|666|9\d{2})([0-6]\d{2}|7([0-6]\d|7[012]))-?(?!00)\d{2}-?(?!0000)\d{4}$/
