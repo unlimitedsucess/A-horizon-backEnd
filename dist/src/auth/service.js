@@ -31,7 +31,7 @@ class AuthService {
     }
     registerUser(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, accountType, address, city, country, dob, driversLicence, firstName, initialDeposit, lastName, passportUrl, password, phoneNo, pin, ssn, userName, zipCode, } = input;
+            const { email, accountType, address, city, country, dob, driversLicence, firstName, initialDeposit, lastName, passportUrl, password, phoneNo, pin, ssn, userName, zipCode, state } = input;
             let user = yield entity_1.default.findOne({ email });
             if (user) {
                 user.accountType = accountType;
@@ -50,6 +50,7 @@ class AuthService {
                 user.ssn = ssn;
                 user.userName = userName;
                 user.zipCode = zipCode;
+                user.state = state;
                 user.accountNumber = utils_1.utils.generateAccNo();
                 user = yield user.save();
             }

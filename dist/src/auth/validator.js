@@ -14,10 +14,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authValidator = void 0;
 const joi_1 = __importDefault(require("joi"));
+const multer_1 = __importDefault(require("multer"));
 const enum_1 = require("../utils/enum");
 const utils_1 = require("../utils");
 const enum_2 = require("../user/enum");
+const storage = multer_1.default.memoryStorage();
+const upload = (0, multer_1.default)({ storage: storage }).fields([
+    { name: "driversLicence", maxCount: 1 },
+    { name: "passport", maxCount: 1 },
+]);
 class AuthValidator {
+    handleFileUpload(req, res, next) {
+        upload(req, res, (err) => {
+            if (err instanceof multer_1.default.MulterError) {
+                if (err.code === "LIMIT_UNEXPECTED_FILE") {
+                    return utils_1.utils.customResponse({
+                        status: 400,
+                        res,
+                        message: enum_1.MessageResponse.Error,
+                        description: `Unexpected field: ${err.field}`,
+                        data: null,
+                    });
+                }
+                return utils_1.utils.customResponse({
+                    status: 400,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: err.message,
+                    data: null,
+                });
+            }
+            else if (err) {
+                return utils_1.utils.customResponse({
+                    status: 500,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: "File upload failed",
+                    data: null,
+                });
+            }
+            next();
+        });
+    }
     registerUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const schema = joi_1.default.object({
@@ -71,6 +109,10 @@ class AuthValidator {
                     "string.base": "Country must be text",
                     "any.required": "Country is required",
                 }),
+                state: joi_1.default.string().required().messages({
+                    "string.base": "State must be text",
+                    "any.required": "State is required",
+                }),
                 city: joi_1.default.string().required().messages({
                     "string.base": "City must be text",
                     "any.required": "City is required",
@@ -109,10 +151,7 @@ class AuthValidator {
                     "string.pattern.base": "PIN must be a 4-6 digit number (no letters allowed)",
                     "any.required": "PIN is required",
                 }),
-                confirmPin: joi_1.default.string()
-                    .valid(joi_1.default.ref("pin"))
-                    .required()
-                    .messages({
+                confirmPin: joi_1.default.string().valid(joi_1.default.ref("pin")).required().messages({
                     "any.required": "Confirm Pin is required.",
                     "any.only": "Pins do not match",
                 }),

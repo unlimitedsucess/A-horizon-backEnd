@@ -102,6 +102,10 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         default: null,
     },
+    state: {
+        type: String,
+        default: null,
+    },
     city: {
         type: String,
         default: null,
