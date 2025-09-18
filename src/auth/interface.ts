@@ -1,13 +1,13 @@
 export type IVerifyEmail = {
   email: string;
   otp: string;
-}
+};
 
 export interface ISignIn {
-    email: string;
-    password: string;
-  }
-  import { AccountType } from "../user/enum";
+  email: string;
+  password: string;
+}
+import { AccountType } from "../user/enum";
 
 export interface ISignUp {
   firstName: string;
@@ -20,6 +20,7 @@ export interface ISignUp {
   address: string;
   country: string;
   city: string;
+  state: string;
   zipCode: string;
   accountType: AccountType;
   userName: string;

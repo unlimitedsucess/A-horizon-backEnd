@@ -37,6 +37,7 @@ class AuthService {
       ssn,
       userName,
       zipCode,
+      state
     } = input;
     let user = await User.findOne({ email });
 
@@ -57,6 +58,7 @@ class AuthService {
       user.ssn = ssn;
       user.userName = userName;
       user.zipCode = zipCode;
+      user.state = state;
       user.accountNumber = utils.generateAccNo()
      user = await user.save();
     }

@@ -103,6 +103,10 @@ class AuthValidator {
         "string.base": "Country must be text",
         "any.required": "Country is required",
       }),
+      state: Joi.string().required().messages({
+        "string.base": "State must be text",
+        "any.required": "State is required",
+      }),
       city: Joi.string().required().messages({
         "string.base": "City must be text",
         "any.required": "City is required",

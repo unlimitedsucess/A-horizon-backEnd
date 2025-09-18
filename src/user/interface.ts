@@ -15,6 +15,7 @@ export interface IUser extends Document {
   expenses?: number;
   address?: string | null;
   country?: string | null;
+  state?: string | null;
   city?: string | null;
   zipCode?: string | null;
   accountType?: AccountType;

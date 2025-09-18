@@ -13,6 +13,8 @@ export interface ITransfer extends Document {
   recipientName: string;
   accountName: string;
   country: string;
+  city: string;
+  state: string;
   swiftCode: string;
   routingNumber: string;
   description?: string | null;
