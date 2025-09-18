@@ -8,7 +8,11 @@ export interface IUser extends Document {
   phoneNo?: string | null;
   dob?: string | null;
   ssn?: string | null;
+  accountNumber?: string | null;
   initialDeposit?: number;
+  loan?: number;
+  loanBalnce?: number;
+  expenses?: number;
   address?: string | null;
   country?: string | null;
   city?: string | null;

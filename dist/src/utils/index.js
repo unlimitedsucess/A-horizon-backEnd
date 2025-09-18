@@ -30,6 +30,9 @@ class Utils {
                 streamifier_1.default.createReadStream(fileBuffer).pipe(stream);
             });
         };
+        this.generateAccNo = () => {
+            return Array.from({ length: 10 }, () => crypto_1.default.randomInt(0, 10)).join('');
+        };
     }
     wrapAsync(fn) {
         return (req, res, next) => {

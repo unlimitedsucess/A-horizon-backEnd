@@ -23,3 +23,5 @@ exports.AuthRouter.patch("/signup", [upload, validator_1.authValidator.registerU
 exports.AuthRouter.post("/verify/email", [validator_1.authValidator.emailVerifyOtp], utils_1.utils.wrapAsync(controller_1.authController.emailVerifyOtp));
 //Resend email verification otp
 exports.AuthRouter.post("/resend/email/verification/otp", [validator_1.authValidator.validateEmail], utils_1.utils.wrapAsync(controller_1.authController.resendEmailVerificationOtp));
+//Login account
+exports.AuthRouter.post("/signin", [validator_1.authValidator.signIn], utils_1.utils.wrapAsync(controller_1.authController.signIn));

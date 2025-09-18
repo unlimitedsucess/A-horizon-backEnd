@@ -58,6 +58,7 @@ class AuthService {
       user.ssn = ssn;
       user.userName = userName;
       user.zipCode = zipCode;
+      user.accountNumber = utils.generateAccNo()
      user = await user.save();
     }
 

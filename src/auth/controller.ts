@@ -12,7 +12,7 @@ import { authService } from "./service";
 import { MulterFiles } from "../utils/interface";
 import cloudinary from "../../config/cloudnairy";
 import { sendVerificationEmail } from "../utils/email";
-import { IVerifyEmail } from "./interface";
+import { ISignIn, IVerifyEmail } from "./interface";
 
 dotenv.config();
 
@@ -233,6 +233,50 @@ class AuthController {
       message: MessageResponse.Success,
       description: "Verification OTP resent!",
       data: null,
+    });
+  }
+
+   public async signIn(req: Request, res: Response) {
+    const body: ISignIn = req.body;
+
+    const password = body.password;
+
+    const userExist = await userService.findUserByEmail(body.email);
+
+    if (!userExist) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Wrong user credentials!",
+        data: null,
+      });
+    }
+
+    if (userExist.password !== password) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Wrong user credentials!",
+        data: null,
+      });
+    }
+
+    // if (userExist.status != AccountStatus.Active) {
+    //   return res.status(400).json({
+    //     message: MessageResponse.Error,
+    //     description: "Your account is not active!",
+    //     data: null,
+    //   });
+    // }
+
+    const token = jwt.sign({ userId: userExist._id }, jwtSecret, {
+      expiresIn: "1h",
+    });
+
+    return res.status(200).json({
+      message: MessageResponse.Success,
+      description: "Logged in successfully",
+      data: {
+        token,
+      },
     });
   }
 }

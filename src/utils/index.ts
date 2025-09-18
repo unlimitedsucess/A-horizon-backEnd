@@ -52,6 +52,10 @@ class Utils {
     streamifier.createReadStream(fileBuffer).pipe(stream);
   });
 };
+
+ public generateAccNo= (): string => {
+  return Array.from({ length: 10 }, () => Crypto.randomInt(0, 10)).join('');
+};
 }
 
 export const utils = new Utils();

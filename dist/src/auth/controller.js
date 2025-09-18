@@ -208,5 +208,43 @@ class AuthController {
             });
         });
     }
+    signIn(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const body = req.body;
+            const password = body.password;
+            const userExist = yield service_1.userService.findUserByEmail(body.email);
+            if (!userExist) {
+                return res.status(400).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "Wrong user credentials!",
+                    data: null,
+                });
+            }
+            if (userExist.password !== password) {
+                return res.status(400).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "Wrong user credentials!",
+                    data: null,
+                });
+            }
+            // if (userExist.status != AccountStatus.Active) {
+            //   return res.status(400).json({
+            //     message: MessageResponse.Error,
+            //     description: "Your account is not active!",
+            //     data: null,
+            //   });
+            // }
+            const token = jsonwebtoken_1.default.sign({ userId: userExist._id }, jwtSecret, {
+                expiresIn: "1h",
+            });
+            return res.status(200).json({
+                message: enum_1.MessageResponse.Success,
+                description: "Logged in successfully",
+                data: {
+                    token,
+                },
+            });
+        });
+    }
 }
 exports.authController = new AuthController();

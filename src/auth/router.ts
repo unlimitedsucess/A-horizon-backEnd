@@ -42,3 +42,10 @@ AuthRouter.post(
   [authValidator.validateEmail],
   utils.wrapAsync(authController.resendEmailVerificationOtp)
 );
+
+//Login account
+AuthRouter.post(
+  "/signin",
+  [authValidator.signIn],
+  utils.wrapAsync(authController.signIn)
+);

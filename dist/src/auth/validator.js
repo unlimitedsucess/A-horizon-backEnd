@@ -233,5 +233,27 @@ class AuthValidator {
             }
         });
     }
+    signIn(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schema = joi_1.default.object({
+                email: joi_1.default.string().email().required().messages({
+                    "string.email": "Please enter a valid email address",
+                    "any.required": "Email address is required",
+                }),
+                password: joi_1.default.string().required().messages({
+                    "any.required": "Password is required.",
+                }),
+            });
+            const { error } = schema.validate(req.body);
+            if (error) {
+                return res.status(400).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: error.details[0].message,
+                    data: null,
+                });
+            }
+            return next();
+        });
+    }
 }
 exports.authValidator = new AuthValidator();

@@ -63,6 +63,37 @@ const userSchema = new mongoose_1.Schema({
         // When saving to DB, convert number or string to Decimal128
         set: (v) => mongoose_1.default.Types.Decimal128.fromString(v.toString()),
     },
+    loan: {
+        type: mongoose_1.default.Schema.Types.Decimal128,
+        default: mongoose_1.default.Types.Decimal128.fromString("0.00"),
+        min: mongoose_1.default.Types.Decimal128.fromString("0.00"),
+        // When retrieving from DB, convert Decimal128 to number
+        get: (v) => v ? parseFloat(v.toString()) : 0,
+        // When saving to DB, convert number or string to Decimal128
+        set: (v) => mongoose_1.default.Types.Decimal128.fromString(v.toString()),
+    },
+    loanBalance: {
+        type: mongoose_1.default.Schema.Types.Decimal128,
+        default: mongoose_1.default.Types.Decimal128.fromString("0.00"),
+        min: mongoose_1.default.Types.Decimal128.fromString("0.00"),
+        // When retrieving from DB, convert Decimal128 to number
+        get: (v) => v ? parseFloat(v.toString()) : 0,
+        // When saving to DB, convert number or string to Decimal128
+        set: (v) => mongoose_1.default.Types.Decimal128.fromString(v.toString()),
+    },
+    expenses: {
+        type: mongoose_1.default.Schema.Types.Decimal128,
+        default: mongoose_1.default.Types.Decimal128.fromString("0.00"),
+        min: mongoose_1.default.Types.Decimal128.fromString("0.00"),
+        // When retrieving from DB, convert Decimal128 to number
+        get: (v) => v ? parseFloat(v.toString()) : 0,
+        // When saving to DB, convert number or string to Decimal128
+        set: (v) => mongoose_1.default.Types.Decimal128.fromString(v.toString()),
+    },
+    accountNumber: {
+        type: String,
+        default: null,
+    },
     address: {
         type: String,
         default: null,
