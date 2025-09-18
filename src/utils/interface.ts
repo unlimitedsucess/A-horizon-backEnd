@@ -21,3 +21,14 @@ export interface CustomHttpResponse {
 export interface MulterFiles {
   [fieldname: string]: Express.Multer.File[];
 }
+
+export interface ISendEmail {
+  receiverEmail: string;
+  subject: string;
+  emailTemplate: string;
+}
+
+export interface IEmailVerification {
+  otp: string;
+  email: string;
+}

@@ -90,6 +90,13 @@ class AuthValidator {
           "string.pattern.base":
             "Password must contain at least one uppercase letter, one lowercase letter, and one number",
         }),
+        confirmPassword: Joi.string()
+        .valid(Joi.ref("password"))
+        .required()
+        .messages({
+          "any.required": "Confirm Password is required.",
+          "any.only": "Passwords do not match",
+        }),
       pin: Joi.string()
         .pattern(/^\d{4,6}$/)
         .required()
@@ -97,6 +104,13 @@ class AuthValidator {
           "string.pattern.base":
             "PIN must be a 4-6 digit number (no letters allowed)",
           "any.required": "PIN is required",
+        }),
+        confirmPin: Joi.string()
+        .valid(Joi.ref("pin"))
+        .required()
+        .messages({
+          "any.required": "Confirm Pin is required.",
+          "any.only": "Pins do not match",
         }),
     });
 
@@ -176,17 +190,54 @@ class AuthValidator {
     }
 
     return next();
-    // if (!error) {
-    //   return next();
-    // } else {
-    //   return utils.customResponse({
-    //     status: 400,
-    //     res,
-    //     message: MessageResponse.Error,
-    //     description: error.details[0].message,
-    //     data: null,
-    //   });
-    // }
+  }
+
+    public async emailVerifyOtp(req: Request, res: Response, next: NextFunction) {
+    const schema = Joi.object({
+      email: Joi.string().email().required().messages({
+        "string.base": "Email must be text",
+        "strig.email": "Invalid email format",
+        "any.required": "Email is required.",
+      }),
+      otp: Joi.string().required().messages({
+        "any.required": "OTP is required.",
+      }),
+    });
+    const { error } = schema.validate(req.body);
+    if (!error) {
+      return next();
+    } else {
+      return utils.customResponse({
+        status: 400,
+        res,
+        message: MessageResponse.Error,
+        description: error.details[0].message,
+        data: null,
+      });
+    }
+  }
+    public async validateEmail(req: Request, res: Response, next: NextFunction) {
+    const schema = Joi.object({
+      email: Joi.string().email().required().messages({
+        "string.base": "Email must be text",
+        "strig.email": "Invalid email format",
+        "any.required": "Email is required.",
+      }),
+    });
+
+    const { error } = schema.validate(req.body);
+
+    if (!error) {
+      return next();
+    } else {
+      return utils.customResponse({
+        status: 400,
+        res,
+        message: MessageResponse.Error,
+        description: error.details[0].message,
+        data: null,
+      });
+    }
   }
 }
 

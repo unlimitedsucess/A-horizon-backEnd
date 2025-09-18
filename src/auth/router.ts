@@ -20,3 +20,18 @@ AuthRouter.post(
   [upload, authValidator.registerUser ],
  utils.wrapAsync(authController.registerUser)
 );
+
+
+// Verify Email
+AuthRouter.post(
+  "/verify/email",
+  [authValidator.emailVerifyOtp],
+  utils.wrapAsync(authController.emailVerifyOtp)
+);
+
+//Resend email verification otp
+AuthRouter.post(
+  "/resend/email/verification/otp",
+  [authValidator.validateEmail],
+  utils.wrapAsync(authController.resendEmailVerificationOtp)
+);
