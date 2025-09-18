@@ -54,6 +54,18 @@ class AuthController {
       const userName = body.userName;
       const files = req.files as MulterFiles;
 
+      const emailExists = await userService.findUserByEmail(email);
+
+      if (!emailExists) {
+        return utils.customResponse({
+          status: 404,
+          res,
+          message: MessageResponse.Error,
+          description: "User not found!",
+          data: null,
+        });
+      }
+
       // check if username exists
       const userNameExists = await userService.findUserByUserName(userName);
       if (userNameExists) {
