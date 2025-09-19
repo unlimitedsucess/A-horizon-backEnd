@@ -3,3 +3,8 @@ export enum TransactionStatus {
   FAILED = "failed",
   COMPLETED = "complete"
 }
+
+export enum TransferType {
+  WIRE = "wire",
+  DOMESTIC = "domestic",
+}

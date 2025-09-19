@@ -8,6 +8,7 @@ import Logging from "./src/utils/loggin";
 import { MessageResponse } from "./src/utils/enum";
 import { AuthRouter } from "./src/auth/router";
 import { UserRouter } from "./src/user/router";
+import { TransactionRouter } from "./src/transaction/router";
 const app: Express = express();
 
 dotenv.config();
@@ -47,9 +48,12 @@ const StartServer = () => {
     })
   );
   const basePath = "/api/v1";
-  // Routes
+  // Auth Routes
   app.use(`${basePath}/auth`, AuthRouter);
-    app.use(basePath, UserRouter);
+  // User Routes
+  app.use(basePath, UserRouter);
+  // Tx Routes
+  app.use(`${basePath}/transaction`, TransactionRouter);
 
   // Health check
   app.get("/api/v1/healthcheck", (_req: Request, res: Response) => {

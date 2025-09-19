@@ -1,9 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransactionStatus = void 0;
+exports.TransferType = exports.TransactionStatus = void 0;
 var TransactionStatus;
 (function (TransactionStatus) {
     TransactionStatus["PENDING"] = "pending";
     TransactionStatus["FAILED"] = "failed";
     TransactionStatus["COMPLETED"] = "complete";
 })(TransactionStatus || (exports.TransactionStatus = TransactionStatus = {}));
+var TransferType;
+(function (TransferType) {
+    TransferType["WIRE"] = "wire";
+    TransferType["DOMESTIC"] = "domestic";
+})(TransferType || (exports.TransferType = TransferType = {}));

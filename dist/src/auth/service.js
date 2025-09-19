@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authService = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
 const entity_1 = __importDefault(require("../user/entity"));
 const utils_1 = require("../utils");
 class AuthService {
@@ -41,7 +42,7 @@ class AuthService {
                 user.dob = dob;
                 user.driversLicence = driversLicence;
                 user.firstName = firstName;
-                user.initialDeposit = initialDeposit;
+                user.initialDeposit = mongoose_1.default.Types.Decimal128.fromString(initialDeposit.toString());
                 user.lastName = lastName;
                 user.passportUrl = passportUrl;
                 user.password = password;

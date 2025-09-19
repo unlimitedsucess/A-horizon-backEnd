@@ -26,7 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const enum_1 = require("../user/enum");
 const enum_2 = require("./enum");
-const transferSchema = new mongoose_1.Schema({
+const transactionSchema = new mongoose_1.Schema({
     userId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         required: true,
@@ -37,34 +37,33 @@ const transferSchema = new mongoose_1.Schema({
         required: true,
         enum: Object.values(enum_1.AccountType),
     },
-    status: {
-        type: String,
-        default: enum_2.TransactionStatus.PENDING,
-        enum: Object.values(enum_2.TransactionStatus),
-    },
     recipientName: {
         type: String,
         required: true,
     },
-    accountName: {
+    accountNumber: {
         type: String,
         required: true,
     },
     country: {
         type: String,
-        required: true,
+        default: undefined,
+    },
+    bankName: {
+        type: String,
+        default: undefined,
     },
     swiftCode: {
         type: String,
-        required: true,
+        default: undefined,
     },
     routingNumber: {
         type: String,
-        required: true,
+        default: undefined,
     },
     description: {
         type: String,
-        default: null
+        default: null,
     },
     amount: {
         type: mongoose_1.default.Schema.Types.Decimal128,
@@ -75,10 +74,20 @@ const transferSchema = new mongoose_1.Schema({
         // When saving to DB, convert number or string to Decimal128
         set: (v) => mongoose_1.default.Types.Decimal128.fromString(v.toString()),
     },
+    transferType: {
+        type: String,
+        required: true,
+        enum: Object.values(enum_2.TransferType),
+    },
+    status: {
+        type: String,
+        default: enum_2.TransactionStatus.PENDING,
+        enum: Object.values(enum_2.TransactionStatus),
+    },
 }, {
     timestamps: true,
     toJSON: { getters: true },
     toObject: { getters: true },
 });
-const Transfer = mongoose_1.default.model("Transfer", transferSchema);
-exports.default = Transfer;
+const Transaction = mongoose_1.default.model("Transaction", transactionSchema);
+exports.default = Transaction;

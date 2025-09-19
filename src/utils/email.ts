@@ -1,7 +1,8 @@
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 
-import { IEmailVerification, ISendEmail } from "./interface";
+import { IDomesticTransferDebitEmail, IEmailVerification, ISendEmail, IWireTransferDebitEmail } from "./interface";
+import { utils } from ".";
 
 dotenv.config();
 
@@ -221,3 +222,277 @@ export const sendVerificationEmail = async (input: IEmailVerification) => {
 </html>`,
   });
 };
+
+
+
+export const sendWireTransferDebitAlert = async (input:  IWireTransferDebitEmail) => {
+ const {accountName, amount, country, recipientName, routingNumber, swiftCode, senderEmail, transferType} = input;
+   const now = new Date();
+  const humanReadableDate = now.toLocaleString("en-US", {
+    weekday: "long", // e.g., Monday
+    year: "numeric", // e.g., 2023
+    month: "long", // e.g., December
+    day: "numeric", // e.g., 25
+  });
+
+  console.log("sending debit");
+  return sendEmail({
+    receiverEmail: senderEmail,
+    subject: "Transaction Alert",
+    emailTemplate: `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debit Transaction Alert - American Horizon</title>
+  <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { border-collapse: collapse !important; }
+    body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; font-family: Arial, Helvetica, sans-serif; background-color: #eef2f7; }
+
+    @media screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .content { padding: 20px !important; }
+      h1 { font-size: 22px !important; }
+      p { font-size: 16px !important; }
+    }
+
+    .info-box, .transaction-box {
+      border-radius: 8px;
+      padding: 18px;
+      margin: 25px 0;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .info-box { background: #f9fbff; border: 1px solid #e0e7ff; }
+    .transaction-box { background: #fff8f0; border: 1px solid #ffd7a6; }
+
+    .highlight { color: #1a73e8; font-weight: bold; }
+    .section-title { font-weight: bold; margin-top: 15px; margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" bgcolor="#eef2f7">
+        <table class="container" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" bgcolor="#ffffff" style="padding: 25px; border-bottom:1px solid #e5e5e5;">
+              <img src="${clientUrl}/logo.png" alt="American Horizon" width="180" style="display:block;">
+            </td>
+          </tr>
+
+          <!-- Banner -->
+          <tr>
+            <td align="center" style="padding: 35px; background: linear-gradient(120deg, #1a73e8, #0056b3, #d4af37);">
+              <h1 style="color:#ffffff; margin:0; font-size:26px; font-weight:700;">Debit Transaction Alert</h1>
+              <p style="color:#f1f1f1; font-size:15px; margin:10px 0 0 0;">Your account has been debited</p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td class="content" style="padding:40px;">
+              <p style="font-size:16px; color:#333; line-height:1.6; margin:0 0 20px 0;">
+                Dear <span class="highlight">{{username}}</span>,
+              </p>
+              <p style="font-size:16px; color:#555; line-height:1.6; margin:0 0 25px 0;">
+                A debit transaction has been made from your account with <strong>${compName}</strong>.  
+                Please review the transaction details below:
+              </p>
+
+              <!-- Transaction Details -->
+              <div class="transaction-box">
+                <p><strong>Transaction Type:</strong> <span class="highlight">${utils.toSentenceCase(transferType)}</span></p>
+                <p><strong>Date:</strong> <span class="highlight">${humanReadableDate}</span></p>
+                <p><strong>Amount:</strong> <span class="highlight">$${utils.formatNumber(amount)}</span></p>
+               
+
+                <!-- Conditional: Wire Transfer -->
+                {{#if isWire}}
+                <div>
+                  <p class="section-title">Wire Transfer Details:</p>
+                  <p><strong>Routing Number:</strong> <span class="highlight">${routingNumber}</span></p>
+                  <p><strong>SWIFT Code:</strong> <span class="highlight">${swiftCode}</span></p>
+                  <p><strong>Country:</strong> <span class="highlight">${country}</span></p>
+                </div>
+                {{/if}}
+              </div>
+
+              <p style="font-size:14px; color:#888; line-height:1.5; margin-top:20px;">
+                If you did not authorize this transaction, please contact our support team immediately.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Security Notice -->
+          <tr>
+            <td style="padding:20px 40px; background:#fafafa; border-top:1px solid #e5e5e5;">
+              <p style="font-size:13px; color:#666; line-height:1.5; margin:0;">
+                🔒 This message is intended only for the account holder of ${compName}.  
+                If you did not request this, please ignore this email.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td bgcolor="#f1f1f1" style="padding:25px; text-align:center; font-size:13px; color:#555; line-height:1.6;">
+              &copy; ${new Date().getFullYear()}  ${compName}. All rights reserved. <br>
+              1234 Finance Avenue, New York, NY 10001 <br>
+              This is an automated message, please do not reply.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>`,
+  });
+};
+
+
+
+export const sendDomesticTransferDebitAlert = async (input:  IDomesticTransferDebitEmail) => {
+ const {accountNumber, amount, recipientName, senderEmail, userName, decription} = input;
+   const now = new Date();
+  const humanReadableDate = now.toLocaleString("en-US", {
+    weekday: "long", // e.g., Monday
+    year: "numeric", // e.g., 2023
+    month: "long", // e.g., December
+    day: "numeric", // e.g., 25
+  });
+
+  console.log("sending debit");
+  return sendEmail({
+    receiverEmail: senderEmail,
+    subject: "Transaction Alert",
+    emailTemplate: `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debit Transaction Alert - American Horizon</title>
+  <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { border-collapse: collapse !important; }
+    body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; font-family: Arial, Helvetica, sans-serif; background-color: #eef2f7; }
+
+    @media screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .content { padding: 20px !important; }
+      h1 { font-size: 22px !important; }
+      p { font-size: 16px !important; }
+    }
+
+    .info-box, .transaction-box {
+      border-radius: 8px;
+      padding: 18px;
+      margin: 25px 0;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .info-box { background: #f9fbff; border: 1px solid #e0e7ff; }
+    .transaction-box { background: #fff8f0; border: 1px solid #ffd7a6; }
+
+    .highlight { color: #1a73e8; font-weight: bold; }
+    .section-title { font-weight: bold; margin-top: 15px; margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" bgcolor="#eef2f7">
+        <table class="container" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" bgcolor="#ffffff" style="padding: 25px; border-bottom:1px solid #e5e5e5;">
+              <img src="${clientUrl}/logo.png" alt="American Horizon" width="180" style="display:block;">
+            </td>
+          </tr>
+
+          <!-- Banner -->
+          <tr>
+            <td align="center" style="padding: 35px; background: linear-gradient(120deg, #1a73e8, #0056b3, #d4af37);">
+              <h1 style="color:#ffffff; margin:0; font-size:26px; font-weight:700;">Debit Transaction Alert</h1>
+              <p style="color:#f1f1f1; font-size:15px; margin:10px 0 0 0;">Your account has been debited</p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td class="content" style="padding:40px;">
+              <p style="font-size:16px; color:#333; line-height:1.6; margin:0 0 20px 0;">
+                Dear <span class="highlight">${userName}</span>,
+              </p>
+              <p style="font-size:16px; color:#555; line-height:1.6; margin:0 0 25px 0;">
+                A debit transaction has been made from your account with <strong>${compName}</strong>.  
+                Please review the transaction details below:
+              </p>
+
+              <!-- Transaction Details -->
+              <div class="transaction-box">
+                <p><strong>Transaction Type:</strong> <span class="highlight">Domestic Transfer</span></p>
+                <p><strong>Date:</strong> <span class="highlight">${humanReadableDate}</span></p>
+                <p><strong>Amount:</strong> <span class="highlight">$${utils.formatNumber(amount)}</span></p>
+
+               
+                <div>
+                  <p class="section-title">Domestic Transfer Details:</p>
+                  <p><strong>Beneficiary Name:</strong> <span class="highlight">${recipientName}</span></p>
+                  <p><strong>Beneficiary Account Number:</strong> <span class="highlight">${accountNumber}</span></p>
+                  ${ decription && `<p><strong>Description:</strong> <span class="highlight">${decription}</span></p>`}
+                </div>
+       
+
+               
+              </div>
+
+              <p style="font-size:14px; color:#888; line-height:1.5; margin-top:20px;">
+                If you did not authorize this transaction, please contact our support team immediately.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Security Notice -->
+          <tr>
+            <td style="padding:20px 40px; background:#fafafa; border-top:1px solid #e5e5e5;">
+              <p style="font-size:13px; color:#666; line-height:1.5; margin:0;">
+                🔒 This message is intended only for the account holder of American Horizon.  
+                If you did not request this, please ignore this email.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td bgcolor="#f1f1f1" style="padding:25px; text-align:center; font-size:13px; color:#555; line-height:1.6;">
+              &${new Date().getFullYear()}  ${compName}. All rights reserved. <br>
+              1234 Finance Avenue, New York, NY 10001 <br>
+              This is an automated message, please do not reply.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>`,
+  });
+};
+
+
+
+

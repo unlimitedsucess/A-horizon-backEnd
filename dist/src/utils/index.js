@@ -46,5 +46,19 @@ class Utils {
             data,
         });
     }
+    formatNumber(value) {
+        if (value === null || value === undefined || value === "")
+            return "0";
+        const num = typeof value === "string" ? parseFloat(value) : value;
+        if (isNaN(num))
+            return "0";
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    toSentenceCase(str) {
+        if (!str)
+            return "";
+        const lower = str.toLowerCase().trim();
+        return lower.charAt(0).toUpperCase() + lower.slice(1);
+    }
 }
 exports.utils = new Utils();

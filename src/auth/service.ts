@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User from "../user/entity";
 import { utils } from "../utils";
 import { ISignUp, IVerifyEmail } from "./interface";
@@ -49,7 +50,7 @@ class AuthService {
       user.dob = dob;
       user.driversLicence = driversLicence;
       user.firstName = firstName;
-      user.initialDeposit = initialDeposit;
+     user.initialDeposit = mongoose.Types.Decimal128.fromString(initialDeposit.toString());
       user.lastName = lastName;
       user.passportUrl = passportUrl;
       user.password = password;

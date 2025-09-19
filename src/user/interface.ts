@@ -1,5 +1,5 @@
-import { Document } from "mongoose";
-import { AccountType } from "./enum";
+import { Document, Types } from "mongoose";
+import { AccountStatus, AccountType } from "./enum";
 
 export interface IUser extends Document {
   firstName?: string | null;
@@ -9,7 +9,7 @@ export interface IUser extends Document {
   dob?: string | null;
   ssn?: string | null;
   accountNumber?: string | null;
-  initialDeposit?: number;
+  initialDeposit: Types.Decimal128;
   loan?: number;
   loanBalnce?: number;
   expenses?: number;
@@ -19,6 +19,7 @@ export interface IUser extends Document {
   city?: string | null;
   zipCode?: string | null;
   accountType?: AccountType;
+  accountStatus: AccountStatus;
   userName?: string | null;
   password?: string | null;
   pin?: string | null;

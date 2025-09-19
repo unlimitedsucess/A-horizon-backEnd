@@ -1,17 +1,17 @@
 import mongoose, { Schema } from "mongoose";
 
-import { AccountType } from "./enum";
+import { AccountStatus, AccountType } from "./enum";
 import { IUser } from "./interface";
 
 const userSchema: Schema = new Schema(
   {
     firstName: {
       type: String,
-      default: null,
+      default: "",
     },
     lastName: {
       type: String,
-      default: null,
+      default: "",
     },
     email: {
       type: String,
@@ -19,19 +19,19 @@ const userSchema: Schema = new Schema(
     },
     phoneNo: {
       type: String,
-      default: null,
+      default: "",
     },
     dob: {
       type: String,
-      default: null,
+      default: "",
     },
     zipCode: {
       type: String,
-      default: null,
+      default: "",
     },
     ssn: {
       type: String,
-      default: null,
+      default: "",
     },
     initialDeposit: {
       type: mongoose.Schema.Types.Decimal128,
@@ -79,23 +79,28 @@ const userSchema: Schema = new Schema(
     },
     accountNumber: {
       type: String,
-      default: null,
+      default: "",
     },
     address: {
       type: String,
-      default: null,
+      default: "",
+    },
+    accountStatus: {
+      type: String,
+      default: AccountStatus.ACTIVE,
+      enum: Object.values(AccountStatus),
     },
     country: {
       type: String,
-      default: null,
+      default: "",
     },
     state: {
       type: String,
-      default: null,
+      default: "",
     },
     city: {
       type: String,
-      default: null,
+      default: "",
     },
     accountType: {
       type: String,
@@ -104,23 +109,23 @@ const userSchema: Schema = new Schema(
     },
     userName: {
       type: String,
-      default: null,
+      default: "",
     },
     password: {
       type: String,
-      default: null,
+      default: "",
     },
     pin: {
       type: String,
-      default: null,
+      default: "",
     },
     passportUrl: {
       type: String,
-      default: null,
+      default: "",
     },
     driversLicence: {
       type: String,
-      default: null,
+      default: "",
     },
     emailVerified: {
       type: Boolean,

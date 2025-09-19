@@ -1,10 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 
 import { AccountType } from "../user/enum";
-import { ITransfer } from "./interface";
-import { TransactionStatus } from "./enum";
+import { TransferType , TransactionStatus } from "./enum";
+import { ITransaction } from "./interface";
 
-const transferSchema: Schema = new Schema(
+const transactionSchema: Schema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -16,34 +16,33 @@ const transferSchema: Schema = new Schema(
       required: true,
       enum: Object.values(AccountType),
     },
-    status: {
-      type: String,
-      default: TransactionStatus.PENDING,
-      enum: Object.values(TransactionStatus),
-    },
-    recipientName: {
+     recipientName: {
       type: String,
       required: true,
     },
-    accountName: {
+     accountNumber: {
       type: String,
       required: true,
     },
-    country: {
+     country: {
       type: String,
-      required: true,
+      default: undefined,
+    },
+    bankName: {
+      type: String,
+      default: undefined,
     },
     swiftCode: {
       type: String,
-      required: true,
+      default: undefined,
     },
     routingNumber: {
       type: String,
-      required: true,
+      default: undefined,
     },
-    description: {
+     description: {
       type: String,
-      default: null
+      default: null,
     },
     amount: {
       type: mongoose.Schema.Types.Decimal128,
@@ -56,6 +55,17 @@ const transferSchema: Schema = new Schema(
       set: (v: string | number): mongoose.Types.Decimal128 =>
         mongoose.Types.Decimal128.fromString(v.toString()),
     },
+    transferType: {
+      type: String,
+      required: true,
+      enum: Object.values(TransferType ),
+    },
+    status: {
+      type: String,
+      default: TransactionStatus.PENDING,
+      enum: Object.values(TransactionStatus),
+    },
+   
   },
   {
     timestamps: true,
@@ -64,6 +74,6 @@ const transferSchema: Schema = new Schema(
   }
 );
 
-const Transfer = mongoose.model<ITransfer>("Transfer", transferSchema);
+const Transaction = mongoose.model<ITransaction>("Transaction", transactionSchema);
 
-export default Transfer;
+export default Transaction;

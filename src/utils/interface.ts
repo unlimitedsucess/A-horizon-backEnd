@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import { MessageResponse } from "./enum";
+import { TransferType } from "../transaction/enum";
 
 export interface CustomRequest extends Request {
   userId: string;
@@ -31,4 +32,25 @@ export interface ISendEmail {
 export interface IEmailVerification {
   otp: string;
   email: string;
+}
+
+export interface IWireTransferDebitEmail {
+  recipientName: string;
+  accountName: string;
+  country: string;
+  swiftCode: string;
+  routingNumber: string;
+  amount: number;
+  senderEmail: string;
+  transferType: TransferType
+}
+
+export interface IDomesticTransferDebitEmail {
+  userName: string;
+  recipientName: string;
+  accountNumber: string;
+  amount: number;
+  senderEmail: string;
+  transferType: TransferType
+  decription?: string;
 }

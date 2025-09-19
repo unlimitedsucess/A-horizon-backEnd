@@ -8,3 +8,9 @@ export enum AccountType {
   DOMICILIARY = "domicilary",
   JOINT = "joint",
 }
+
+
+export enum AccountStatus {
+  SUSPENDED = "suspended",
+  ACTIVE = "active",
+}

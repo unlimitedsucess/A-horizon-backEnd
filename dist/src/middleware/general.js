@@ -9,32 +9,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userController = void 0;
+const service_1 = require("../user/service");
 const enum_1 = require("../utils/enum");
-const service_1 = require("./service");
-const utils_1 = require("../utils");
-class UserController {
-    fetchUserDetails(req, res) {
+const enum_2 = require("../user/enum");
+class GeneralMiddleware {
+    static isUserActive(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const { userId } = req;
-            const userExist = yield service_1.userService.findUserByIdWithoutPassword(userId);
+            const userExist = yield service_1.userService.findUserById(userId);
             if (!userExist) {
-                return utils_1.utils.customResponse({
-                    status: 404,
-                    res,
+                return res.status(400).json({
                     message: enum_1.MessageResponse.Error,
-                    description: "User does not exist!",
+                    description: "User not found",
                     data: null,
                 });
             }
-            return utils_1.utils.customResponse({
-                status: 200,
-                res,
-                message: enum_1.MessageResponse.Success,
-                description: "User details fetched successfully!",
-                data: userExist,
-            });
+            if (!userExist.accountType) {
+                return res.status(400).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "Please complete your account sign registration",
+                    data: null,
+                });
+            }
+            if (userExist.accountStatus === enum_2.AccountStatus.SUSPENDED) {
+                return res.status(400).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "Your account has beeen suspended please contact customer support!",
+                    data: null,
+                });
+            }
+            next();
         });
     }
 }
-exports.userController = new UserController();
+exports.default = GeneralMiddleware;

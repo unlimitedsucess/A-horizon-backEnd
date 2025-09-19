@@ -28,6 +28,13 @@ class UserService {
 
     return user;
   }
+
+
+    public async findUserById(id: string) {
+    const user = await User.findById(id);
+
+    return user;
+  }
 }
 
 export const userService = new UserService();

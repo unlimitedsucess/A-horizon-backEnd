@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AccountType = void 0;
+exports.AccountStatus = exports.AccountType = void 0;
 var AccountType;
 (function (AccountType) {
     AccountType["SAVINGS"] = "savings";
@@ -12,3 +12,8 @@ var AccountType;
     AccountType["DOMICILIARY"] = "domicilary";
     AccountType["JOINT"] = "joint";
 })(AccountType || (exports.AccountType = AccountType = {}));
+var AccountStatus;
+(function (AccountStatus) {
+    AccountStatus["SUSPENDED"] = "suspended";
+    AccountStatus["ACTIVE"] = "active";
+})(AccountStatus || (exports.AccountStatus = AccountStatus = {}));
