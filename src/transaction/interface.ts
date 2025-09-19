@@ -1,6 +1,6 @@
 import { Document, Types } from "mongoose";
 import { AccountType } from "../user/enum";
-import { TransferType, TransactionStatus } from "./enum";
+import { TransferType, TransactionStatus, TransactionType, TransactionDirection } from "./enum";
 
 
 export interface ITransaction extends Document {
@@ -17,6 +17,8 @@ export interface ITransaction extends Document {
   amount: number; 
   transferType: TransferType;
   status: TransactionStatus;
+  transactionType: TransactionType;
+  transactionDirection: TransactionDirection;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,6 +39,8 @@ export interface IWireTransferUserInput {
 export interface IWireTransferInput {
   userId: string;
   accountType: AccountType;
+  transactionDirection: TransactionDirection;
+  transactionType: TransactionType;
   recipientName: string;
   accountNumber: string;
   country: string;
@@ -64,6 +68,8 @@ export interface IDomesticTransferUserInput {
 export interface IDomesticTransferInput {
   userId: string;
   accountType: AccountType;
+  transactionDirection: TransactionDirection;
+  transactionType: TransactionType;
   bankName: string;
   recipientName: string;
   accountNumber: string;

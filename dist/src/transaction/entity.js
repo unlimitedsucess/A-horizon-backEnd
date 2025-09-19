@@ -79,6 +79,16 @@ const transactionSchema = new mongoose_1.Schema({
         required: true,
         enum: Object.values(enum_2.TransferType),
     },
+    transactionType: {
+        type: String,
+        required: true,
+        enum: Object.values(enum_2.TransactionType),
+    },
+    transactionDirection: {
+        type: String,
+        required: true,
+        enum: Object.values(enum_2.TransactionDirection),
+    },
     status: {
         type: String,
         default: enum_2.TransactionStatus.PENDING,

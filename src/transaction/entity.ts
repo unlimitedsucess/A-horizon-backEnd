@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 import { AccountType } from "../user/enum";
-import { TransferType , TransactionStatus } from "./enum";
+import { TransferType , TransactionStatus, TransactionType, TransactionDirection } from "./enum";
 import { ITransaction } from "./interface";
 
 const transactionSchema: Schema = new Schema(
@@ -59,6 +59,16 @@ const transactionSchema: Schema = new Schema(
       type: String,
       required: true,
       enum: Object.values(TransferType ),
+    },
+    transactionType: {
+      type: String,
+      required: true,
+      enum: Object.values(TransactionType),
+    },
+    transactionDirection: {
+      type: String,
+      required: true,
+      enum: Object.values(TransactionDirection),
     },
     status: {
       type: String,

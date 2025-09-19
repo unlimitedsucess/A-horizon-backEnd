@@ -20,7 +20,7 @@ import {
   sendDomesticTransferDebitAlert,
   sendWireTransferDebitAlert,
 } from "../utils/email";
-import { TransactionStatus, TransferType } from "./enum";
+import { TransactionDirection, TransactionStatus, TransactionType, TransferType } from "./enum";
 
 class TransactionController {
   public async createWireTransfer(req: Request, res: Response) {
@@ -69,6 +69,8 @@ class TransactionController {
     }
     const transfer: IWireTransferInput = {
       ...body,
+      transactionType: TransactionType.TRANSFER,
+      transactionDirection: TransactionDirection.DEBIT,
       status: TransactionStatus.COMPLETED,
       transferType: TransferType.WIRE,
       userId: userExist._id.toString(),
@@ -146,6 +148,8 @@ class TransactionController {
     const transfer: IDomesticTransferInput = {
       ...body,
       status: TransactionStatus.COMPLETED,
+      transactionType: TransactionType.TRANSFER,
+      transactionDirection: TransactionDirection.DEBIT,
       transferType: TransferType.DOMESTIC,
       userId: userExist._id.toString(),
     };

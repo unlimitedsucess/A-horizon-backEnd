@@ -56,7 +56,7 @@ class TransactionController {
                     data: null,
                 });
             }
-            const transfer = Object.assign(Object.assign({}, body), { status: enum_2.TransactionStatus.COMPLETED, transferType: enum_2.TransferType.WIRE, userId: userExist._id.toString() });
+            const transfer = Object.assign(Object.assign({}, body), { transactionType: enum_2.TransactionType.TRANSFER, transactionDirection: enum_2.TransactionDirection.DEBIT, status: enum_2.TransactionStatus.COMPLETED, transferType: enum_2.TransferType.WIRE, userId: userExist._id.toString() });
             yield service_2.transactionService.createWireTransfer(transfer);
             yield service_2.transactionService.debitUser(transferAmount, userExist._id.toString());
             // 📩 Send debit alert
@@ -117,7 +117,7 @@ class TransactionController {
                     data: null,
                 });
             }
-            const transfer = Object.assign(Object.assign({}, body), { status: enum_2.TransactionStatus.COMPLETED, transferType: enum_2.TransferType.DOMESTIC, userId: userExist._id.toString() });
+            const transfer = Object.assign(Object.assign({}, body), { status: enum_2.TransactionStatus.COMPLETED, transactionType: enum_2.TransactionType.TRANSFER, transactionDirection: enum_2.TransactionDirection.DEBIT, transferType: enum_2.TransferType.DOMESTIC, userId: userExist._id.toString() });
             yield service_2.transactionService.createDomesticTransfer(transfer);
             yield service_2.transactionService.debitUser(transferAmount, userExist._id.toString());
             // 📩 Send debit alert
