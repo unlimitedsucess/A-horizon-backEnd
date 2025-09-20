@@ -74,7 +74,7 @@ class AdminController {
             const cards = yield service_1.adminService.fetchCards();
             return res.status(200).json({
                 message: enum_1.MessageResponse.Success,
-                description: "Detils fetched successfully!",
+                description: "Detials fetched successfully!",
                 data: {
                     users,
                     transactions,
