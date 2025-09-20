@@ -72,6 +72,26 @@ public toSentenceCase(str: string): string {
   const lower = str.toLowerCase().trim();
   return lower.charAt(0).toUpperCase() + lower.slice(1);
 }
+public generateCardNumber = (): string => {
+  return Array.from({ length: 16 }, () => Crypto.randomInt(0, 10)).join('');
+};
+
+public generateCVV = (): string => {
+  return Crypto.randomInt(100, 1000).toString(); // 100 to 999
+};
+
+public generateExpiryDate = (): string => {
+  const now = new Date();
+  const futureYear = now.getFullYear() + 4;
+  const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
+  const year = futureYear.toString().slice(-2); // Get last 2 digits of year
+
+  return `${month}/${year}`;
+};
+
+public generateCardPin = (): string => {
+  return Array.from({ length: 4 }, () => Crypto.randomInt(0, 10)).join('');
+};
 
 }
 

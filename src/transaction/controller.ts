@@ -44,7 +44,7 @@ class TransactionController {
         status: 400,
         res,
         message: MessageResponse.Error,
-        description: "Incorrect transfer pin!",
+        description: "Incorrect pin!",
         data: null,
       });
     }

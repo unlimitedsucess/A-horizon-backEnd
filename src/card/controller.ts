@@ -2,15 +2,15 @@ import { Request, Response } from "express";
 
 import { MessageResponse } from "../utils/enum";
 import { CustomRequest } from "../utils/interface";
-import { ILoanInput, ILoanUserInput } from "./interface";
+import { ICardInput, ICardUserInput } from "./interface";
 import { utils } from "../utils";
 import { userService } from "../user/service";
-import { loanService } from "./service";
+import { cardService } from "./service";
 
-class LoanController {
-  public async applyLoan(req: Request, res: Response) {
+class CardController {
+  public async createCard(req: Request, res: Response) {
     const { userId } = req as CustomRequest;
-    const body: ILoanUserInput = req.body;
+    const body: ICardUserInput = req.body;
 
     const userExist = await userService.findUserById(userId);
 
@@ -24,29 +24,22 @@ class LoanController {
       });
     }
 
-    if (body.pin !== userExist.pin) {
-      return utils.customResponse({
-        status: 400,
-        res,
-        message: MessageResponse.Error,
-        description: "Incorrect pin!",
-        data: null,
-      });
-    }
-
-    const loan: ILoanInput = {
+    const card: ICardInput = {
       ...body,
+      cardNumber: utils.generateCardNumber(),
+      ccv: utils.generateCVV(),
+      expiryDate: utils.generateExpiryDate(),
       userId: userExist._id.toString(),
     };
 
-    await loanService.applyLoan(loan);
+    await cardService.createCard(card);
 
     return res.status(201).json({
       message: MessageResponse.Success,
-      description: "Loan Application successful",
+      description: "Card Created successfully",
       data: null,
     });
   }
 }
 
-export const loanController = new LoanController();
+export const cardController = new CardController();

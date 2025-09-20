@@ -12,40 +12,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loanValidator = void 0;
+exports.cardValidator = void 0;
 const joi_1 = __importDefault(require("joi"));
-const multer_1 = __importDefault(require("multer"));
 const enum_1 = require("../utils/enum");
-const enum_2 = require("./enum");
-const storage = multer_1.default.memoryStorage();
-const upload = (0, multer_1.default)({ storage: storage }).fields([
-    { name: "driversLicence", maxCount: 1 },
-    { name: "passport", maxCount: 1 },
-]);
-class LoanValidator {
-    applyLoan(req, res, next) {
+const utils_1 = require("../utils");
+const enum_2 = require("./enum"); // adjust path if needed
+class CardValidator {
+    validateCardApplication(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const schema = joi_1.default.object({
-                loanAmount: joi_1.default.number().min(0).required().messages({
-                    "number.base": "Loan Amount must be a number",
-                    "number.min": "Loan Amount cannot be less than 0",
-                    "any.required": "Loan Amount is required",
-                }),
-                pin: joi_1.default.string().required().messages({
-                    "string.base": "Pin must be text",
-                    "any.required": "Pin is required",
-                }),
-                loanDuraion: joi_1.default.string()
-                    .valid(...Object.values(enum_2.LoanDuration))
+                cardType: joi_1.default.string()
+                    .valid(...Object.values(enum_2.CardType))
                     .required()
                     .messages({
-                    "any.only": `Loan duraion must be one of: ${Object.values(enum_2.LoanDuration).join(", ")}`,
-                    "any.required": "Loan duraion is required",
+                    "any.only": `Card type must be one of: ${Object.values(enum_2.CardType).join(", ")}`,
+                    "any.required": "Card type is required",
+                }),
+                pin: joi_1.default.string()
+                    .pattern(/^\d{4}$/)
+                    .required()
+                    .messages({
+                    "string.base": "Pin must be text",
+                    "string.pattern.base": "Pin must be a 4-digit number",
+                    "any.required": "Pin is required",
                 }),
             });
             const { error } = schema.validate(req.body);
             if (error) {
-                return res.status(400).json({
+                return utils_1.utils.customResponse({
+                    status: 400,
+                    res,
                     message: enum_1.MessageResponse.Error,
                     description: error.details[0].message,
                     data: null,
@@ -55,4 +51,4 @@ class LoanValidator {
         });
     }
 }
-exports.loanValidator = new LoanValidator();
+exports.cardValidator = new CardValidator();

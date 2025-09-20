@@ -14,6 +14,7 @@ export interface ILoan extends Document {
 export interface ILoanUserInput {
   loanDuration: LoanDuration;
   loanAmount: number;
+  pin: string;
 }
 
 export interface ILoanInput {

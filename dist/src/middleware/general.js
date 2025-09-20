@@ -35,7 +35,9 @@ class GeneralMiddleware {
                 return res.status(400).json({
                     message: enum_1.MessageResponse.Error,
                     description: "Your account has beeen suspended please contact customer support!",
-                    data: null,
+                    data: {
+                        accountStatus: enum_2.AccountStatus.SUSPENDED,
+                    },
                 });
             }
             next();

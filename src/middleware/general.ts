@@ -31,7 +31,9 @@ export default class GeneralMiddleware {
         message: MessageResponse.Error,
         description:
           "Your account has beeen suspended please contact customer support!",
-        data: null,
+        data: {
+          accountStatus: AccountStatus.SUSPENDED,
+        },
       });
     }
 

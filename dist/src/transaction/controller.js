@@ -36,7 +36,7 @@ class TransactionController {
                     status: 400,
                     res,
                     message: enum_1.MessageResponse.Error,
-                    description: "Incorrect transfer pin!",
+                    description: "Incorrect pin!",
                     data: null,
                 });
             }

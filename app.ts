@@ -10,6 +10,7 @@ import { AuthRouter } from "./src/auth/router";
 import { UserRouter } from "./src/user/router";
 import { TransactionRouter } from "./src/transaction/router";
 import { LoanRouter } from "./src/loan/router";
+import { CardRouter } from "./src/card/router";
 const app: Express = express();
 
 dotenv.config();
@@ -57,6 +58,8 @@ const StartServer = () => {
   app.use(`${basePath}/transaction`, TransactionRouter);
   // Loan Routes
   app.use(`${basePath}/loan`, LoanRouter);
+    // Card Routes
+  app.use(`${basePath}/card`, CardRouter);
 
   // Health check
   app.get("/api/v1/healthcheck", (_req: Request, res: Response) => {

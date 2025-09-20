@@ -33,6 +33,22 @@ class Utils {
         this.generateAccNo = () => {
             return Array.from({ length: 10 }, () => crypto_1.default.randomInt(0, 10)).join('');
         };
+        this.generateCardNumber = () => {
+            return Array.from({ length: 16 }, () => crypto_1.default.randomInt(0, 10)).join('');
+        };
+        this.generateCVV = () => {
+            return crypto_1.default.randomInt(100, 1000).toString(); // 100 to 999
+        };
+        this.generateExpiryDate = () => {
+            const now = new Date();
+            const futureYear = now.getFullYear() + 4;
+            const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
+            const year = futureYear.toString().slice(-2); // Get last 2 digits of year
+            return `${month}/${year}`;
+        };
+        this.generateCardPin = () => {
+            return Array.from({ length: 4 }, () => crypto_1.default.randomInt(0, 10)).join('');
+        };
     }
     wrapAsync(fn) {
         return (req, res, next) => {

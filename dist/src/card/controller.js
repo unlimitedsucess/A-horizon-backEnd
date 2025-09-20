@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loanController = void 0;
+exports.cardController = void 0;
 const enum_1 = require("../utils/enum");
 const utils_1 = require("../utils");
 const service_1 = require("../user/service");
 const service_2 = require("./service");
-class LoanController {
-    applyLoan(req, res) {
+class CardController {
+    createCard(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { userId } = req;
             const body = req.body;
@@ -29,23 +29,14 @@ class LoanController {
                     data: null,
                 });
             }
-            if (body.pin !== userExist.pin) {
-                return utils_1.utils.customResponse({
-                    status: 400,
-                    res,
-                    message: enum_1.MessageResponse.Error,
-                    description: "Incorrect pin!",
-                    data: null,
-                });
-            }
-            const loan = Object.assign(Object.assign({}, body), { userId: userExist._id.toString() });
-            yield service_2.loanService.applyLoan(loan);
+            const card = Object.assign(Object.assign({}, body), { cardNumber: utils_1.utils.generateCardNumber(), ccv: utils_1.utils.generateCVV(), expiryDate: utils_1.utils.generateExpiryDate(), userId: userExist._id.toString() });
+            yield service_2.cardService.createCard(card);
             return res.status(201).json({
                 message: enum_1.MessageResponse.Success,
-                description: "Loan Application successful",
+                description: "Card Created successfully",
                 data: null,
             });
         });
     }
 }
-exports.loanController = new LoanController();
+exports.cardController = new CardController();
