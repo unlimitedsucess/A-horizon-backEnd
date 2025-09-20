@@ -19,6 +19,7 @@ export interface ITransaction extends Document {
   status: TransactionStatus;
   transactionType: TransactionType;
   transactionDirection: TransactionDirection;
+  transactionDate: Date;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -5,7 +5,7 @@ import Transaction from "../transaction/entity";
 import User from "../user/entity";
 import { AccountStatus } from "../user/enum";
 import Admin from "./entity";
-import { IAdminUserInput, IUpdateUserAccountStatus } from "./interface";
+import { IAdminCreateDomesticTransferUserInput, IAdminCreateWireTransferInput, IAdminUserInput, IUpdateUserAccountStatus } from "./interface";
 
 class AdminService {
   public async createAdmin(input: IAdminUserInput) {
@@ -96,27 +96,37 @@ class AdminService {
     return user;
   }
 
-  // public async fetchAllTransfer() {
-  //   const transfers = Transfer.find();
+    public async deleteTransaction(userId: string) {
+      const transaction = await Transaction.findOneAndDelete({ _id: userId });
 
-  //   return transfers;
-  // }
-
-  //   public async approveUser(userId: string) {
-  //     const user = await User.findOneAndUpdate(
-  //       { _id: userId },
-  //       { $set: { status: AccountStatus.Active } },
-  //       { new: true } // Return the updated document
-  //     );
-
-  //     return user;
-  //   }
+      return transaction;
+  }
 
     public async deleteUser(userId: string) {
       const user = await User.findOneAndDelete({ _id: userId });
 
       return user;
   }
+
+   public async adminCreateWireTransfer(input: IAdminCreateWireTransferInput) {
+      let newTransaction = new Transaction({
+        ...input,
+      });
+  
+      await newTransaction.save();
+  
+      return;
+    }
+
+     public async adminCreateDomesticTransfer(input: IAdminCreateDomesticTransferUserInput) {
+      let newTransaction = new Transaction({
+        ...input,
+      });
+  
+      await newTransaction.save();
+  
+      return;
+    }
 }
 
 export const adminService = new AdminService();

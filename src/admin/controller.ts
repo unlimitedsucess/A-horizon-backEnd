@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import { MessageResponse } from "../utils/enum";
-import { IAdminUserInput, IUpdateUserAccountStatus } from "./interface";
+import {
+  IAdminCreateDomesticTransferUserInput,
+  IAdminCreateWireTransferInput,
+  IAdminUserInput,
+  IUpdateUserAccountStatus,
+} from "./interface";
 import { adminService } from "./service";
 import { utils } from "../utils";
 import dotenv from "dotenv";
@@ -8,6 +13,7 @@ import { tokenExpiry } from "../utils/global";
 import jwt from "jsonwebtoken";
 import { ISignUp } from "../auth/interface";
 import { userService } from "../user/service";
+import { TransactionType, TransferType } from "../transaction/enum";
 
 dotenv.config();
 
@@ -148,6 +154,80 @@ class AdminController {
     });
   }
 
+  public async deleteATransferHistory(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const transaction = await adminService.deleteTransaction(id);
+
+    if (!transaction) {
+      return res.status(404).json({
+        message: MessageResponse.Success,
+        description: "Transaction not found!",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: MessageResponse.Success,
+      description: "Transaction has been deleted!",
+      data: null,
+    });
+  }
+
+  public async adminCreateWireTransferHistory(req: Request, res: Response) {
+    const body: IAdminCreateWireTransferInput = req.body;
+
+    const user = await userService.findUserById(body.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: MessageResponse.Success,
+        description: "User not found!",
+        data: null,
+      });
+    }
+
+    const txHis: IAdminCreateWireTransferInput = {
+      ...body,
+      transferType: TransferType.WIRE,
+    };
+
+    await adminService.adminCreateWireTransfer(txHis);
+
+    return res.status(201).json({
+      message: MessageResponse.Success,
+      description: "Transaction created successfully!",
+      data: null,
+    });
+  }
+
+  public async adminCreateDomesticTransferHistory(req: Request, res: Response) {
+    const body: IAdminCreateDomesticTransferUserInput = req.body;
+
+    const user = await userService.findUserById(body.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: "User not found!",
+        data: null,
+      });
+    }
+
+    const txHis: IAdminCreateDomesticTransferUserInput = {
+      ...body,
+      transferType: TransferType.DOMESTIC,
+    };
+
+    await adminService.adminCreateDomesticTransfer(txHis);
+
+    return res.status(201).json({
+      message: MessageResponse.Success,
+      description: "Transaction created successfully!",
+      data: null,
+    });
+  }
+
   //   public async approveUserAccount(req: Request, res: Response) {
   //     const { id } = req.params;
 
@@ -173,28 +253,6 @@ class AdminController {
   //     return res.status(200).json({
   //       message: MessageResponse.Success,
   //       description: "User has been approved!",
-  //       data: null,
-  //     });
-  //   }
-
-  //   public async deleteATransferHistory(req: Request, res: Response) {
-  //     const { id } = req.params;
-
-  //     const transfer = await transferService.findTransferById(id);
-
-  //     if (!transfer) {
-  //       return res.status(404).json({
-  //         message: MessageResponse.Success,
-  //         description: "Transfer not found!",
-  //         data: null,
-  //       });
-  //     }
-
-  //     await transferService.deleteTransfer(id);
-
-  //     return res.status(200).json({
-  //       message: MessageResponse.Success,
-  //       description: "Transfer has been deleted!",
   //       data: null,
   //     });
   //   }

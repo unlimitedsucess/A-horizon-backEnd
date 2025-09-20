@@ -11,13 +11,13 @@ import { authValidator } from "../auth/validator";
 export const AdminRouter = Router();
 
 // Create an admin
-AdminRouter.post(
-    "/signup",
-    // [
-      // upload.none(),  // For FormData
-      // adminValidator.signUp],
-   utils.wrapAsync(adminController.adminSignUp)
-  );
+// AdminRouter.post(
+//     "/signup",
+//     // [
+//       // upload.none(),  // For FormData
+//       // adminValidator.signUp],
+//    utils.wrapAsync(adminController.adminSignUp)
+//   );
 
 
 //Sign in as admin
@@ -51,20 +51,31 @@ AdminRouter.patch(
 
 //Delete user acc
 AdminRouter.delete(
-  "/delete/user/:id",
+  "/user/:id",
   [isAuth, GeneralMiddleware.isAdmin, adminValidator.validateParams],
   utils.wrapAsync(adminController.deleteUserAccount)
 );
 
+//Delete transfer history
+AdminRouter.delete(
+  "/transaction/:id",
+  [isAuth, GeneralMiddleware.isAdmin, adminValidator.validateParams],
+  utils.wrapAsync(adminController.deleteATransferHistory)
+);
 
-// //Approve user acc
-// AdminRouter.patch(
-//   "/admin/approve/user/:id",
-//   [isAuth, adminValidator.validateParams],
-//   wrapAsync(adminController.approveUserAccount)
-// );
+//Create Wire TF
+AdminRouter.post(
+  "/transaction/wire",
+  [isAuth, GeneralMiddleware.isAdmin, adminValidator.createWireTransfer],
+  utils.wrapAsync(adminController.adminCreateWireTransferHistory)
+);
 
-
+//Create Domestic TF
+AdminRouter.post(
+  "/transaction/domestic",
+  [isAuth, GeneralMiddleware.isAdmin, adminValidator.createDomesticTransfer],
+  utils.wrapAsync(adminController.adminCreateWireTransferHistory)
+);
 
 
 
@@ -97,12 +108,7 @@ AdminRouter.delete(
 //   wrapAsync(adminController.fetchTransferByUserId)
 // );
 
-// //Delete transfer history
-// AdminRouter.delete(
-//   "/admin/delete/transfer/:id",
-//   [isAuth, adminValidator.validateParams],
-//   wrapAsync(adminController.deleteATransferHistory)
-// );
+
 
 // //Update transfer details
 // AdminRouter.patch(

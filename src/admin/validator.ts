@@ -5,6 +5,12 @@ import mongoose from "mongoose";
 import { AccountStatus, AccountType } from "../user/enum";
 import { CardStatus } from "../card/enum";
 import { utils } from "../utils";
+import {
+  TransactionDirection,
+  TransactionStatus,
+  TransactionType,
+  TransferType,
+} from "../transaction/enum";
 
 class AdminValidator {
   public async adminLogin(req: Request, res: Response, next: NextFunction) {
@@ -205,143 +211,223 @@ class AdminValidator {
     return next();
   }
 
-  //   public async createTransferWithAdmin(
-  //     req: Request,
-  //     res: Response,
-  //     next: NextFunction
-  //   ) {
-  //     const schema = Joi.object({
-  //       bankName: Joi.string().required().messages({
-  //         "string.base": "Bank name must be text",
-  //         "any.required": "Bank name is required.",
-  //       }),
-  //       beneficiaryName: Joi.string().required().messages({
-  //         "string.base": "Beneficiary name must be text",
-  //         "any.required": "Beneficiary name is required.",
-  //       }),
-  //       beneficiaryAccountNumber: Joi.string().required().messages({
-  //         "string.base": "Beneficiary account number must be text",
-  //         "any.required": "Beneficiary account number is required.",
-  //       }),
-  //       amount: Joi.alternatives()
-  //         .try(Joi.number().positive(), Joi.string().pattern(/^\d+(\.\d+)?$/))
-  //         .required()
-  //         .messages({
-  //           "alternatives.match": "Amount must be a valid number.",
-  //           "any.required": "Amount is required.",
-  //         }),
-  //       serviceFee: Joi.alternatives()
-  //         .try(Joi.number().positive(), Joi.string().pattern(/^\d+(\.\d+)?$/))
-  //         .required()
-  //         .messages({
-  //           "alternatives.match": "Service fee must be a valid number.",
-  //           "any.required": "Service fee is required.",
-  //         }),
-  //       narration: Joi.string().required().messages({
-  //         "string.base": "Narration must be text",
-  //         "any.required": "Narration is required.",
-  //       }),
+  public async createWireTransfer(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const schema = Joi.object({
+      userId: Joi.string()
+        .custom((value, helpers) => {
+          if (!mongoose.Types.ObjectId.isValid(value)) {
+            return helpers.message({
+              custom: "User id must be a valid ObjectId",
+            });
+          }
+          return value;
+        })
+        .required()
+        .messages({
+          "string.base": "User id must be text",
+          "any.required": "User id is required",
+        }),
 
-  //       accountType: Joi.string()
-  //         .valid(
-  //           AccountType.Current,
-  //           AccountType.Savings,
-  //           AccountType.Checking,
-  //           AccountType.Domiciliary,
-  //           AccountType.Fixed,
-  //           AccountType.Joint,
-  //           AccountType.NonResident,
-  //           AccountType.Checking,
-  //           AccountType.OnlineBanking
-  //         )
-  //         .required()
-  //         .messages({
-  //           "string.base": `Account type must be either "${AccountType.Current}", "${AccountType.OnlineBanking}", "${AccountType.Savings}", "${AccountType.Checking}, "${AccountType.Domiciliary}" "${AccountType.Fixed}, "${AccountType.Joint}", "${AccountType.NonResident}" or "${AccountType.Checking}"`,
-  //           "any.required": "Account type is required.",
-  //           "any.only": `Account type must be either "${AccountType.Current}", "${AccountType.OnlineBanking}", "${AccountType.Savings}", "${AccountType.Checking}, "${AccountType.Domiciliary}", "${AccountType.Fixed}, "${AccountType.Joint}", "${AccountType.NonResident}" or "${AccountType.Checking}"`,
-  //         }),
-  //       transferType: Joi.string()
-  //         .valid(TransferType.Domestic, TransferType.Wire)
-  //         .required()
-  //         .messages({
-  //           "string.base": `Transfer type must be either "${TransferType.Domestic}" or "${TransferType.Wire}"`,
-  //           "any.required": "Transfer type is required.",
-  //           "any.only": `Transfer type must be either "${TransferType.Domestic}" or "${TransferType.Wire}"`,
-  //         }),
+      accountType: Joi.string()
+        .valid(...Object.values(AccountType))
+        .required()
+        .messages({
+          "any.only": `Account type must be one of: ${Object.values(
+            AccountType
+          ).join(", ")}`,
+          "any.required": "Account type is required",
+        }),
 
-  //       routingNumber: Joi.when("transferType", {
-  //         is: TransferType.Wire,
-  //         then: Joi.string()
-  //           .pattern(/^\d{9}$/)
-  //           .required()
-  //           .messages({
-  //             "string.pattern.base":
-  //               "Routing number must be a 9 digit numeric value.",
-  //             "any.required": "Routing number is required for wire transfers.",
-  //           }),
-  //         otherwise: Joi.forbidden(),
-  //       }),
-  //       swiftcode: Joi.when("transferType", {
-  //         is: TransferType.Wire,
-  //         then: Joi.string()
-  //           .pattern(/^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$/)
-  //           .required()
-  //           .messages({
-  //             "string.pattern.base":
-  //               "Swift code must be 8 or 11 characters (letters and numbers).",
-  //             "any.required": "Swift code is required.",
-  //           }),
-  //         otherwise: Joi.forbidden(),
-  //       }),
+      transactionDirection: Joi.string()
+        .valid(...Object.values(TransactionDirection))
+        .required()
+        .messages({
+          "any.only": `Transaction direction must be one of: ${Object.values(
+            TransactionDirection
+          ).join(", ")}`,
+          "any.required": "Transaction direction is required",
+        }),
 
-  //       beneficiaryCountry: Joi.when("transferType", {
-  //         is: TransferType.Wire,
-  //         then: Joi.string().required().messages({
-  //           "string.base": "Country must be text",
-  //           "any.required": "Country is required for wire transfers.",
-  //         }),
-  //         otherwise: Joi.forbidden(),
-  //       }),
-  //       userId: Joi.string()
-  //         .custom((value, helpers) => {
-  //           if (!mongoose.Types.ObjectId.isValid(value)) {
-  //             return helpers.message({
-  //               custom: "Usuer ID must be a valid ObjectId",
-  //             });
-  //           }
-  //           return value;
-  //         })
-  //         .required()
-  //         .messages({
-  //           "string.base": "Usuer ID must be a string",
-  //           "any.required": "Usuer ID is required",
-  //         }),
-  //       transactionType: Joi.string()
-  //         .valid(TransactionType.Debit, TransactionType.Credit)
-  //         .required()
-  //         .messages({
-  //           "string.base": `Transaction type must be either "${TransactionType.Debit}" or "${TransactionType.Credit}"`,
-  //           "any.required": "Transaction type is required.",
-  //           "any.only": `Transaction type must be either "${TransactionType.Debit}" or "${TransactionType.Credit}"`,
-  //         }),
-  //       transferDate: Joi.date().iso().messages({
-  //         "date.base": "Transfer date must be a valid date.",
-  //         "date.format":
-  //           "Transfer date must be in ISO 8601 format (e.g., YYYY-MM-DDTHH:mm:ss.sssZ).",
-  //       }),
-  //     });
+      transactionType: Joi.string()
+        .valid(...Object.values(TransactionType))
+        .required()
+        .messages({
+          "any.only": `Transaction type must be one of: ${Object.values(
+            TransactionType
+          ).join(", ")}`,
+          "any.required": "Transaction type is required",
+        }),
 
-  //     const { error } = schema.validate(req.body);
-  //     if (error) {
-  //       return res.status(400).json({
-  //         message: MessageResponse.Error,
-  //         description: error.details[0].message,
-  //         data: null,
-  //       });
-  //     }
+      recipientName: Joi.string().required().messages({
+        "string.base": "Recipient name must be text",
+        "any.required": "Recipient name is required",
+      }),
 
-  //     return next();
-  //   }
+      accountNumber: Joi.string().pattern(/^\d+$/).required().messages({
+        "string.pattern.base": "Account number must contain only digits",
+        "any.required": "Account number is required",
+      }),
+
+      country: Joi.string().required().messages({
+        "string.base": "Country must be text",
+        "any.required": "Country is required",
+      }),
+
+      swiftCode: Joi.string().required().messages({
+        "string.base": "SWIFT code must be text",
+        "any.required": "SWIFT code is required",
+      }),
+
+      routingNumber: Joi.string().pattern(/^\d+$/).required().messages({
+        "string.pattern.base": "Routing number must contain only digits",
+        "any.required": "Routing number is required",
+      }),
+
+      description: Joi.string().allow(null, "").optional(),
+
+      amount: Joi.number().positive().required().messages({
+        "number.base": "Amount must be a number",
+        "number.positive": "Amount must be greater than 0",
+        "any.required": "Amount is required",
+      }),
+
+      status: Joi.string()
+        .valid(...Object.values(TransactionStatus))
+        .required()
+        .messages({
+          "any.only": `Transaction status must be one of: ${Object.values(
+            TransactionStatus
+          ).join(", ")}`,
+          "any.required": "Transaction status is required",
+        }),
+
+      transactionDate: Joi.date().required().messages({
+        "date.base": "Transaction date must be a valid date",
+        "any.required": "Transaction date is required",
+      }),
+    });
+
+    const { error } = schema.validate(req.body);
+
+    if (error) {
+      return utils.customResponse({
+        status: 400,
+        res,
+        message: MessageResponse.Error,
+        description: error.details[0].message,
+        data: null,
+      });
+    }
+
+    return next();
+  }
+
+  public async createDomesticTransfer(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const schema = Joi.object({
+      userId: Joi.string()
+        .custom((value, helpers) => {
+          if (!mongoose.Types.ObjectId.isValid(value)) {
+            return helpers.message({
+              custom: "User id must be a valid ObjectId",
+            });
+          }
+          return value;
+        })
+        .required()
+        .messages({
+          "string.base": "User id must be text",
+          "any.required": "User id is required",
+        }),
+
+      accountType: Joi.string()
+        .valid(...Object.values(AccountType))
+        .required()
+        .messages({
+          "any.only": `Account type must be one of: ${Object.values(
+            AccountType
+          ).join(", ")}`,
+          "any.required": "Account type is required",
+        }),
+
+      bankName: Joi.string().required().messages({
+        "string.base": "Bank name must be text",
+        "any.required": "Bank name is required",
+      }),
+
+      recipientName: Joi.string().required().messages({
+        "string.base": "Recipient name must be text",
+        "any.required": "Recipient name is required",
+      }),
+
+      accountNumber: Joi.string().pattern(/^\d+$/).required().messages({
+        "string.pattern.base": "Account number must contain only digits",
+        "any.required": "Account number is required",
+      }),
+
+      description: Joi.string().allow(null, "").optional(),
+
+      amount: Joi.number().positive().required().messages({
+        "number.base": "Amount must be a number",
+        "number.positive": "Amount must be greater than 0",
+        "any.required": "Amount is required",
+      }),
+       transactionType: Joi.string()
+        .valid(...Object.values(TransactionType))
+        .required()
+        .messages({
+          "any.only": `Transaction type must be one of: ${Object.values(
+            TransactionType
+          ).join(", ")}`,
+          "any.required": "Transaction type is required",
+        }),
+      status: Joi.string()
+        .valid(...Object.values(TransactionStatus))
+        .required()
+        .messages({
+          "any.only": `Transaction status must be one of: ${Object.values(
+            TransactionStatus
+          ).join(", ")}`,
+          "any.required": "Transaction status is required",
+        }),
+
+      transactionDirection: Joi.string()
+        .valid(...Object.values(TransactionDirection))
+        .required()
+        .messages({
+          "any.only": `Transaction direction must be one of: ${Object.values(
+            TransactionDirection
+          ).join(", ")}`,
+          "any.required": "Transaction direction is required",
+        }),
+
+      transactionDate: Joi.date().required().messages({
+        "date.base": "Transaction date must be a valid date",
+        "any.required": "Transaction date is required",
+      }),
+    });
+
+    const { error } = schema.validate(req.body);
+
+    if (error) {
+      return utils.customResponse({
+        status: 400,
+        res,
+        message: MessageResponse.Error,
+        description: error.details[0].message,
+        data: null,
+      });
+    }
+
+    return next();
+  }
 }
 
 export const adminValidator = new AdminValidator();

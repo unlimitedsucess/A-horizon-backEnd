@@ -75,6 +75,10 @@ const transactionSchema: Schema = new Schema(
       default: TransactionStatus.PENDING,
       enum: Object.values(TransactionStatus),
     },
+    transactionDate: {
+      type: Date,
+      default: Date.now(),
+    },
    
   },
   {

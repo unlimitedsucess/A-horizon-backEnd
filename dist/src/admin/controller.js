@@ -20,6 +20,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const global_1 = require("../utils/global");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const service_2 = require("../user/service");
+const enum_2 = require("../transaction/enum");
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET || "";
 class AdminController {
@@ -139,6 +140,64 @@ class AdminController {
             return res.status(200).json({
                 message: enum_1.MessageResponse.Success,
                 description: "User has been deleted!",
+                data: null,
+            });
+        });
+    }
+    deleteATransferHistory(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const transaction = yield service_1.adminService.deleteTransaction(id);
+            if (!transaction) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Success,
+                    description: "Transaction not found!",
+                    data: null,
+                });
+            }
+            return res.status(200).json({
+                message: enum_1.MessageResponse.Success,
+                description: "Transaction has been deleted!",
+                data: null,
+            });
+        });
+    }
+    adminCreateWireTransferHistory(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const body = req.body;
+            const user = yield service_2.userService.findUserById(body.userId);
+            if (!user) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Success,
+                    description: "User not found!",
+                    data: null,
+                });
+            }
+            const txHis = Object.assign(Object.assign({}, body), { transferType: enum_2.TransferType.WIRE });
+            yield service_1.adminService.adminCreateWireTransfer(txHis);
+            return res.status(201).json({
+                message: enum_1.MessageResponse.Success,
+                description: "Transaction created successfully!",
+                data: null,
+            });
+        });
+    }
+    adminCreateDomesticTransferHistory(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const body = req.body;
+            const user = yield service_2.userService.findUserById(body.userId);
+            if (!user) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "User not found!",
+                    data: null,
+                });
+            }
+            const txHis = Object.assign(Object.assign({}, body), { transferType: enum_2.TransferType.DOMESTIC });
+            yield service_1.adminService.adminCreateDomesticTransfer(txHis);
+            return res.status(201).json({
+                message: enum_1.MessageResponse.Success,
+                description: "Transaction created successfully!",
                 data: null,
             });
         });

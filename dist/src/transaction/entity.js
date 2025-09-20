@@ -94,6 +94,10 @@ const transactionSchema = new mongoose_1.Schema({
         default: enum_2.TransactionStatus.PENDING,
         enum: Object.values(enum_2.TransactionStatus),
     },
+    transactionDate: {
+        type: Date,
+        default: Date.now(),
+    },
 }, {
     timestamps: true,
     toJSON: { getters: true },

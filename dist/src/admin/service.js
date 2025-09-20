@@ -82,22 +82,30 @@ class AdminService {
             return user;
         });
     }
-    // public async fetchAllTransfer() {
-    //   const transfers = Transfer.find();
-    //   return transfers;
-    // }
-    //   public async approveUser(userId: string) {
-    //     const user = await User.findOneAndUpdate(
-    //       { _id: userId },
-    //       { $set: { status: AccountStatus.Active } },
-    //       { new: true } // Return the updated document
-    //     );
-    //     return user;
-    //   }
+    deleteTransaction(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const transaction = yield entity_3.default.findOneAndDelete({ _id: userId });
+            return transaction;
+        });
+    }
     deleteUser(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield entity_4.default.findOneAndDelete({ _id: userId });
             return user;
+        });
+    }
+    adminCreateWireTransfer(input) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let newTransaction = new entity_3.default(Object.assign({}, input));
+            yield newTransaction.save();
+            return;
+        });
+    }
+    adminCreateDomesticTransfer(input) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let newTransaction = new entity_3.default(Object.assign({}, input));
+            yield newTransaction.save();
+            return;
         });
     }
 }

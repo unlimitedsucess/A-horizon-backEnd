@@ -18,6 +18,7 @@ const enum_1 = require("../utils/enum");
 const mongoose_1 = __importDefault(require("mongoose"));
 const enum_2 = require("../user/enum");
 const utils_1 = require("../utils");
+const enum_3 = require("../transaction/enum");
 class AdminValidator {
     adminLogin(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -184,6 +185,176 @@ class AdminValidator {
                     .messages({
                     "string.pattern.base": "PIN must be a 4-6 digit number (no letters allowed)",
                     "any.required": "PIN is required",
+                }),
+            });
+            const { error } = schema.validate(req.body);
+            if (error) {
+                return utils_1.utils.customResponse({
+                    status: 400,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: error.details[0].message,
+                    data: null,
+                });
+            }
+            return next();
+        });
+    }
+    createWireTransfer(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schema = joi_1.default.object({
+                userId: joi_1.default.string()
+                    .custom((value, helpers) => {
+                    if (!mongoose_1.default.Types.ObjectId.isValid(value)) {
+                        return helpers.message({
+                            custom: "User id must be a valid ObjectId",
+                        });
+                    }
+                    return value;
+                })
+                    .required()
+                    .messages({
+                    "string.base": "User id must be text",
+                    "any.required": "User id is required",
+                }),
+                accountType: joi_1.default.string()
+                    .valid(...Object.values(enum_2.AccountType))
+                    .required()
+                    .messages({
+                    "any.only": `Account type must be one of: ${Object.values(enum_2.AccountType).join(", ")}`,
+                    "any.required": "Account type is required",
+                }),
+                transactionDirection: joi_1.default.string()
+                    .valid(...Object.values(enum_3.TransactionDirection))
+                    .required()
+                    .messages({
+                    "any.only": `Transaction direction must be one of: ${Object.values(enum_3.TransactionDirection).join(", ")}`,
+                    "any.required": "Transaction direction is required",
+                }),
+                transactionType: joi_1.default.string()
+                    .valid(...Object.values(enum_3.TransactionType))
+                    .required()
+                    .messages({
+                    "any.only": `Transaction type must be one of: ${Object.values(enum_3.TransactionType).join(", ")}`,
+                    "any.required": "Transaction type is required",
+                }),
+                recipientName: joi_1.default.string().required().messages({
+                    "string.base": "Recipient name must be text",
+                    "any.required": "Recipient name is required",
+                }),
+                accountNumber: joi_1.default.string().pattern(/^\d+$/).required().messages({
+                    "string.pattern.base": "Account number must contain only digits",
+                    "any.required": "Account number is required",
+                }),
+                country: joi_1.default.string().required().messages({
+                    "string.base": "Country must be text",
+                    "any.required": "Country is required",
+                }),
+                swiftCode: joi_1.default.string().required().messages({
+                    "string.base": "SWIFT code must be text",
+                    "any.required": "SWIFT code is required",
+                }),
+                routingNumber: joi_1.default.string().pattern(/^\d+$/).required().messages({
+                    "string.pattern.base": "Routing number must contain only digits",
+                    "any.required": "Routing number is required",
+                }),
+                description: joi_1.default.string().allow(null, "").optional(),
+                amount: joi_1.default.number().positive().required().messages({
+                    "number.base": "Amount must be a number",
+                    "number.positive": "Amount must be greater than 0",
+                    "any.required": "Amount is required",
+                }),
+                status: joi_1.default.string()
+                    .valid(...Object.values(enum_3.TransactionStatus))
+                    .required()
+                    .messages({
+                    "any.only": `Transaction status must be one of: ${Object.values(enum_3.TransactionStatus).join(", ")}`,
+                    "any.required": "Transaction status is required",
+                }),
+                transactionDate: joi_1.default.date().required().messages({
+                    "date.base": "Transaction date must be a valid date",
+                    "any.required": "Transaction date is required",
+                }),
+            });
+            const { error } = schema.validate(req.body);
+            if (error) {
+                return utils_1.utils.customResponse({
+                    status: 400,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: error.details[0].message,
+                    data: null,
+                });
+            }
+            return next();
+        });
+    }
+    createDomesticTransfer(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schema = joi_1.default.object({
+                userId: joi_1.default.string()
+                    .custom((value, helpers) => {
+                    if (!mongoose_1.default.Types.ObjectId.isValid(value)) {
+                        return helpers.message({
+                            custom: "User id must be a valid ObjectId",
+                        });
+                    }
+                    return value;
+                })
+                    .required()
+                    .messages({
+                    "string.base": "User id must be text",
+                    "any.required": "User id is required",
+                }),
+                accountType: joi_1.default.string()
+                    .valid(...Object.values(enum_2.AccountType))
+                    .required()
+                    .messages({
+                    "any.only": `Account type must be one of: ${Object.values(enum_2.AccountType).join(", ")}`,
+                    "any.required": "Account type is required",
+                }),
+                bankName: joi_1.default.string().required().messages({
+                    "string.base": "Bank name must be text",
+                    "any.required": "Bank name is required",
+                }),
+                recipientName: joi_1.default.string().required().messages({
+                    "string.base": "Recipient name must be text",
+                    "any.required": "Recipient name is required",
+                }),
+                accountNumber: joi_1.default.string().pattern(/^\d+$/).required().messages({
+                    "string.pattern.base": "Account number must contain only digits",
+                    "any.required": "Account number is required",
+                }),
+                description: joi_1.default.string().allow(null, "").optional(),
+                amount: joi_1.default.number().positive().required().messages({
+                    "number.base": "Amount must be a number",
+                    "number.positive": "Amount must be greater than 0",
+                    "any.required": "Amount is required",
+                }),
+                transactionType: joi_1.default.string()
+                    .valid(...Object.values(enum_3.TransactionType))
+                    .required()
+                    .messages({
+                    "any.only": `Transaction type must be one of: ${Object.values(enum_3.TransactionType).join(", ")}`,
+                    "any.required": "Transaction type is required",
+                }),
+                status: joi_1.default.string()
+                    .valid(...Object.values(enum_3.TransactionStatus))
+                    .required()
+                    .messages({
+                    "any.only": `Transaction status must be one of: ${Object.values(enum_3.TransactionStatus).join(", ")}`,
+                    "any.required": "Transaction status is required",
+                }),
+                transactionDirection: joi_1.default.string()
+                    .valid(...Object.values(enum_3.TransactionDirection))
+                    .required()
+                    .messages({
+                    "any.only": `Transaction direction must be one of: ${Object.values(enum_3.TransactionDirection).join(", ")}`,
+                    "any.required": "Transaction direction is required",
+                }),
+                transactionDate: joi_1.default.date().required().messages({
+                    "date.base": "Transaction date must be a valid date",
+                    "any.required": "Transaction date is required",
                 }),
             });
             const { error } = schema.validate(req.body);
