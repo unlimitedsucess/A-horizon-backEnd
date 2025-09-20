@@ -145,14 +145,14 @@ class AdminController {
                 }
             }
             // upload proof of address
-            let passportUrl = null;
+            let passportUrl = userExist.passportUrl;
             if ((_a = files === null || files === void 0 ? void 0 : files["passport"]) === null || _a === void 0 ? void 0 : _a[0]) {
                 const buffer = files["passport"][0].buffer;
                 const uploadRes = yield utils_1.utils.uploadFromBuffer(buffer, "passport");
                 passportUrl = uploadRes.secure_url;
             }
             // upload profile picture
-            let driversLicence = null;
+            let driversLicence = userExist.driversLicence;
             if ((_b = files === null || files === void 0 ? void 0 : files["driversLicence"]) === null || _b === void 0 ? void 0 : _b[0]) {
                 const buffer = files["driversLicence"][0].buffer;
                 const uploadRes = yield utils_1.utils.uploadFromBuffer(buffer, "driversLicence");

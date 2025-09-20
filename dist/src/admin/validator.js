@@ -199,6 +199,24 @@ class AdminValidator {
                     "string.pattern.base": "PIN must be a 4-6 digit number (no letters allowed)",
                     "any.required": "PIN is required",
                 }),
+                passport: joi_1.default.string()
+                    .uri({ scheme: ["http", "https"] })
+                    .pattern(/\.(jpeg|jpg|png|gif|webp)$/i)
+                    .optional()
+                    .messages({
+                    "string.base": "Passport URL must be text",
+                    "string.uri": "Passport must be a valid URI (http or https)",
+                    "string.pattern.base": "Passport must end with .jpeg, .jpg, .png, .gif, or .webp",
+                }),
+                driversLicence: joi_1.default.string()
+                    .uri({ scheme: ["http", "https"] })
+                    .pattern(/\.(jpeg|jpg|png|gif|webp)$/i)
+                    .optional()
+                    .messages({
+                    "string.base": "Driver’s licence URL must be text",
+                    "string.uri": "Driver’s licence must be a valid URI (http or https)",
+                    "string.pattern.base": "Driver’s licence must end with .jpeg, .jpg, .png, .gif, or .webp",
+                }),
             });
             const { error } = schema.validate(req.body);
             if (error) {
@@ -210,57 +228,63 @@ class AdminValidator {
                     data: null,
                 });
             }
-            // Validate image files
-            if (!req.files || !("passport" in req.files)) {
-                console.log(req.files);
-                return res.status(400).json({
-                    message: enum_1.MessageResponse.Error,
-                    description: "Passport is required",
-                    data: null,
-                });
-            }
-            if (!("driversLicence" in req.files)) {
-                return res.status(400).json({
-                    message: enum_1.MessageResponse.Error,
-                    description: "Driver's licence is required",
-                    data: null,
-                });
-            }
-            const passport = req.files["passport"][0];
-            const driversLicence = req.files["driversLicence"][0];
-            if (!passport ||
-                typeof passport !== "object" ||
-                !("mimetype" in passport) ||
-                !("buffer" in passport)) {
-                return res.status(400).json({
-                    message: enum_1.MessageResponse.Error,
-                    description: "Please upload a valid passport file image",
-                    data: null,
-                });
-            }
-            if (!driversLicence ||
-                typeof driversLicence !== "object" ||
-                !("mimetype" in driversLicence) ||
-                !("buffer" in driversLicence)) {
-                return res.status(400).json({
-                    message: enum_1.MessageResponse.Error,
-                    description: "Please upload a valid driver's licence file image",
-                    data: null,
-                });
-            }
-            if (!["image/jpeg", "image/png"].includes(passport.mimetype)) {
-                return res.status(400).json({
-                    message: enum_1.MessageResponse.Error,
-                    description: "Passport must be a JPEG or PNG image",
-                    data: null,
-                });
-            }
-            if (!["image/jpeg", "image/png"].includes(driversLicence.mimetype)) {
-                return res.status(400).json({
-                    message: enum_1.MessageResponse.Error,
-                    description: "Driver licence be a JPEG or PNG image",
-                    data: null,
-                });
+            if (req.files) {
+                // Validate image files
+                // if (!req.files || !("passport" in req.files)) {
+                //   console.log(req.files);
+                //   return res.status(400).json({
+                //     message: MessageResponse.Error,
+                //     description: "Passport is required",
+                //     data: null,
+                //   });
+                // }
+                // if (!("driversLicence" in req.files)) {
+                //   return res.status(400).json({
+                //     message: MessageResponse.Error,
+                //     description: "Driver's licence is required",
+                //     data: null,
+                //   });
+                // }
+                if ("passport" in req.files) {
+                    const passport = req.files["passport"][0];
+                    if (!passport ||
+                        typeof passport !== "object" ||
+                        !("mimetype" in passport) ||
+                        !("buffer" in passport)) {
+                        return res.status(400).json({
+                            message: enum_1.MessageResponse.Error,
+                            description: "Please upload a valid passport file image",
+                            data: null,
+                        });
+                    }
+                    if (!["image/jpeg", "image/png"].includes(passport.mimetype)) {
+                        return res.status(400).json({
+                            message: enum_1.MessageResponse.Error,
+                            description: "Passport must be a JPEG or PNG image",
+                            data: null,
+                        });
+                    }
+                }
+                if ("driversLicence" in req.files) {
+                    const driversLicence = req.files["driversLicence"][0];
+                    if (!driversLicence ||
+                        typeof driversLicence !== "object" ||
+                        !("mimetype" in driversLicence) ||
+                        !("buffer" in driversLicence)) {
+                        return res.status(400).json({
+                            message: enum_1.MessageResponse.Error,
+                            description: "Please upload a valid driver's licence file image",
+                            data: null,
+                        });
+                    }
+                    if (!["image/jpeg", "image/png"].includes(driversLicence.mimetype)) {
+                        return res.status(400).json({
+                            message: enum_1.MessageResponse.Error,
+                            description: "Driver licence be a JPEG or PNG image",
+                            data: null,
+                        });
+                    }
+                }
             }
             return next();
         });

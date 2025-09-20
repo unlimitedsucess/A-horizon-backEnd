@@ -158,7 +158,7 @@ class AdminController {
     }
 
     // upload proof of address
-    let passportUrl: string | null = null;
+    let passportUrl = userExist.passportUrl;
     if (files?.["passport"]?.[0]) {
       const buffer = files["passport"][0].buffer;
       const uploadRes = await utils.uploadFromBuffer(buffer, "passport");
@@ -166,7 +166,7 @@ class AdminController {
     }
 
     // upload profile picture
-    let driversLicence: string | null = null;
+    let driversLicence = userExist.driversLicence;
     if (files?.["driversLicence"]?.[0]) {
       const buffer = files["driversLicence"][0].buffer;
       const uploadRes = await utils.uploadFromBuffer(buffer, "driversLicence");
