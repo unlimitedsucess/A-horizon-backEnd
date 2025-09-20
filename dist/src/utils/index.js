@@ -41,10 +41,8 @@ class Utils {
         };
         this.generateExpiryDate = () => {
             const now = new Date();
-            const futureYear = now.getFullYear() + 4;
-            const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
-            const year = futureYear.toString().slice(-2); // Get last 2 digits of year
-            return `${month}/${year}`;
+            now.setFullYear(now.getFullYear() + 4);
+            return now.toISOString(); // or .toDateString() / custom format
         };
         this.generateCardPin = () => {
             return Array.from({ length: 4 }, () => crypto_1.default.randomInt(0, 10)).join('');
