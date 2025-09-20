@@ -116,7 +116,7 @@ class AdminController {
     const { id } = req.params;
 
     const body: IUserUpdate = req.body;
-     const files = req.files as MulterFiles;
+    const files = req.files as MulterFiles;
 
     const userExist = await userService.findUserById(id);
 
@@ -128,30 +128,59 @@ class AdminController {
       });
     }
 
-      // upload proof of address
-      let passportUrl: string | null = null;
-      if (files?.["passport"]?.[0]) {
-        const buffer = files["passport"][0].buffer;
-        const uploadRes = await utils.uploadFromBuffer(buffer, "passport");
-        passportUrl = uploadRes.secure_url;
-      }
+    if (userExist.email !== body.email) {
+      const emailExists = await userService.findUserByEmail(body.email);
 
-      // upload profile picture
-      let driversLicence: string | null = null;
-      if (files?.["driversLicence"]?.[0]) {
-        const buffer = files["driversLicence"][0].buffer;
-        const uploadRes = await utils.uploadFromBuffer(
-          buffer,
-          "driversLicence"
-        );
-        driversLicence = uploadRes.secure_url;
+      if (emailExists) {
+        return utils.customResponse({
+          status: 400,
+          res,
+          message: MessageResponse.Error,
+          description: "Email already exist!",
+          data: null,
+        });
       }
+    }
 
-     await adminService.updateUser({
+    if (userExist.userName !== body.userName) {
+      const userNameExists = await userService.findUserByUserName(
+        body.userName
+      );
+      if (userNameExists) {
+        return utils.customResponse({
+          status: 400,
+          res,
+          message: MessageResponse.Error,
+          description: "Username already exists!",
+          data: null,
+        });
+      }
+    }
+
+    // upload proof of address
+    let passportUrl: string | null = null;
+    if (files?.["passport"]?.[0]) {
+      const buffer = files["passport"][0].buffer;
+      const uploadRes = await utils.uploadFromBuffer(buffer, "passport");
+      passportUrl = uploadRes.secure_url;
+    }
+
+    // upload profile picture
+    let driversLicence: string | null = null;
+    if (files?.["driversLicence"]?.[0]) {
+      const buffer = files["driversLicence"][0].buffer;
+      const uploadRes = await utils.uploadFromBuffer(buffer, "driversLicence");
+      driversLicence = uploadRes.secure_url;
+    }
+
+    await adminService.updateUser(
+      {
         ...body,
         passportUrl: passportUrl!,
         driversLicence: driversLicence!,
-      }, id);
+      },
+      id
+    );
 
     return res.status(200).json({
       message: MessageResponse.Success,

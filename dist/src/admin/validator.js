@@ -125,6 +125,10 @@ class AdminValidator {
                     "string.base": "Last name must be text",
                     "any.required": "Last name is required",
                 }),
+                userName: joi_1.default.string().required().messages({
+                    "string.base": "User name must be text",
+                    "any.required": "User name is required",
+                }),
                 email: joi_1.default.string().email().required().messages({
                     "string.email": "Please enter a valid email address",
                     "any.required": "Email address is required",

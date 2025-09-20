@@ -120,6 +120,30 @@ class AdminController {
                     data: null,
                 });
             }
+            if (userExist.email !== body.email) {
+                const emailExists = yield service_2.userService.findUserByEmail(body.email);
+                if (emailExists) {
+                    return utils_1.utils.customResponse({
+                        status: 400,
+                        res,
+                        message: enum_1.MessageResponse.Error,
+                        description: "Email already exist!",
+                        data: null,
+                    });
+                }
+            }
+            if (userExist.userName !== body.userName) {
+                const userNameExists = yield service_2.userService.findUserByUserName(body.userName);
+                if (userNameExists) {
+                    return utils_1.utils.customResponse({
+                        status: 400,
+                        res,
+                        message: enum_1.MessageResponse.Error,
+                        description: "Username already exists!",
+                        data: null,
+                    });
+                }
+            }
             // upload proof of address
             let passportUrl = null;
             if ((_a = files === null || files === void 0 ? void 0 : files["passport"]) === null || _a === void 0 ? void 0 : _a[0]) {
