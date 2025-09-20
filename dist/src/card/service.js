@@ -22,5 +22,11 @@ class CardService {
             return;
         });
     }
+    fetchCardsByUserId(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const transfer = entity_1.default.find({ userId: id });
+            return transfer;
+        });
+    }
 }
 exports.cardService = new CardService();

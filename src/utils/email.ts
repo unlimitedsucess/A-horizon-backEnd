@@ -313,14 +313,14 @@ export const sendWireTransferDebitAlert = async (input:  IWireTransferDebitEmail
                
 
                 <!-- Conditional: Wire Transfer -->
-                {{#if isWire}}
+               
                 <div>
                   <p class="section-title">Wire Transfer Details:</p>
                   <p><strong>Routing Number:</strong> <span class="highlight">${routingNumber}</span></p>
                   <p><strong>SWIFT Code:</strong> <span class="highlight">${swiftCode}</span></p>
                   <p><strong>Country:</strong> <span class="highlight">${country}</span></p>
                 </div>
-                {{/if}}
+                
               </div>
 
               <p style="font-size:14px; color:#888; line-height:1.5; margin-top:20px;">

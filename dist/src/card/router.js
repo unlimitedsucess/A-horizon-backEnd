@@ -11,5 +11,7 @@ const general_1 = __importDefault(require("../middleware/general"));
 const validator_1 = require("./validator");
 const controller_1 = require("./controller");
 exports.CardRouter = (0, express_1.Router)();
-//Apply Loan
+//Create Card
 exports.CardRouter.post("/create", [isAuth_1.isAuth, general_1.default.isUserActive, validator_1.cardValidator.validateCardApplication], utils_1.utils.wrapAsync(controller_1.cardController.createCard));
+//Fetch User cars
+exports.CardRouter.get("/all", [isAuth_1.isAuth, general_1.default.isUserActive], utils_1.utils.wrapAsync(controller_1.cardController.fetchUserCard));

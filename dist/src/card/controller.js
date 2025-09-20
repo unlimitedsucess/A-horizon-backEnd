@@ -38,5 +38,17 @@ class CardController {
             });
         });
     }
+    fetchUserCard(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { userId } = req;
+            console.log(userId);
+            const cards = yield service_2.cardService.fetchCardsByUserId(userId);
+            return res.status(200).json({
+                message: enum_1.MessageResponse.Success,
+                description: "Cards fetched successful",
+                data: cards,
+            });
+        });
+    }
 }
 exports.cardController = new CardController();

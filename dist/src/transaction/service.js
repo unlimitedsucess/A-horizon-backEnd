@@ -47,12 +47,10 @@ class TransactionService {
             return user;
         });
     }
-    fetchUserTransferByUserId(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const transfer = entity_2.default.find({ userId: id });
-            return transfer;
-        });
-    }
+    // public async fetchUserTransactionHistoryByUserId(id: string) {
+    //   const transfer = Transaction.find({ userId: id });
+    //   return transfer;
+    // }
     findTransferById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield entity_2.default.findById(id);
