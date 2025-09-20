@@ -34,18 +34,28 @@ AdminRouter.get(
   utils.wrapAsync(adminController.fetchAdminDetails)
 );
 
-
+//Acc Status update
 AdminRouter.patch(
   "/account/status",
   [isAuth, GeneralMiddleware.isAdmin, adminValidator.validateUserAccountStatus],
   utils.wrapAsync(adminController.updateUserAccountStatus)
 );
 
+//User update
 AdminRouter.patch(
   "/update/user/:id",
-  [isAuth, adminValidator.validateParams, adminValidator.userUpdate],
+  [isAuth, GeneralMiddleware.isAdmin, adminValidator.validateParams, adminValidator.userUpdate],
   utils.wrapAsync(adminController.updateUser)
 );
+
+
+//Delete user acc
+AdminRouter.delete(
+  "/delete/user/:id",
+  [isAuth, GeneralMiddleware.isAdmin, adminValidator.validateParams],
+  utils.wrapAsync(adminController.deleteUserAccount)
+);
+
 
 // //Approve user acc
 // AdminRouter.patch(
@@ -54,12 +64,6 @@ AdminRouter.patch(
 //   wrapAsync(adminController.approveUserAccount)
 // );
 
-// //Delete user acc
-// AdminRouter.delete(
-//   "/admin/delete/user/:id",
-//   [isAuth, adminValidator.validateParams],
-//   wrapAsync(adminController.deleteUserAccount)
-// );
 
 
 

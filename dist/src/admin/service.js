@@ -82,5 +82,23 @@ class AdminService {
             return user;
         });
     }
+    // public async fetchAllTransfer() {
+    //   const transfers = Transfer.find();
+    //   return transfers;
+    // }
+    //   public async approveUser(userId: string) {
+    //     const user = await User.findOneAndUpdate(
+    //       { _id: userId },
+    //       { $set: { status: AccountStatus.Active } },
+    //       { new: true } // Return the updated document
+    //     );
+    //     return user;
+    //   }
+    deleteUser(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield entity_4.default.findOneAndDelete({ _id: userId });
+            return user;
+        });
+    }
 }
 exports.adminService = new AdminService();

@@ -125,5 +125,23 @@ class AdminController {
             });
         });
     }
+    deleteUserAccount(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const user = yield service_1.adminService.deleteUser(id);
+            if (!user) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Success,
+                    description: "User not found!",
+                    data: null,
+                });
+            }
+            return res.status(200).json({
+                message: enum_1.MessageResponse.Success,
+                description: "User has been deleted!",
+                data: null,
+            });
+        });
+    }
 }
 exports.adminController = new AdminController();

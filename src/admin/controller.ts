@@ -104,31 +104,49 @@ class AdminController {
     });
   }
 
+  public async updateUser(req: Request, res: Response) {
+    const { id } = req.params;
 
-      public async updateUser(req: Request, res: Response) {
-      const { id } = req.params;
+    const body: ISignUp = req.body;
 
-      const body: ISignUp = req.body;
+    const userExist = await userService.findUserById(id);
 
-      const userExist = await userService.findUserById(id);
-
-      if (!userExist) {
-        return res.status(404).json({
-          message: MessageResponse.Error,
-          description: "User does not exist!",
-          data: null,
-        });
-      }
-
-      const user = await adminService.updateUser(body, id);
-
-      return res.status(200).json({
-        message: MessageResponse.Success,
-        description: "User details updated successfully!",
+    if (!userExist) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: "User does not exist!",
         data: null,
       });
     }
 
+    const user = await adminService.updateUser(body, id);
+
+    return res.status(200).json({
+      message: MessageResponse.Success,
+      description: "User details updated successfully!",
+      data: null,
+    });
+  }
+
+  public async deleteUserAccount(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const user = await adminService.deleteUser(id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: MessageResponse.Success,
+        description: "User not found!",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: MessageResponse.Success,
+      description: "User has been deleted!",
+      data: null,
+    });
+  }
 
   //   public async approveUserAccount(req: Request, res: Response) {
   //     const { id } = req.params;
@@ -155,28 +173,6 @@ class AdminController {
   //     return res.status(200).json({
   //       message: MessageResponse.Success,
   //       description: "User has been approved!",
-  //       data: null,
-  //     });
-  //   }
-
-  //   public async deleteUserAccount(req: Request, res: Response) {
-  //     const { id } = req.params;
-
-  //     const user = await userService.findUserById(id);
-
-  //     if (!user) {
-  //       return res.status(404).json({
-  //         message: MessageResponse.Success,
-  //         description: "User not found!",
-  //         data: null,
-  //       });
-  //     }
-
-  //     await adminService.deleteUser(id);
-
-  //     return res.status(200).json({
-  //       message: MessageResponse.Success,
-  //       description: "User has been deleted!",
   //       data: null,
   //     });
   //   }
@@ -242,7 +238,6 @@ class AdminController {
   //       data: transfer,
   //     });
   //   }
-
 
   //   public async updateUserTransfer(req: Request, res: Response) {
   //     const { id } = req.params;

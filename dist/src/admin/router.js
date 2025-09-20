@@ -21,19 +21,17 @@ utils_1.utils.wrapAsync(controller_1.adminController.adminSignUp));
 exports.AdminRouter.post("/signin", [validator_1.adminValidator.adminLogin], utils_1.utils.wrapAsync(controller_1.adminController.adminSignIn));
 //Fetch Users
 exports.AdminRouter.get("/info", [isAuth_1.isAuth, general_1.default.isAdmin], utils_1.utils.wrapAsync(controller_1.adminController.fetchAdminDetails));
+//Acc Status update
 exports.AdminRouter.patch("/account/status", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.validateUserAccountStatus], utils_1.utils.wrapAsync(controller_1.adminController.updateUserAccountStatus));
-exports.AdminRouter.patch("/update/user/:id", [isAuth_1.isAuth, validator_1.adminValidator.validateParams, validator_1.adminValidator.userUpdate], utils_1.utils.wrapAsync(controller_1.adminController.updateUser));
+//User update
+exports.AdminRouter.patch("/update/user/:id", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.validateParams, validator_1.adminValidator.userUpdate], utils_1.utils.wrapAsync(controller_1.adminController.updateUser));
+//Delete user acc
+exports.AdminRouter.delete("/delete/user/:id", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.validateParams], utils_1.utils.wrapAsync(controller_1.adminController.deleteUserAccount));
 // //Approve user acc
 // AdminRouter.patch(
 //   "/admin/approve/user/:id",
 //   [isAuth, adminValidator.validateParams],
 //   wrapAsync(adminController.approveUserAccount)
-// );
-// //Delete user acc
-// AdminRouter.delete(
-//   "/admin/delete/user/:id",
-//   [isAuth, adminValidator.validateParams],
-//   wrapAsync(adminController.deleteUserAccount)
 // );
 // //create transfer with admin
 // AdminRouter.post(

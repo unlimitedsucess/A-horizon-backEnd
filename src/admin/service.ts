@@ -112,11 +112,11 @@ class AdminService {
   //     return user;
   //   }
 
-  //   public async deleteUser(userId: string) {
-  //     const user = await User.findOneAndDelete({ _id: userId });
+    public async deleteUser(userId: string) {
+      const user = await User.findOneAndDelete({ _id: userId });
 
-  //     return user;
-  // }
+      return user;
+  }
 }
 
 export const adminService = new AdminService();
