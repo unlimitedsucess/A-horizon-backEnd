@@ -11,6 +11,12 @@ class CardService {
 
     return;
   }
+
+   public async fetchCardsByUserId(id: string) {
+    const transfer = Card.find({ userId: id });
+
+    return transfer;
+  }
 }
 
 export const cardService = new CardService();

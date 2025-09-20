@@ -6,6 +6,7 @@ import { ICardInput, ICardUserInput } from "./interface";
 import { utils } from "../utils";
 import { userService } from "../user/service";
 import { cardService } from "./service";
+import { transactionService } from "../transaction/service";
 
 class CardController {
   public async createCard(req: Request, res: Response) {
@@ -40,6 +41,20 @@ class CardController {
       data: null,
     });
   }
+
+     public async fetchUserCard(req: Request, res: Response) {
+      const { userId } = req as CustomRequest;
+  
+      console.log(userId);
+  
+      const cards = await cardService.fetchCardsByUserId(userId);
+  
+       return res.status(200).json({
+        message: MessageResponse.Success,
+        description: "Cards fetched successful",
+        data: cards,
+      });
+      }
 }
 
 export const cardController = new CardController();

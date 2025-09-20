@@ -48,11 +48,11 @@ class TransactionService {
     return user;
   }
 
-  public async fetchUserTransferByUserId(id: string) {
-    const transfer = Transaction.find({ userId: id });
+  // public async fetchUserTransactionHistoryByUserId(id: string) {
+  //   const transfer = Transaction.find({ userId: id });
 
-    return transfer;
-  }
+  //   return transfer;
+  // }
 
   public async findTransferById(id: string) {
     const user = await Transaction.findById(id);

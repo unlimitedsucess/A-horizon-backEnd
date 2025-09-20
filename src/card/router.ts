@@ -8,9 +8,17 @@ import { cardController } from "./controller";
 
 export const CardRouter = Router();
 
-//Apply Loan
+//Create Card
 CardRouter.post(
   "/create",
   [isAuth, GeneralMiddleware.isUserActive, cardValidator.validateCardApplication],
   utils.wrapAsync(cardController.createCard)
+);
+
+
+//Fetch User cars
+CardRouter.get(
+  "/all",
+  [isAuth, GeneralMiddleware.isUserActive],
+  utils.wrapAsync(cardController.fetchUserCard)
 );
