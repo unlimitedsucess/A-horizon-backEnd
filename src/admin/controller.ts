@@ -70,7 +70,7 @@ class AdminController {
 
     return res.status(200).json({
       message: MessageResponse.Success,
-      description: "Detials fetched successfully!",
+      description: "Details fetched successfully!",
       data: {
         users,
         transactions,

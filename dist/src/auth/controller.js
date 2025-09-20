@@ -65,6 +65,15 @@ class AuthController {
                         data: null,
                     });
                 }
+                if (!emailExists.emailVerified) {
+                    return utils_1.utils.customResponse({
+                        status: 400,
+                        res,
+                        message: enum_1.MessageResponse.Error,
+                        description: "Email not verified!",
+                        data: null,
+                    });
+                }
                 // check if username exists
                 const userNameExists = yield service_1.userService.findUserByUserName(userName);
                 if (userNameExists) {
@@ -158,17 +167,12 @@ class AuthController {
                         data: null,
                     });
                 }
-                const token = jsonwebtoken_1.default.sign({ userId: userExists._id }, jwtSecret, {
-                    expiresIn: "30d",
-                });
                 return utils_1.utils.customResponse({
                     status: 200,
                     res,
                     message: enum_1.MessageResponse.Success,
                     description: "Verification successful",
-                    data: {
-                        token,
-                    },
+                    data: null,
                 });
             }
             else {

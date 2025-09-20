@@ -65,6 +65,16 @@ class AuthController {
         });
       }
 
+      if(!emailExists.emailVerified) {
+        return utils.customResponse({
+          status: 400,
+          res,
+          message: MessageResponse.Error,
+          description: "Email not verified!",
+          data: null,
+        });
+      }
+
       // check if username exists
       const userNameExists = await userService.findUserByUserName(userName);
       if (userNameExists) {
@@ -179,18 +189,12 @@ class AuthController {
         });
       }
 
-      const token = jwt.sign({ userId: userExists._id }, jwtSecret, {
-        expiresIn: "30d",
-      });
-
       return utils.customResponse({
         status: 200,
         res,
         message: MessageResponse.Success,
         description: "Verification successful",
-        data: {
-          token,
-        },
+        data: null,
       });
     } else {
       return utils.customResponse({
@@ -235,7 +239,7 @@ class AuthController {
     });
   }
 
-   public async signIn(req: Request, res: Response) {
+  public async signIn(req: Request, res: Response) {
     const body: ISignIn = req.body;
 
     const password = body.password;
