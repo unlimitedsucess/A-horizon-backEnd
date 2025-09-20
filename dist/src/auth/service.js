@@ -92,5 +92,26 @@ class AuthService {
             return user;
         });
     }
+    deleteOtp(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield entity_1.default.findOne({ email });
+            if (user) {
+                user.emailVerificationOtp = undefined;
+                user.emailVerificationOtpExpiration = undefined;
+                yield user.save();
+            }
+            return user;
+        });
+    }
+    changePassword(email, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield entity_1.default.findOne({ email });
+            if (user) {
+                user.password = password;
+                yield user.save();
+            }
+            return user;
+        });
+    }
 }
 exports.authService = new AuthService();

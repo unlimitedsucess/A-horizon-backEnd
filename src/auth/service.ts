@@ -103,6 +103,29 @@ class AuthService {
 
     return user;
   }
+
+
+        public async deleteOtp(email: string) {
+        const user = await User.findOne({ email });
+    
+        if (user) {
+          user.emailVerificationOtp = undefined;
+          user.emailVerificationOtpExpiration = undefined;
+          await user.save();
+        }
+        return user;
+      }
+
+      public async changePassword(email: string, password: string) {
+        const user = await User.findOne({ email });
+    
+        if (user) {
+          user.password = password;
+          await user.save();
+        }
+        return user;
+      }
+
 }
 
 export const authService = new AuthService();

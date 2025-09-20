@@ -282,6 +282,89 @@ class AuthController {
       },
     });
   }
+
+    public async generateOtpForForgotPassword(req: Request, res: Response) {
+    const { email } = req.body;
+
+    const userExist = await userService.findUserByEmail(email);
+
+    if (userExist) {
+      const otp = utils.generateOtp();
+
+      const emailVerify = await authService.saveOtp({ email, otp });
+
+      if (!emailVerify) {
+        return res.status(404).json({
+          message: MessageResponse.Error,
+          description: "User not found",
+          data: null,
+        });
+      }
+
+      // sendForgotPasswordEmail({
+      //   email,
+      //   otp,
+      // });
+
+      return res.status(201).json({
+        message: MessageResponse.Success,
+        description: "An OTP has been sent to your email address",
+        data: null,
+      });
+    }
+
+    return res.status(404).json({
+      message: MessageResponse.Error,
+      description: "Email does not exists",
+      data: null,
+    });
+  }
+
+  public async forgotPasswordChange(req: Request, res: Response) {
+    const { email, otp, password } = req.body;
+
+    const user = await authService.validateOtp({email, otp});
+
+    if (!user) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Invalid otp",
+        data: null,
+      });
+    }
+
+    if (user.emailVerificationOtpExpiration !== undefined) {
+      const currentDate = new Date();
+
+      const expirationDate = new Date(user.emailVerificationOtpExpiration);
+
+      if (expirationDate < currentDate) {
+        return res.status(400).json({
+          message: MessageResponse.Error,
+          description: "Verification OTP expired",
+          data: null,
+        });
+      }
+
+      await authService.deleteOtp(email);
+
+      await authService.changePassword(email, password);
+
+    //  sendForgotPasswordResetSuccessfullyEmail({email, fullName: `${user.firstName} ${user.lastName}`})
+
+      return res.status(201).json({
+        message: MessageResponse.Success,
+        description: "Password Changed Successfully!",
+        data: null,
+      });
+    }
+
+    return res.status(400).json({
+      message: MessageResponse.Error,
+      description: "Verification OTP expired",
+      data: null,
+    });
+  }
 }
 
 export const authController = new AuthController();

@@ -291,5 +291,46 @@ class AuthValidator {
             return next();
         });
     }
+    forgotPasswordChange(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schema = joi_1.default.object({
+                email: joi_1.default.string().email().required().messages({
+                    "string.base": "Email must be text",
+                    "strig.email": "Invalid email format",
+                    "any.required": "Email is required.",
+                }),
+                otp: joi_1.default.string().required().messages({
+                    "any.required": "OTP is required.",
+                }),
+                password: joi_1.default.string()
+                    .min(8)
+                    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
+                    .required()
+                    .messages({
+                    "any.required": "Password is required.",
+                    "string.min": "Password must be at least 8 characters long",
+                    "string.pattern.base": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+                }),
+                confirmPassword: joi_1.default.string()
+                    .valid(joi_1.default.ref("password"))
+                    .required()
+                    .messages({
+                    "any.required": "Confirm Password is required.",
+                    "any.only": "Passwords do not match",
+                }),
+            });
+            const { error } = schema.validate(req.body);
+            if (!error) {
+                return next();
+            }
+            else {
+                return res.status(400).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: error.details[0].message,
+                    data: null,
+                });
+            }
+        });
+    }
 }
 exports.authValidator = new AuthValidator();

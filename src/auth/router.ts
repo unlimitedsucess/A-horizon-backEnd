@@ -6,12 +6,11 @@ import { utils } from "../utils";
 
 export const AuthRouter = Router();
 
-
 //Send Email Registration OTP
 AuthRouter.post(
   "/send/email/otp",
-  [authValidator.validateEmail ],
- utils.wrapAsync(authController.createAccount)
+  [authValidator.validateEmail],
+  utils.wrapAsync(authController.createAccount)
 );
 
 //Create account
@@ -20,7 +19,6 @@ AuthRouter.patch(
   [authValidator.handleFileUpload, authValidator.registerUser],
   utils.wrapAsync(authController.registerUser)
 );
-
 
 // Verify Email
 AuthRouter.post(
@@ -41,4 +39,18 @@ AuthRouter.post(
   "/signin",
   [authValidator.signIn],
   utils.wrapAsync(authController.signIn)
+);
+
+//Genare otp for forgot password request
+AuthRouter.post(
+  "/forgot/password", // For FormData
+  [authValidator.validateEmail],
+  utils.wrapAsync(authController.generateOtpForForgotPassword)
+);
+
+//change password after forgot ppassword request
+AuthRouter.post(
+  "/forgot/password/change",
+  [authValidator.forgotPasswordChange],
+  utils.wrapAsync(authController.forgotPasswordChange)
 );

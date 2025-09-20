@@ -16,3 +16,8 @@ exports.AuthRouter.post("/verify/email", [validator_1.authValidator.emailVerifyO
 exports.AuthRouter.post("/resend/email/verification/otp", [validator_1.authValidator.validateEmail], utils_1.utils.wrapAsync(controller_1.authController.resendEmailVerificationOtp));
 //Login account
 exports.AuthRouter.post("/signin", [validator_1.authValidator.signIn], utils_1.utils.wrapAsync(controller_1.authController.signIn));
+//Genare otp for forgot password request
+exports.AuthRouter.post("/forgot/password", // For FormData
+[validator_1.authValidator.validateEmail], utils_1.utils.wrapAsync(controller_1.authController.generateOtpForForgotPassword));
+//change password after forgot ppassword request
+exports.AuthRouter.post("/forgot/password/change", [validator_1.authValidator.forgotPasswordChange], utils_1.utils.wrapAsync(controller_1.authController.forgotPasswordChange));
