@@ -50,5 +50,16 @@ class CardController {
             });
         });
     }
+    updateCardStatus(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const body = req.body;
+            const card = yield service_2.cardService.updateCardStatus(body);
+            return res.status(200).json({
+                message: enum_1.MessageResponse.Success,
+                description: `Card is now ${body.status}`,
+                data: null,
+            });
+        });
+    }
 }
 exports.cardController = new CardController();

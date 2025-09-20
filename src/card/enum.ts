@@ -4,3 +4,8 @@ export enum CardType {
   VERVE = "verve",
   DISCOVER = "discover"
 }
+
+export enum CardStatus {
+  ACTIVE = "active",
+  DE_ACTIVATED = "de-activated",
+}

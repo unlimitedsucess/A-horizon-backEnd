@@ -2,7 +2,11 @@ import { Request, Response } from "express";
 
 import { MessageResponse } from "../utils/enum";
 import { CustomRequest } from "../utils/interface";
-import { ICardInput, ICardUserInput } from "./interface";
+import {
+  ICardInput,
+  ICardUserInput,
+  IUpdateCardStatusUserInput,
+} from "./interface";
 import { utils } from "../utils";
 import { userService } from "../user/service";
 import { cardService } from "./service";
@@ -42,19 +46,31 @@ class CardController {
     });
   }
 
-     public async fetchUserCard(req: Request, res: Response) {
-      const { userId } = req as CustomRequest;
-  
-      console.log(userId);
-  
-      const cards = await cardService.fetchCardsByUserId(userId);
-  
-       return res.status(200).json({
-        message: MessageResponse.Success,
-        description: "Cards fetched successful",
-        data: cards,
-      });
-      }
+  public async fetchUserCard(req: Request, res: Response) {
+    const { userId } = req as CustomRequest;
+
+    console.log(userId);
+
+    const cards = await cardService.fetchCardsByUserId(userId);
+
+    return res.status(200).json({
+      message: MessageResponse.Success,
+      description: "Cards fetched successful",
+      data: cards,
+    });
+  }
+
+  public async updateCardStatus(req: Request, res: Response) {
+    const body: IUpdateCardStatusUserInput = req.body;
+
+    const card = await cardService.updateCardStatus(body);
+
+    return res.status(200).json({
+      message: MessageResponse.Success,
+      description: `Card is now ${body.status}`,
+      data: null,
+    });
+  }
 }
 
 export const cardController = new CardController();

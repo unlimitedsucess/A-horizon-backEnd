@@ -36,6 +36,11 @@ const cardSchema = new mongoose_1.Schema({
         required: true,
         enum: Object.values(enum_1.CardType),
     },
+    status: {
+        type: String,
+        default: enum_1.CardStatus.ACTIVE,
+        enum: Object.values(enum_1.CardStatus),
+    },
     pin: {
         type: String,
         required: true,

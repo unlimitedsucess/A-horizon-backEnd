@@ -1,5 +1,5 @@
 import { Types, Document } from "mongoose";
-import { CardType } from "./enum";
+import { CardStatus, CardType } from "./enum";
 
 export interface ICard extends Document {
   _id: Types.ObjectId;
@@ -8,6 +8,7 @@ export interface ICard extends Document {
   pin: string;
   ccv: string;
   cardNumber: string;
+  cardStatus: CardStatus;
   expiryDate: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -24,3 +25,14 @@ export interface ICardInput {
   cardNumber: string;
   expiryDate: string;
 }
+
+
+export interface IUpdateCardStatusUserInput {
+  cardId: Types.ObjectId;
+  status: CardStatus;
+}
+
+// export interface IUpdateCardStatusInput {
+//   staus: CardStatus;
+//   userId: Types.ObjectId;
+// }

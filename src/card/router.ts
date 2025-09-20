@@ -22,3 +22,10 @@ CardRouter.get(
   [isAuth, GeneralMiddleware.isUserActive],
   utils.wrapAsync(cardController.fetchUserCard)
 );
+
+//Update card
+CardRouter.patch(
+  "/update",
+  [isAuth, GeneralMiddleware.isUserActive, cardValidator.validateCardStatus],
+  utils.wrapAsync(cardController.updateCardStatus)
+);

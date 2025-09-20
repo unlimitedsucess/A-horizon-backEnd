@@ -28,5 +28,12 @@ class CardService {
             return transfer;
         });
     }
+    updateCardStatus(input) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { cardId, status } = input;
+            const card = yield entity_1.default.findOneAndUpdate({ _id: cardId }, { $set: { cardStatus: status } }, { new: true });
+            return card;
+        });
+    }
 }
 exports.cardService = new CardService();

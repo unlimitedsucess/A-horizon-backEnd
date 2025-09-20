@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { CardType } from "./enum";
+import { CardStatus, CardType } from "./enum";
 import { ICard } from "./interface";
 
 const cardSchema: Schema = new Schema(
@@ -13,6 +13,11 @@ const cardSchema: Schema = new Schema(
       type: String,
       required: true,
       enum: Object.values(CardType),
+    },
+    status: {
+      type: String,
+      default: CardStatus.ACTIVE,
+      enum: Object.values(CardStatus),
     },
     pin: {
       type: String,

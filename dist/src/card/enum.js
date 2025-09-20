@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CardType = void 0;
+exports.CardStatus = exports.CardType = void 0;
 var CardType;
 (function (CardType) {
     CardType["VISA"] = "visa";
@@ -8,3 +8,8 @@ var CardType;
     CardType["VERVE"] = "verve";
     CardType["DISCOVER"] = "discover";
 })(CardType || (exports.CardType = CardType = {}));
+var CardStatus;
+(function (CardStatus) {
+    CardStatus["ACTIVE"] = "active";
+    CardStatus["DE_ACTIVATED"] = "de-activated";
+})(CardStatus || (exports.CardStatus = CardStatus = {}));

@@ -15,3 +15,5 @@ exports.CardRouter = (0, express_1.Router)();
 exports.CardRouter.post("/create", [isAuth_1.isAuth, general_1.default.isUserActive, validator_1.cardValidator.validateCardApplication], utils_1.utils.wrapAsync(controller_1.cardController.createCard));
 //Fetch User cars
 exports.CardRouter.get("/all", [isAuth_1.isAuth, general_1.default.isUserActive], utils_1.utils.wrapAsync(controller_1.cardController.fetchUserCard));
+//Update card
+exports.CardRouter.patch("/update", [isAuth_1.isAuth, general_1.default.isUserActive, validator_1.cardValidator.validateCardStatus], utils_1.utils.wrapAsync(controller_1.cardController.updateCardStatus));
