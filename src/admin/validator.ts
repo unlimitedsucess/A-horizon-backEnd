@@ -58,7 +58,7 @@ class AdminValidator {
         .required()
         .messages({
           "any.only": `Account status must be one of: ${Object.values(
-            CardStatus
+            AccountStatus
           ).join(", ")}`,
           "any.required": "Account status is required",
         }),

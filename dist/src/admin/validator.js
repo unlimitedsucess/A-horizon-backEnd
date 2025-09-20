@@ -17,7 +17,6 @@ const joi_1 = __importDefault(require("joi"));
 const enum_1 = require("../utils/enum");
 const mongoose_1 = __importDefault(require("mongoose"));
 const enum_2 = require("../user/enum");
-const enum_3 = require("../card/enum");
 const utils_1 = require("../utils");
 class AdminValidator {
     adminLogin(req, res, next) {
@@ -68,7 +67,7 @@ class AdminValidator {
                     .valid(...Object.values(enum_2.AccountStatus))
                     .required()
                     .messages({
-                    "any.only": `Account status must be one of: ${Object.values(enum_3.CardStatus).join(", ")}`,
+                    "any.only": `Account status must be one of: ${Object.values(enum_2.AccountStatus).join(", ")}`,
                     "any.required": "Account status is required",
                 }),
             });
