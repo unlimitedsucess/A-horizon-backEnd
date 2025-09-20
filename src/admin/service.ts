@@ -31,7 +31,7 @@ class AdminService {
 
   public async fetchAllUsers() {
     const users = User.find().select(
-      "-password -pin -emailVerificationOtp -emailVerificationOtpExpiration"
+      "-emailVerificationOtp -emailVerificationOtpExpiration"
     );
 
     return users;
@@ -40,7 +40,7 @@ class AdminService {
   public async fetchLoans() {
     const loans = await Loan.find().populate(
       "userId",
-      "-password -pin -emailVerificationOtp -emailVerificationOtpExpiration"
+      "-emailVerificationOtp -emailVerificationOtpExpiration"
     );
 
     return loans;
@@ -49,7 +49,7 @@ class AdminService {
   public async fetchTransactions() {
     const loans = await Transaction.find().populate(
       "userId",
-      "-password -pin -emailVerificationOtp -emailVerificationOtpExpiration"
+      "-emailVerificationOtp -emailVerificationOtpExpiration"
     );
 
     return loans;
@@ -58,7 +58,7 @@ class AdminService {
   public async fetchCards() {
     const loans = await Card.find().populate(
       "userId",
-      "-password -pin -emailVerificationOtp -emailVerificationOtpExpiration"
+      "-emailVerificationOtp -emailVerificationOtpExpiration"
     );
 
     return loans;

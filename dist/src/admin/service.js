@@ -39,25 +39,25 @@ class AdminService {
     }
     fetchAllUsers() {
         return __awaiter(this, void 0, void 0, function* () {
-            const users = entity_4.default.find().select("-password -pin -emailVerificationOtp -emailVerificationOtpExpiration");
+            const users = entity_4.default.find().select("-emailVerificationOtp -emailVerificationOtpExpiration");
             return users;
         });
     }
     fetchLoans() {
         return __awaiter(this, void 0, void 0, function* () {
-            const loans = yield entity_2.default.find().populate("userId", "-password -pin -emailVerificationOtp -emailVerificationOtpExpiration");
+            const loans = yield entity_2.default.find().populate("userId", "-emailVerificationOtp -emailVerificationOtpExpiration");
             return loans;
         });
     }
     fetchTransactions() {
         return __awaiter(this, void 0, void 0, function* () {
-            const loans = yield entity_3.default.find().populate("userId", "-password -pin -emailVerificationOtp -emailVerificationOtpExpiration");
+            const loans = yield entity_3.default.find().populate("userId", "-emailVerificationOtp -emailVerificationOtpExpiration");
             return loans;
         });
     }
     fetchCards() {
         return __awaiter(this, void 0, void 0, function* () {
-            const loans = yield entity_1.default.find().populate("userId", "-password -pin -emailVerificationOtp -emailVerificationOtpExpiration");
+            const loans = yield entity_1.default.find().populate("userId", "-emailVerificationOtp -emailVerificationOtpExpiration");
             return loans;
         });
     }
