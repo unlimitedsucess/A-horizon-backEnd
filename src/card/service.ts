@@ -23,7 +23,7 @@ class CardService {
 
     const card = await Card.findOneAndUpdate(
       { _id: cardId },
-      { $set: { cardStatus: status } },
+      { $set: { status } },
       { new: true }
     );
 

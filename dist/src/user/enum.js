@@ -14,6 +14,7 @@ var AccountType;
 })(AccountType || (exports.AccountType = AccountType = {}));
 var AccountStatus;
 (function (AccountStatus) {
+    AccountStatus["PENDING"] = "pending";
     AccountStatus["SUSPENDED"] = "suspended";
     AccountStatus["ACTIVE"] = "active";
 })(AccountStatus || (exports.AccountStatus = AccountStatus = {}));

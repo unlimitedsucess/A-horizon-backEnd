@@ -65,6 +65,14 @@ class CardController {
 
     const card = await cardService.updateCardStatus(body);
 
+    if (!card) {
+      return res.status(404).json({
+        message: MessageResponse.Success,
+        description: "Card not found",
+        data: null,
+      });
+    }
+
     return res.status(200).json({
       message: MessageResponse.Success,
       description: `Card is now ${body.status}`,

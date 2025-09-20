@@ -8,7 +8,7 @@ export interface ICard extends Document {
   pin: string;
   ccv: string;
   cardNumber: string;
-  cardStatus: CardStatus;
+  status: CardStatus;
   expiryDate: Date;
   createdAt: Date;
   updatedAt: Date;

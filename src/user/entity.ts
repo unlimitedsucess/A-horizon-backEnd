@@ -87,7 +87,7 @@ const userSchema: Schema = new Schema(
     },
     accountStatus: {
       type: String,
-      default: AccountStatus.ACTIVE,
+      default: AccountStatus.PENDING,
       enum: Object.values(AccountStatus),
     },
     country: {

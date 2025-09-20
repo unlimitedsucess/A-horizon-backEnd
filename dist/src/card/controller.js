@@ -54,6 +54,13 @@ class CardController {
         return __awaiter(this, void 0, void 0, function* () {
             const body = req.body;
             const card = yield service_2.cardService.updateCardStatus(body);
+            if (!card) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Success,
+                    description: "Card not found",
+                    data: null,
+                });
+            }
             return res.status(200).json({
                 message: enum_1.MessageResponse.Success,
                 description: `Card is now ${body.status}`,

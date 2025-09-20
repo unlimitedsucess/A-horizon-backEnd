@@ -9,6 +9,7 @@ export enum LoanDuration {
 
 export enum LoanStatus {
   PENDING = "pending",
+  OVERDUE = "overdue",
   REJECTED = "rejected",
   APPROVED = "approved",
 }

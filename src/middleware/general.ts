@@ -3,6 +3,7 @@ import { CustomRequest } from "../utils/interface";
 import { userService } from "../user/service";
 import { MessageResponse } from "../utils/enum";
 import { AccountStatus } from "../user/enum";
+import { adminService } from "../admin/service";
 
 export default class GeneralMiddleware {
   static async isUserActive(req: Request, res: Response, next: NextFunction) {
@@ -26,14 +27,30 @@ export default class GeneralMiddleware {
       });
     }
 
-    if (userExist.accountStatus === AccountStatus.SUSPENDED) {
+    if (userExist.accountStatus !== AccountStatus.ACTIVE) {
       return res.status(400).json({
         message: MessageResponse.Error,
         description:
-          "Your account has beeen suspended please contact customer support!",
+          `Your account is ${userExist.accountStatus} please contact customer support!`,
         data: {
-          accountStatus: AccountStatus.SUSPENDED,
+          accountStatus: userExist.accountStatus,
         },
+      });
+    }
+
+    next();
+  }
+
+   static async isAdmin(req: Request, res: Response, next: NextFunction) {
+    const { userId } = req as CustomRequest;
+
+    const adminExist = await adminService.findAdminById(userId);
+
+    if (!adminExist) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Admin not found",
+        data: null,
       });
     }
 

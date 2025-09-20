@@ -100,7 +100,7 @@ const userSchema = new mongoose_1.Schema({
     },
     accountStatus: {
         type: String,
-        default: enum_1.AccountStatus.ACTIVE,
+        default: enum_1.AccountStatus.PENDING,
         enum: Object.values(enum_1.AccountStatus),
     },
     country: {

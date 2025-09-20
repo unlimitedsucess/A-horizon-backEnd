@@ -12,6 +12,7 @@ var LoanDuration;
 var LoanStatus;
 (function (LoanStatus) {
     LoanStatus["PENDING"] = "pending";
+    LoanStatus["OVERDUE"] = "overdue";
     LoanStatus["REJECTED"] = "rejected";
     LoanStatus["APPROVED"] = "approved";
 })(LoanStatus || (exports.LoanStatus = LoanStatus = {}));

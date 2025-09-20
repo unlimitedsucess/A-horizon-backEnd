@@ -11,6 +11,7 @@ export enum AccountType {
 
 
 export enum AccountStatus {
+  PENDING = "pending",
   SUSPENDED = "suspended",
   ACTIVE = "active",
 }
