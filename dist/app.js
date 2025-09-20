@@ -32,12 +32,10 @@ const StartServer = () => {
     app.use(express_1.default.urlencoded({ extended: true }));
     // Cors
     app.use((0, cors_1.default)({
-        origin: "*",
-        // [
-        //   "https://kingswaycompany.com",
-        //   "https://kingways-logistics.vercel.app",
-        //   "http://127.0.0.1:5500",
-        // ],
+        origin: [
+            "http://localhost:3000",
+            "https://american-digital-bank.vercel.app",
+        ],
         credentials: true,
     }));
     const basePath = "/api/v1";
