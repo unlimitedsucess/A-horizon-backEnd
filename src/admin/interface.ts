@@ -35,6 +35,8 @@ export interface IUserUpdate {
   accountType: AccountType;
   userName: string;
   pin: string;
+  passportUrl: string;
+  driversLicence: string;
 }
 
 

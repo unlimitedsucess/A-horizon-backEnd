@@ -108,8 +108,10 @@ class AdminController {
     }
     updateUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
             const { id } = req.params;
             const body = req.body;
+            const files = req.files;
             const userExist = yield service_2.userService.findUserById(id);
             if (!userExist) {
                 return res.status(404).json({
@@ -118,7 +120,21 @@ class AdminController {
                     data: null,
                 });
             }
-            const user = yield service_1.adminService.updateUser(body, id);
+            // upload proof of address
+            let passportUrl = null;
+            if ((_a = files === null || files === void 0 ? void 0 : files["passport"]) === null || _a === void 0 ? void 0 : _a[0]) {
+                const buffer = files["passport"][0].buffer;
+                const uploadRes = yield utils_1.utils.uploadFromBuffer(buffer, "passport");
+                passportUrl = uploadRes.secure_url;
+            }
+            // upload profile picture
+            let driversLicence = null;
+            if ((_b = files === null || files === void 0 ? void 0 : files["driversLicence"]) === null || _b === void 0 ? void 0 : _b[0]) {
+                const buffer = files["driversLicence"][0].buffer;
+                const uploadRes = yield utils_1.utils.uploadFromBuffer(buffer, "driversLicence");
+                driversLicence = uploadRes.secure_url;
+            }
+            yield service_1.adminService.updateUser(Object.assign(Object.assign({}, body), { passportUrl: passportUrl, driversLicence: driversLicence }), id);
             return res.status(200).json({
                 message: enum_1.MessageResponse.Success,
                 description: "User details updated successfully!",

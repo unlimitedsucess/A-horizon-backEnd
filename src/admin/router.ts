@@ -44,7 +44,7 @@ AdminRouter.patch(
 //User update
 AdminRouter.patch(
   "/update/user/:id",
-  [isAuth, GeneralMiddleware.isAdmin, adminValidator.validateParams, adminValidator.userUpdate],
+  [isAuth, GeneralMiddleware.isAdmin, adminValidator.validateParams, authValidator.handleFileUpload, adminValidator.userUpdate],
   utils.wrapAsync(adminController.updateUser)
 );
 

@@ -5,7 +5,7 @@ import Transaction from "../transaction/entity";
 import User from "../user/entity";
 import { AccountStatus } from "../user/enum";
 import Admin from "./entity";
-import { IAdminCreateDomesticTransferUserInput, IAdminCreateWireTransferInput, IAdminUserInput, IUpdateUserAccountStatus } from "./interface";
+import { IAdminCreateDomesticTransferUserInput, IAdminCreateWireTransferInput, IAdminUserInput, IUpdateUserAccountStatus, IUserUpdate } from "./interface";
 
 class AdminService {
   public async createAdmin(input: IAdminUserInput) {
@@ -84,7 +84,7 @@ class AdminService {
     return user;
   }
 
-    public async updateUser(input: ISignUp, _id: string) {
+    public async updateUser(input: IUserUpdate, _id: string) {
     const user = await User.findOneAndUpdate(
       { _id }, // Query to find the user by ID
       {

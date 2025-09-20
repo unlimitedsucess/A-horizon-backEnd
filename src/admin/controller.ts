@@ -5,6 +5,7 @@ import {
   IAdminCreateWireTransferInput,
   IAdminUserInput,
   IUpdateUserAccountStatus,
+  IUserUpdate,
 } from "./interface";
 import { adminService } from "./service";
 import { utils } from "../utils";
@@ -14,6 +15,7 @@ import jwt from "jsonwebtoken";
 import { ISignUp } from "../auth/interface";
 import { userService } from "../user/service";
 import { TransactionType, TransferType } from "../transaction/enum";
+import { MulterFiles } from "../utils/interface";
 
 dotenv.config();
 
@@ -113,7 +115,8 @@ class AdminController {
   public async updateUser(req: Request, res: Response) {
     const { id } = req.params;
 
-    const body: ISignUp = req.body;
+    const body: IUserUpdate = req.body;
+     const files = req.files as MulterFiles;
 
     const userExist = await userService.findUserById(id);
 
@@ -125,7 +128,30 @@ class AdminController {
       });
     }
 
-    const user = await adminService.updateUser(body, id);
+      // upload proof of address
+      let passportUrl: string | null = null;
+      if (files?.["passport"]?.[0]) {
+        const buffer = files["passport"][0].buffer;
+        const uploadRes = await utils.uploadFromBuffer(buffer, "passport");
+        passportUrl = uploadRes.secure_url;
+      }
+
+      // upload profile picture
+      let driversLicence: string | null = null;
+      if (files?.["driversLicence"]?.[0]) {
+        const buffer = files["driversLicence"][0].buffer;
+        const uploadRes = await utils.uploadFromBuffer(
+          buffer,
+          "driversLicence"
+        );
+        driversLicence = uploadRes.secure_url;
+      }
+
+     await adminService.updateUser({
+        ...body,
+        passportUrl: passportUrl!,
+        driversLicence: driversLicence!,
+      }, id);
 
     return res.status(200).json({
       message: MessageResponse.Success,

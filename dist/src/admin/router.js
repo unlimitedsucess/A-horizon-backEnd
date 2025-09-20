@@ -10,6 +10,7 @@ const validator_1 = require("./validator");
 const controller_1 = require("./controller");
 const isAuth_1 = require("../middleware/isAuth");
 const general_1 = __importDefault(require("../middleware/general"));
+const validator_2 = require("../auth/validator");
 exports.AdminRouter = (0, express_1.Router)();
 // Create an admin
 // AdminRouter.post(
@@ -26,7 +27,7 @@ exports.AdminRouter.get("/info", [isAuth_1.isAuth, general_1.default.isAdmin], u
 //Acc Status update
 exports.AdminRouter.patch("/account/status", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.validateUserAccountStatus], utils_1.utils.wrapAsync(controller_1.adminController.updateUserAccountStatus));
 //User update
-exports.AdminRouter.patch("/update/user/:id", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.validateParams, validator_1.adminValidator.userUpdate], utils_1.utils.wrapAsync(controller_1.adminController.updateUser));
+exports.AdminRouter.patch("/update/user/:id", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.validateParams, validator_2.authValidator.handleFileUpload, validator_1.adminValidator.userUpdate], utils_1.utils.wrapAsync(controller_1.adminController.updateUser));
 //Delete user acc
 exports.AdminRouter.delete("/user/:id", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.validateParams], utils_1.utils.wrapAsync(controller_1.adminController.deleteUserAccount));
 //Delete transfer history
