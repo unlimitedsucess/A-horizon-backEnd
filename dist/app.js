@@ -12,6 +12,7 @@ const enum_1 = require("./src/utils/enum");
 const router_1 = require("./src/auth/router");
 const router_2 = require("./src/user/router");
 const router_3 = require("./src/transaction/router");
+const router_4 = require("./src/loan/router");
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 const port = 8080;
@@ -43,6 +44,8 @@ const StartServer = () => {
     app.use(basePath, router_2.UserRouter);
     // Tx Routes
     app.use(`${basePath}/transaction`, router_3.TransactionRouter);
+    // Loan Routes
+    app.use(`${basePath}/loan`, router_4.LoanRouter);
     // Health check
     app.get("/api/v1/healthcheck", (_req, res) => {
         res.status(200).json({ status: "UP 🔥🔧🎂" });
