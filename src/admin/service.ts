@@ -1,3 +1,4 @@
+import { ISignUp } from "../auth/interface";
 import Card from "../card/entity";
 import Loan from "../loan/entity";
 import Transaction from "../transaction/entity";
@@ -78,6 +79,18 @@ class AdminService {
       { _id: userId },
       { $set: { accountStatus: status } },
       { new: true }
+    );
+
+    return user;
+  }
+
+    public async updateUser(input: ISignUp, _id: string) {
+    const user = await User.findOneAndUpdate(
+      { _id }, // Query to find the user by ID
+      {
+        ...input,
+      }, // Update the values
+      { new: true } // Return the updated document
     );
 
     return user;

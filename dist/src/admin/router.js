@@ -22,6 +22,7 @@ exports.AdminRouter.post("/signin", [validator_1.adminValidator.adminLogin], uti
 //Fetch Users
 exports.AdminRouter.get("/info", [isAuth_1.isAuth, general_1.default.isAdmin], utils_1.utils.wrapAsync(controller_1.adminController.fetchAdminDetails));
 exports.AdminRouter.patch("/account/status", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.validateUserAccountStatus], utils_1.utils.wrapAsync(controller_1.adminController.updateUserAccountStatus));
+exports.AdminRouter.patch("/update/user/:id", [isAuth_1.isAuth, validator_1.adminValidator.validateParams, validator_1.adminValidator.userUpdate], utils_1.utils.wrapAsync(controller_1.adminController.updateUser));
 // //Approve user acc
 // AdminRouter.patch(
 //   "/admin/approve/user/:id",
@@ -33,11 +34,6 @@ exports.AdminRouter.patch("/account/status", [isAuth_1.isAuth, general_1.default
 //   "/admin/delete/user/:id",
 //   [isAuth, adminValidator.validateParams],
 //   wrapAsync(adminController.deleteUserAccount)
-// );
-// AdminRouter.patch(
-//   "/admin/update/user/:id",
-//   [isAuth, adminValidator.validateParams, adminValidator.userUpdate],
-//   wrapAsync(adminController.updateUser)
 // );
 // //create transfer with admin
 // AdminRouter.post(

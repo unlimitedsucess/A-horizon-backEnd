@@ -4,6 +4,7 @@ import { adminValidator } from "./validator";
 import { adminController } from "./controller";
 import { isAuth } from "../middleware/isAuth";
 import GeneralMiddleware from "../middleware/general";
+import { authValidator } from "../auth/validator";
 
 
 
@@ -40,6 +41,12 @@ AdminRouter.patch(
   utils.wrapAsync(adminController.updateUserAccountStatus)
 );
 
+AdminRouter.patch(
+  "/update/user/:id",
+  [isAuth, adminValidator.validateParams, adminValidator.userUpdate],
+  utils.wrapAsync(adminController.updateUser)
+);
+
 // //Approve user acc
 // AdminRouter.patch(
 //   "/admin/approve/user/:id",
@@ -55,11 +62,7 @@ AdminRouter.patch(
 // );
 
 
-// AdminRouter.patch(
-//   "/admin/update/user/:id",
-//   [isAuth, adminValidator.validateParams, adminValidator.userUpdate],
-//   wrapAsync(adminController.updateUser)
-// );
+
 
 // //create transfer with admin
 // AdminRouter.post(

@@ -6,6 +6,8 @@ import { utils } from "../utils";
 import dotenv from "dotenv";
 import { tokenExpiry } from "../utils/global";
 import jwt from "jsonwebtoken";
+import { ISignUp } from "../auth/interface";
+import { userService } from "../user/service";
 
 dotenv.config();
 
@@ -101,6 +103,32 @@ class AdminController {
       data: null,
     });
   }
+
+
+      public async updateUser(req: Request, res: Response) {
+      const { id } = req.params;
+
+      const body: ISignUp = req.body;
+
+      const userExist = await userService.findUserById(id);
+
+      if (!userExist) {
+        return res.status(404).json({
+          message: MessageResponse.Error,
+          description: "User does not exist!",
+          data: null,
+        });
+      }
+
+      const user = await adminService.updateUser(body, id);
+
+      return res.status(200).json({
+        message: MessageResponse.Success,
+        description: "User details updated successfully!",
+        data: null,
+      });
+    }
+
 
   //   public async approveUserAccount(req: Request, res: Response) {
   //     const { id } = req.params;
@@ -215,41 +243,6 @@ class AdminController {
   //     });
   //   }
 
-  //   public async updateUser(req: Request, res: Response) {
-  //     const { id } = req.params;
-
-  //     const body: IUserUpdate = req.body;
-
-  //     const userExist = await userService.findUserById(id);
-
-  //     if (!userExist) {
-  //       return res.status(404).json({
-  //         message: MessageResponse.Error,
-  //         description: "User does not exist!",
-  //         data: null,
-  //       });
-  //     }
-
-  //     const user = await userService.updateUser(body, id);
-
-  //     if (userExist.status != user?.status) {
-  //       const approvalStatus: AccountApproved = {
-  //         receiverEmail: userExist.email,
-  //         fullName: `${userExist.firstName} ${userExist.lastName}`,
-  //       };
-  //       if (user?.status == AccountStatus.Active) {
-  //         sendAccountActivatedEmailToUser(approvalStatus);
-  //       } else {
-  //         sendAccountSuspendedmailToUser(approvalStatus);
-  //       }
-  //     }
-
-  //     return res.status(200).json({
-  //       message: MessageResponse.Success,
-  //       description: "User details updated successfully!",
-  //       data: null,
-  //     });
-  //   }
 
   //   public async updateUserTransfer(req: Request, res: Response) {
   //     const { id } = req.params;

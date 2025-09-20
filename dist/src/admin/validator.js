@@ -84,5 +84,120 @@ class AdminValidator {
             return next();
         });
     }
+    validateParams(req, res, next) {
+        const schema = joi_1.default.object({
+            id: joi_1.default.string()
+                .custom((value, helpers) => {
+                if (!mongoose_1.default.Types.ObjectId.isValid(value)) {
+                    return helpers.message({
+                        custom: "ID must be a valid ObjectId",
+                    });
+                }
+                return value;
+            })
+                .required()
+                .messages({
+                "string.base": "ID must be a string",
+                "any.required": "ID is required",
+            }),
+        });
+        const { error } = schema.validate(req.params);
+        if (!error) {
+            return next();
+        }
+        else {
+            return res.status(400).json({
+                message: enum_1.MessageResponse.Error,
+                description: error.details[0].message,
+                data: null,
+            });
+        }
+    }
+    userUpdate(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schema = joi_1.default.object({
+                firstName: joi_1.default.string().required().messages({
+                    "string.base": "First name must be text",
+                    "any.required": "First name is required",
+                }),
+                lastName: joi_1.default.string().required().messages({
+                    "string.base": "Last name must be text",
+                    "any.required": "Last name is required",
+                }),
+                email: joi_1.default.string().email().required().messages({
+                    "string.email": "Please enter a valid email address",
+                    "any.required": "Email address is required",
+                }),
+                phoneNo: joi_1.default.string()
+                    .pattern(/^\+?[1-9]\d{6,14}$/)
+                    .required()
+                    .messages({
+                    "string.pattern.base": "Please enter a valid international phone number",
+                    "any.required": "Phone number is required",
+                }),
+                dob: joi_1.default.string().isoDate().required().messages({
+                    "string.isoDate": "Date of birth must be a valid ISO date (YYYY-MM-DD)",
+                    "any.required": "Date of birth is required",
+                }),
+                zipCode: joi_1.default.string().required().messages({
+                    "string.base": "Zipcode must be text",
+                    "any.required": "Zipcode is required",
+                }),
+                ssn: joi_1.default.string()
+                    .pattern(/^(?!000|666|9\d{2})([0-6]\d{2}|7([0-6]\d|7[012]))-?(?!00)\d{2}-?(?!0000)\d{4}$/)
+                    .required()
+                    .messages({
+                    "string.pattern.base": "SSN must be a valid 9-digit number (e.g., 123-45-6789)",
+                    "any.required": "SSN is required",
+                }),
+                initialDeposit: joi_1.default.number().min(0).required().messages({
+                    "number.base": "Initial deposit must be a number",
+                    "number.min": "Initial deposit cannot be less than 0",
+                    "any.required": "Initial deposit is required",
+                }),
+                address: joi_1.default.string().required().messages({
+                    "string.base": "Address must be text",
+                    "any.required": "Address is required",
+                }),
+                country: joi_1.default.string().required().messages({
+                    "string.base": "Country must be text",
+                    "any.required": "Country is required",
+                }),
+                state: joi_1.default.string().required().messages({
+                    "string.base": "State must be text",
+                    "any.required": "State is required",
+                }),
+                city: joi_1.default.string().required().messages({
+                    "string.base": "City must be text",
+                    "any.required": "City is required",
+                }),
+                accountType: joi_1.default.string()
+                    .valid(...Object.values(enum_2.AccountType))
+                    .required()
+                    .messages({
+                    "any.only": `Account type must be one of: ${Object.values(enum_2.AccountType).join(", ")}`,
+                    "any.required": "Account type is required",
+                }),
+                pin: joi_1.default.string()
+                    .pattern(/^\d{4,6}$/)
+                    .required()
+                    .messages({
+                    "string.pattern.base": "PIN must be a 4-6 digit number (no letters allowed)",
+                    "any.required": "PIN is required",
+                }),
+            });
+            const { error } = schema.validate(req.body);
+            if (error) {
+                return utils_1.utils.customResponse({
+                    status: 400,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: error.details[0].message,
+                    data: null,
+                });
+            }
+            return next();
+        });
+    }
 }
 exports.adminValidator = new AdminValidator();

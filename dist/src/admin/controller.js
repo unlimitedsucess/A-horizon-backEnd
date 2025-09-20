@@ -19,6 +19,7 @@ const utils_1 = require("../utils");
 const dotenv_1 = __importDefault(require("dotenv"));
 const global_1 = require("../utils/global");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const service_2 = require("../user/service");
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET || "";
 class AdminController {
@@ -100,6 +101,26 @@ class AdminController {
             return res.status(200).json({
                 message: enum_1.MessageResponse.Success,
                 description: `User is now ${body.status}`,
+                data: null,
+            });
+        });
+    }
+    updateUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const body = req.body;
+            const userExist = yield service_2.userService.findUserById(id);
+            if (!userExist) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "User does not exist!",
+                    data: null,
+                });
+            }
+            const user = yield service_1.adminService.updateUser(body, id);
+            return res.status(200).json({
+                message: enum_1.MessageResponse.Success,
+                description: "User details updated successfully!",
                 data: null,
             });
         });
