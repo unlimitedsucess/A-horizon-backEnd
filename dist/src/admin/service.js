@@ -67,5 +67,12 @@ class AdminService {
             return admin;
         });
     }
+    updateUserStatus(input) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { userId, status } = input;
+            const user = yield entity_4.default.findOneAndUpdate({ _id: userId }, { $set: { accountStatus: status } }, { new: true });
+            return user;
+        });
+    }
 }
 exports.adminService = new AdminService();

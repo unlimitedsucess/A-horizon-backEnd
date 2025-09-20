@@ -84,5 +84,25 @@ class AdminController {
             });
         });
     }
+    updateUserAccountStatus(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const body = req.body;
+            const userExist = yield service_1.adminService.updateUserStatus(body);
+            if (!userExist) {
+                return utils_1.utils.customResponse({
+                    status: 404,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: "User does not exist!",
+                    data: null,
+                });
+            }
+            return res.status(200).json({
+                message: enum_1.MessageResponse.Success,
+                description: `User is now ${body.status}`,
+                data: null,
+            });
+        });
+    }
 }
 exports.adminController = new AdminController();

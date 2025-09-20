@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { MessageResponse } from "../utils/enum";
-import { IAdminUserInput } from "./interface";
+import { IAdminUserInput, IUpdateUserAccountStatus } from "./interface";
 import { adminService } from "./service";
 import { utils } from "../utils";
 import dotenv from "dotenv";
@@ -77,6 +77,28 @@ class AdminController {
         loans,
         cards,
       },
+    });
+  }
+
+  public async updateUserAccountStatus(req: Request, res: Response) {
+    const body: IUpdateUserAccountStatus = req.body;
+
+    const userExist = await adminService.updateUserStatus(body);
+
+    if (!userExist) {
+      return utils.customResponse({
+        status: 404,
+        res,
+        message: MessageResponse.Error,
+        description: "User does not exist!",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: MessageResponse.Success,
+      description: `User is now ${body.status}`,
+      data: null,
     });
   }
 

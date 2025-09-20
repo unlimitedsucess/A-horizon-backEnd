@@ -33,6 +33,13 @@ AdminRouter.get(
   utils.wrapAsync(adminController.fetchAdminDetails)
 );
 
+
+AdminRouter.patch(
+  "/account/status",
+  [isAuth, GeneralMiddleware.isAdmin, adminValidator.validateUserAccountStatus],
+  utils.wrapAsync(adminController.updateUserAccountStatus)
+);
+
 // //Approve user acc
 // AdminRouter.patch(
 //   "/admin/approve/user/:id",

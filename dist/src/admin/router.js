@@ -21,6 +21,7 @@ utils_1.utils.wrapAsync(controller_1.adminController.adminSignUp));
 exports.AdminRouter.post("/signin", [validator_1.adminValidator.adminLogin], utils_1.utils.wrapAsync(controller_1.adminController.adminSignIn));
 //Fetch Users
 exports.AdminRouter.get("/info", [isAuth_1.isAuth, general_1.default.isAdmin], utils_1.utils.wrapAsync(controller_1.adminController.fetchAdminDetails));
+exports.AdminRouter.patch("/account/status", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.validateUserAccountStatus], utils_1.utils.wrapAsync(controller_1.adminController.updateUserAccountStatus));
 // //Approve user acc
 // AdminRouter.patch(
 //   "/admin/approve/user/:id",

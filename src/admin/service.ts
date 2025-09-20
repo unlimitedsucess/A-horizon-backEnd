@@ -4,7 +4,7 @@ import Transaction from "../transaction/entity";
 import User from "../user/entity";
 import { AccountStatus } from "../user/enum";
 import Admin from "./entity";
-import { IAdminUserInput } from "./interface";
+import { IAdminUserInput, IUpdateUserAccountStatus } from "./interface";
 
 class AdminService {
   public async createAdmin(input: IAdminUserInput) {
@@ -68,6 +68,19 @@ class AdminService {
     const admin = await Admin.findById(id);
 
     return admin;
+  }
+
+
+    public async updateUserStatus(input: IUpdateUserAccountStatus) {
+    const { userId, status } = input;
+
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { $set: { accountStatus: status } },
+      { new: true }
+    );
+
+    return user;
   }
 
   // public async fetchAllTransfer() {

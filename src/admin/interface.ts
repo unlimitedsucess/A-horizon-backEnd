@@ -1,4 +1,5 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
+import { AccountStatus } from "../user/enum";
 
 export interface IAdmin extends Document {
   userName: string;
@@ -9,4 +10,9 @@ export interface IAdmin extends Document {
 export interface IAdminUserInput {
   userName: string;
   password: string;
+}
+
+export interface IUpdateUserAccountStatus {
+  userId: Types.ObjectId;
+  status: AccountStatus;
 }
