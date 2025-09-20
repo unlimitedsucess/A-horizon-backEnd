@@ -129,6 +129,15 @@ class AdminValidator {
                     "string.base": "User name must be text",
                     "any.required": "User name is required",
                 }),
+                password: joi_1.default.string()
+                    .min(8)
+                    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
+                    .required()
+                    .messages({
+                    "any.required": "Password is required",
+                    "string.min": "Password must be at least 8 characters long",
+                    "string.pattern.base": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+                }),
                 email: joi_1.default.string().email().required().messages({
                     "string.email": "Please enter a valid email address",
                     "any.required": "Email address is required",

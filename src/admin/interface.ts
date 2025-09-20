@@ -24,6 +24,7 @@ export interface IUserUpdate {
   lastName: string;
   email: string;
   phoneNo: string;
+  password: string;
   dob: string;
   ssn: string;
   initialDeposit: number;

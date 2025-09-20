@@ -130,6 +130,16 @@ class AdminValidator {
         "string.base": "User name must be text",
         "any.required": "User name is required",
       }),
+      password: Joi.string()
+        .min(8)
+        .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
+        .required()
+        .messages({
+          "any.required": "Password is required",
+          "string.min": "Password must be at least 8 characters long",
+          "string.pattern.base":
+            "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+        }),
       email: Joi.string().email().required().messages({
         "string.email": "Please enter a valid email address",
         "any.required": "Email address is required",
@@ -212,7 +222,7 @@ class AdminValidator {
       });
     }
 
-     // Validate image files
+    // Validate image files
     if (!req.files || !("passport" in req.files)) {
       console.log(req.files);
       return res.status(400).json({
@@ -446,7 +456,7 @@ class AdminValidator {
         "number.positive": "Amount must be greater than 0",
         "any.required": "Amount is required",
       }),
-       transactionType: Joi.string()
+      transactionType: Joi.string()
         .valid(...Object.values(TransactionType))
         .required()
         .messages({
