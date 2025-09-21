@@ -11,6 +11,7 @@ import {
   TransactionType,
   TransferType,
 } from "../transaction/enum";
+import { LoanStatus } from "../loan/enum";
 
 class AdminValidator {
   public async adminLogin(req: Request, res: Response, next: NextFunction) {
@@ -515,6 +516,55 @@ class AdminValidator {
         "date.base": "Transaction date must be a valid date",
         "any.required": "Transaction date is required",
       }),
+    });
+
+    const { error } = schema.validate(req.body);
+
+    if (error) {
+      return utils.customResponse({
+        status: 400,
+        res,
+        message: MessageResponse.Error,
+        description: error.details[0].message,
+        data: null,
+      });
+    }
+
+    return next();
+  }
+
+
+
+    public async updateLoanStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const schema = Joi.object({
+      loanId: Joi.string()
+        .custom((value, helpers) => {
+          if (!mongoose.Types.ObjectId.isValid(value)) {
+            return helpers.message({
+              custom: "Loan id must be a valid ObjectId",
+            });
+          }
+          return value;
+        })
+        .required()
+        .messages({
+          "string.base": "Loan id must be text",
+          "any.required": "Loan id is required",
+        }),
+
+      status: Joi.string()
+        .valid(...Object.values(LoanStatus))
+        .required()
+        .messages({
+          "any.only": `status must be one of: ${Object.values(
+            LoanStatus
+          ).join(", ")}`,
+          "any.required": "status is required",
+        }),
     });
 
     const { error } = schema.validate(req.body);

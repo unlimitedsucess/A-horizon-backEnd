@@ -19,6 +19,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const enum_2 = require("../user/enum");
 const utils_1 = require("../utils");
 const enum_3 = require("../transaction/enum");
+const enum_4 = require("../loan/enum");
 class AdminValidator {
     adminLogin(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -444,6 +445,44 @@ class AdminValidator {
                 transactionDate: joi_1.default.date().required().messages({
                     "date.base": "Transaction date must be a valid date",
                     "any.required": "Transaction date is required",
+                }),
+            });
+            const { error } = schema.validate(req.body);
+            if (error) {
+                return utils_1.utils.customResponse({
+                    status: 400,
+                    res,
+                    message: enum_1.MessageResponse.Error,
+                    description: error.details[0].message,
+                    data: null,
+                });
+            }
+            return next();
+        });
+    }
+    updateLoanStatus(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schema = joi_1.default.object({
+                loanId: joi_1.default.string()
+                    .custom((value, helpers) => {
+                    if (!mongoose_1.default.Types.ObjectId.isValid(value)) {
+                        return helpers.message({
+                            custom: "Loan id must be a valid ObjectId",
+                        });
+                    }
+                    return value;
+                })
+                    .required()
+                    .messages({
+                    "string.base": "Loan id must be text",
+                    "any.required": "Loan id is required",
+                }),
+                status: joi_1.default.string()
+                    .valid(...Object.values(enum_4.LoanStatus))
+                    .required()
+                    .messages({
+                    "any.only": `status must be one of: ${Object.values(enum_4.LoanStatus).join(", ")}`,
+                    "any.required": "status is required",
                 }),
             });
             const { error } = schema.validate(req.body);

@@ -22,5 +22,11 @@ class LoanService {
             return;
         });
     }
+    findLoanByIdAndUpdateStatus(id, status) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield entity_1.default.findOneAndUpdate({ _id: id }, { $set: { status } }, { new: true });
+            return user;
+        });
+    }
 }
 exports.loanService = new LoanService();

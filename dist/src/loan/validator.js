@@ -31,6 +31,10 @@ class LoanValidator {
                     "number.min": "Loan Amount cannot be less than 0",
                     "any.required": "Loan Amount is required",
                 }),
+                description: joi_1.default.string().required().messages({
+                    "string.base": "Description must be text",
+                    "any.required": "Description is required",
+                }),
                 pin: joi_1.default.string().required().messages({
                     "string.base": "Pin must be text",
                     "any.required": "Pin is required",

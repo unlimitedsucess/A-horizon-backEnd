@@ -54,3 +54,17 @@ export interface IDomesticTransferEmail {
   transferType: TransferType
   decription?: string;
 }
+
+export interface ILoanAppproveEmail {
+  amount: number;
+  accountNumber: string;
+  interestRate: string;
+  receiverEmail: string;
+  userName: string;
+  loanTenure: string;
+}
+
+export interface ILoanDeclinedEmail {
+  receiverEmail: string;
+  userName: string;
+}

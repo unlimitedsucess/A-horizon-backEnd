@@ -77,6 +77,13 @@ AdminRouter.post(
   utils.wrapAsync(adminController.adminCreateWireTransferHistory)
 );
 
+//Update Loan Status
+AdminRouter.patch(
+  "/loan/status",
+  [isAuth, GeneralMiddleware.isAdmin, adminValidator.updateLoanStatus],
+  utils.wrapAsync(adminController.adminUpdateLoan)
+);
+
 
 
 // //create transfer with admin

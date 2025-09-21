@@ -6,6 +6,7 @@ export interface ILoan extends Document {
   userId: Types.ObjectId;
   loanDuration: LoanDuration;
   status: LoanStatus;
+  description: string;
   loanAmount: number;
   createdAt: Date;
   updatedAt: Date;
@@ -14,11 +15,13 @@ export interface ILoan extends Document {
 export interface ILoanUserInput {
   loanDuration: LoanDuration;
   loanAmount: number;
+  description: string;
   pin: string;
 }
 
 export interface ILoanInput {
   userId: string;
+  description: string;
   loanDuration: LoanDuration;
   loanAmount: number;
 }

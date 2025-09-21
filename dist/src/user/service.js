@@ -13,7 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
 const entity_1 = __importDefault(require("./entity"));
+const decimal_js_1 = __importDefault(require("decimal.js"));
 class UserService {
     findUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -40,6 +42,24 @@ class UserService {
     findUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield entity_1.default.findById(id);
+            return user;
+        });
+    }
+    updateLoanAndLoanBalance(amount, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
+            const user = yield entity_1.default.findById(userId);
+            if (user) {
+                const currentLoan = new decimal_js_1.default(((_a = user.loan) === null || _a === void 0 ? void 0 : _a.toString()) || "0");
+                const currentLoanBalance = new decimal_js_1.default(((_b = user.loanBalnce) === null || _b === void 0 ? void 0 : _b.toString()) || "0");
+                const amountToAdd = new decimal_js_1.default(amount);
+                const newLoan = currentLoan.minus(amountToAdd);
+                const newLoanBalance = currentLoanBalance.minus(amountToAdd);
+                user.loan = mongoose_1.default.Types.Decimal128.fromString(newLoan.toFixed(2));
+                user.loanBalnce = mongoose_1.default.Types.Decimal128.fromString(newLoanBalance.toFixed(2));
+                yield user.save();
+                return user;
+            }
             return user;
         });
     }

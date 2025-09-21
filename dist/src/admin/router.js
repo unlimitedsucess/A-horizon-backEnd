@@ -36,6 +36,8 @@ exports.AdminRouter.delete("/transaction/:id", [isAuth_1.isAuth, general_1.defau
 exports.AdminRouter.post("/transaction/wire", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.createWireTransfer], utils_1.utils.wrapAsync(controller_1.adminController.adminCreateWireTransferHistory));
 //Create Domestic TF
 exports.AdminRouter.post("/transaction/domestic", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.createDomesticTransfer], utils_1.utils.wrapAsync(controller_1.adminController.adminCreateWireTransferHistory));
+//Update Loan Status
+exports.AdminRouter.patch("/loan/status", [isAuth_1.isAuth, general_1.default.isAdmin, validator_1.adminValidator.updateLoanStatus], utils_1.utils.wrapAsync(controller_1.adminController.adminUpdateLoan));
 // //create transfer with admin
 // AdminRouter.post(
 //   "/admin/create/transfer",

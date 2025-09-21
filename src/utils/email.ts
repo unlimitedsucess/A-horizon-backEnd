@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 
-import { IDomesticTransferEmail, IEmailVerification, ISendEmail, IWireTransferEmail } from "./interface";
+import { IDomesticTransferEmail, IEmailVerification, ILoanAppproveEmail, ILoanDeclinedEmail, ISendEmail, IWireTransferEmail } from "./interface";
 import { utils } from ".";
 
 dotenv.config();
@@ -746,6 +746,256 @@ export const sendWireTransferCreditAlert = async (input:  IWireTransferEmail) =>
               <p style="font-size:13px; color:#666; line-height:1.5; margin:0;">
                 🔒 This message is intended only for the account holder of American Horizon.  
                 If you did not request this, please ignore this email.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td bgcolor="#f1f1f1" style="padding:25px; text-align:center; font-size:13px; color:#555; line-height:1.6;">
+               &copy; ${new Date().getFullYear()}  ${compName}. All rights reserved. <br>
+              1234 Finance Avenue, New York, NY 10001 <br>
+              This is an automated message, please do not reply.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>`,
+  });
+};
+
+
+
+export const sendLoanApprovalEmail = async (input:  ILoanAppproveEmail) => {
+ const {amount, interestRate, receiverEmail, userName, accountNumber, loanTenure} = input;
+   const now = new Date();
+  const humanReadableDate = now.toLocaleString("en-US", {
+    weekday: "long", // e.g., Monday
+    year: "numeric", // e.g., 2023
+    month: "long", // e.g., December
+    day: "numeric", // e.g., 25
+  });
+
+  console.log("sending debit");
+  return sendEmail({
+    receiverEmail: receiverEmail,
+    subject: "Transaction Alert",
+    emailTemplate: `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Approved - ${compName}</title>
+  <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { border-collapse: collapse !important; }
+    body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; font-family: Arial, Helvetica, sans-serif; background-color: #eef2f7; }
+
+    @media screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .content { padding: 20px !important; }
+      h1 { font-size: 22px !important; }
+      p { font-size: 16px !important; }
+    }
+
+    .transaction-box {
+      background: #e6fff0;
+      border: 1px solid #a6ffd7;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 25px 0;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .highlight { color: #1a73e8; font-weight: bold; }
+    .section-title { font-weight: bold; margin-top: 15px; margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" bgcolor="#eef2f7">
+        <table class="container" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" bgcolor="#ffffff" style="padding: 25px; border-bottom:1px solid #e5e5e5;">
+              <img src="${clientUrl}/logo.png" alt="American Horizon" width="180" style="display:block;">
+            </td>
+          </tr>
+
+          <!-- Banner -->
+          <tr>
+            <td align="center" style="padding: 35px; background: linear-gradient(120deg, #1a73e8, #0056b3, #28a745);">
+              <h1 style="color:#ffffff; margin:0; font-size:26px; font-weight:700;">Loan Approved & Credited</h1>
+              <p style="color:#f1f1f1; font-size:15px; margin:10px 0 0 0;">Congratulations!</p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td class="content" style="padding:40px;">
+              <p style="font-size:16px; color:#333; line-height:1.6; margin:0 0 20px 0;">
+                Dear <span class="highlight">${userName}</span>,
+              </p>
+              <p style="font-size:16px; color:#555; line-height:1.6; margin:0 0 25px 0;">
+                Your loan application with <strong>${compName}</strong> has been <strong>approved</strong>. The approved loan amount has been successfully credited to your account.
+              </p>
+
+              <!-- Loan Details -->
+              <div class="transaction-box">
+                <p><strong>Loan Amount:</strong> <span class="highlight">${utils.formatNumber(amount)}</span></p>
+                <p><strong>Loan Account Number:</strong> <span class="highlight">${accountNumber}</span></p>
+                <p><strong>Date Credited:</strong> <span class="highlight">${humanReadableDate}</span></p>
+                <p><strong>Tenure:</strong> <span class="highlight">${loanTenure}</span></p>
+                <p><strong>Interest Rate:</strong> <span class="highlight">${interestRate}%</span></p>
+                <p><strong>Description:</strong> <span class="highlight">{{description}}</span></p>
+              </div>
+
+              <p style="font-size:14px; color:#888; line-height:1.5; margin-top:20px;">
+                You can now access your account to view your updated balance. For any questions, please contact your account manager or our Customer Care team.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Security Notice -->
+          <tr>
+            <td style="padding:20px 40px; background:#fafafa; border-top:1px solid #e5e5e5;">
+              <p style="font-size:13px; color:#666; line-height:1.5; margin:0;">
+                🔒 This message is intended only for the account holder of American Horizon.  
+                If you did not request this, please contact Customer Care immediately.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td bgcolor="#f1f1f1" style="padding:25px; text-align:center; font-size:13px; color:#555; line-height:1.6;">
+               &copy; ${new Date().getFullYear()}  ${compName}. All rights reserved. <br>
+              1234 Finance Avenue, New York, NY 10001 <br>
+              This is an automated message, please do not reply.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>`,
+  });
+};
+
+
+
+export const sendLoanDeclinedEmail = async (input:  ILoanDeclinedEmail) => {
+ const {receiverEmail, userName} = input;
+   const now = new Date();
+  const humanReadableDate = now.toLocaleString("en-US", {
+    weekday: "long", // e.g., Monday
+    year: "numeric", // e.g., 2023
+    month: "long", // e.g., December
+    day: "numeric", // e.g., 25
+  });
+
+  console.log("sending debit");
+  return sendEmail({
+    receiverEmail: receiverEmail,
+    subject: "Transaction Alert",
+    emailTemplate: `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Application Status - American Horizon</title>
+  <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { border-collapse: collapse !important; }
+    body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; font-family: Arial, Helvetica, sans-serif; background-color: #eef2f7; }
+
+    @media screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .content { padding: 20px !important; }
+      h1 { font-size: 22px !important; }
+      p { font-size: 16px !important; }
+    }
+
+    .alert-box {
+      background: #fff4f4;
+      border: 1px solid #f5c2c7;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 25px 0;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .highlight { color: #d93025; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" bgcolor="#eef2f7">
+        <table class="container" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" bgcolor="#ffffff" style="padding: 25px; border-bottom:1px solid #e5e5e5;">
+              <img src="${clientUrl}/logo.png" alt="American Horizon" width="180" style="display:block;">
+            </td>
+          </tr>
+
+          <!-- Banner -->
+          <tr>
+            <td align="center" style="padding: 35px; background: linear-gradient(120deg, #d93025, #a52714);">
+              <h1 style="color:#ffffff; margin:0; font-size:26px; font-weight:700;">Loan Application Declined</h1>
+              <p style="color:#f1f1f1; font-size:15px; margin:10px 0 0 0;">Important Update</p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td class="content" style="padding:40px;">
+              <p style="font-size:16px; color:#333; line-height:1.6; margin:0 0 20px 0;">
+                Dear <span class="highlight">${userName}</span>,
+              </p>
+              <div class="alert-box">
+                <p>
+                  We regret to inform you that your recent loan application with <strong>American Horizon</strong> has been <span class="highlight">declined</span>.
+                </p>
+                <p>
+                  The decision was based on our internal review process. Unfortunately, we are unable to provide specific reasons due to regulatory and confidentiality policies.
+                </p>
+                <p>
+                  For further assistance or to discuss alternative financing options, please contact your account manager or our Customer Care team.
+                </p>
+                <p>
+                  <strong>Customer Care:</strong> <span class="highlight">${adminEmail}</span> | <span class="highlight">{{customerCarePhone}}</span>
+                </p>
+              </div>
+
+              <p style="font-size:14px; color:#888; line-height:1.5; margin-top:20px;">
+                We appreciate your understanding and encourage you to explore other banking solutions with American Horizon.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Security Notice -->
+          <tr>
+            <td style="padding:20px 40px; background:#fafafa; border-top:1px solid #e5e5e5;">
+              <p style="font-size:13px; color:#666; line-height:1.5; margin:0;">
+                🔒 This message is intended only for the account holder of ${compName}.  
+                If you did not request this, please contact Customer Care immediately.
               </p>
             </td>
           </tr>

@@ -84,5 +84,13 @@ class Utils {
             inputDate.getMonth() === today.getMonth() &&
             inputDate.getDate() === today.getDate());
     }
+    getValueAfterUnderscore(input) {
+        const parts = input.split("_");
+        return parts.length > 1 ? parts[1] : null;
+    }
+    getValueBeforeUnderscore(input) {
+        const parts = input.split("_");
+        return parts.length > 1 ? parts[0] : null;
+    }
 }
 exports.utils = new Utils();

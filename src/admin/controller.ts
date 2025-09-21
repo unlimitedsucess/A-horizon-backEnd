@@ -3,6 +3,7 @@ import { MessageResponse } from "../utils/enum";
 import {
   IAdminCreateDomesticTransferUserInput,
   IAdminCreateWireTransferInput,
+  IAdminUpadateLoan,
   IAdminUserInput,
   IUpdateUserAccountStatus,
   IUserUpdate,
@@ -27,9 +28,13 @@ import {
 import {
   sendDomesticTransferCreditAlert,
   sendDomesticTransferDebitAlert,
+  sendLoanApprovalEmail,
+  sendLoanDeclinedEmail,
   sendWireTransferCreditAlert,
   sendWireTransferDebitAlert,
 } from "../utils/email";
+import { loanService } from "../loan/service";
+import { LoanStatus } from "../loan/enum";
 
 dotenv.config();
 
@@ -334,6 +339,61 @@ class AdminController {
     });
   }
 
+  public async adminUpdateLoan(req: Request, res: Response) {
+    const body: IAdminUpadateLoan = req.body;
+
+    const loan = await loanService.findLoanByIdAndUpdateStatus(
+      body.loanId,
+      body.status
+    );
+
+    if (!loan) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: "Loan not found!",
+        data: null,
+      });
+    }
+
+    const userExist = await userService.findUserById(loan.userId.toString());
+
+    if (!userExist) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: "User not found!",
+        data: null,
+      });
+    }
+
+    if (body.status === LoanStatus.APPROVED) {
+      await userService.updateLoanAndLoanBalance(
+        loan.loanAmount,
+        loan.userId.toString()
+      );
+
+      sendLoanApprovalEmail({
+        accountNumber: userExist.accountNumber!,
+        amount: loan.loanAmount,
+        interestRate: utils.getValueAfterUnderscore(loan.loanDuration!)!,
+        loanTenure: utils.getValueBeforeUnderscore(loan.loanDuration)!, 
+        receiverEmail: userExist.email!,
+        userName: userExist.userName!,
+      });
+    }
+
+    if (body.status === LoanStatus.REJECTED) {
+      sendLoanDeclinedEmail({
+        receiverEmail: userExist.email!,
+        userName: userExist.userName!,
+      });
+    }
+
+    return res.status(200).json({
+      message: MessageResponse.Success,
+      description: `Loan updated successfully!`,
+      data: null,
+    });
+  }
   //   public async approveUserAccount(req: Request, res: Response) {
   //     const { id } = req.params;
 

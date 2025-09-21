@@ -1,6 +1,7 @@
 import { Document, Types } from "mongoose";
 import { AccountStatus, AccountType } from "../user/enum";
 import { TransactionDirection, TransactionStatus, TransactionType, TransferType } from "../transaction/enum";
+import { LoanStatus } from "../loan/enum";
 
 export interface IAdmin extends Document {
   userName: string;
@@ -73,4 +74,9 @@ export interface IAdminCreateDomesticTransferUserInput {
   transactionDirection: TransactionDirection;
   transferType: TransferType;
   status: TransactionStatus;
+}
+
+export interface IAdminUpadateLoan {
+  loanId: string;
+  status: LoanStatus;
 }

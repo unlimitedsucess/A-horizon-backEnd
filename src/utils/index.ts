@@ -106,6 +106,16 @@ public isToday(dateInput: string) {
   );
 }
 
+public getValueAfterUnderscore(input: string): string | null {
+  const parts = input.split("_");
+  return parts.length > 1 ? parts[1] : null;
+}
+
+public getValueBeforeUnderscore(input: string): string | null {
+  const parts = input.split("_");
+  return parts.length > 1 ? parts[0] : null;
+}
+
 }
 
 export const utils = new Utils();

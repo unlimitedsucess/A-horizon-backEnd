@@ -22,6 +22,8 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const service_2 = require("../user/service");
 const enum_2 = require("../transaction/enum");
 const email_1 = require("../utils/email");
+const service_3 = require("../loan/service");
+const enum_3 = require("../loan/enum");
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET || "";
 class AdminController {
@@ -274,6 +276,49 @@ class AdminController {
             return res.status(201).json({
                 message: enum_1.MessageResponse.Success,
                 description: "Transaction created successfully!",
+                data: null,
+            });
+        });
+    }
+    adminUpdateLoan(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const body = req.body;
+            const loan = yield service_3.loanService.findLoanByIdAndUpdateStatus(body.loanId, body.status);
+            if (!loan) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "Loan not found!",
+                    data: null,
+                });
+            }
+            const userExist = yield service_2.userService.findUserById(loan.userId.toString());
+            if (!userExist) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "User not found!",
+                    data: null,
+                });
+            }
+            if (body.status === enum_3.LoanStatus.APPROVED) {
+                yield service_2.userService.updateLoanAndLoanBalance(loan.loanAmount, loan.userId.toString());
+                (0, email_1.sendLoanApprovalEmail)({
+                    accountNumber: userExist.accountNumber,
+                    amount: loan.loanAmount,
+                    interestRate: utils_1.utils.getValueAfterUnderscore(loan.loanDuration),
+                    loanTenure: utils_1.utils.getValueBeforeUnderscore(loan.loanDuration),
+                    receiverEmail: userExist.email,
+                    userName: userExist.userName,
+                });
+            }
+            if (body.status === enum_3.LoanStatus.REJECTED) {
+                (0, email_1.sendLoanDeclinedEmail)({
+                    receiverEmail: userExist.email,
+                    userName: userExist.userName,
+                });
+            }
+            return res.status(200).json({
+                message: enum_1.MessageResponse.Success,
+                description: `Loan updated successfully!`,
                 data: null,
             });
         });

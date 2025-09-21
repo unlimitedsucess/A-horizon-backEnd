@@ -10,8 +10,8 @@ export interface IUser extends Document {
   ssn?: string | null;
   accountNumber?: string | null;
   initialDeposit: Types.Decimal128;
-  loan?: number;
-  loanBalnce?: number;
+  loan?: Types.Decimal128;
+  loanBalnce?: Types.Decimal128;
   expenses?: number;
   address?: string | null;
   country?: string | null;

@@ -1,5 +1,6 @@
 import { ILoanInput } from "./interface";
 import Loan from "./entity";
+import { LoanStatus } from "./enum";
 
 class LoanService {
   public async applyLoan(input: ILoanInput) {
@@ -10,6 +11,16 @@ class LoanService {
     await newLoan.save();
 
     return;
+  }
+
+   public async findLoanByIdAndUpdateStatus(id: string, status: LoanStatus) {
+     const user = await Loan.findOneAndUpdate(
+      { _id: id },
+      { $set: { status } },
+      { new: true }
+    );
+
+    return user;
   }
 }
 
