@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import { CustomRequest } from "../utils/interface";
 import { MessageResponse } from "../utils/enum";
+import { utils } from "../utils";
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ export const isAuth = async (
   next: NextFunction
 ) => {
   const authHeader = req.get("Authorization");
+
+  utils.updateLoansAndBalances();
 
   if (!authHeader) {
     return res.status(401).json({

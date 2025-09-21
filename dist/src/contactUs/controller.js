@@ -11,11 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.contactUsController = void 0;
 const enum_1 = require("../utils/enum");
+const email_1 = require("../utils/email");
 class ContactUsController {
     contactUs(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const body = req.body;
-            //  sendContactUsEmail(body);
+            (0, email_1.sendContactUsEmail)(body);
             return res.status(200).json({
                 message: enum_1.MessageResponse.Success,
                 description: "Email sent successfully!",

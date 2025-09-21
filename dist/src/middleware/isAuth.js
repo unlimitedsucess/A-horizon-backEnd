@@ -16,9 +16,11 @@ exports.isAuth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const enum_1 = require("../utils/enum");
+const utils_1 = require("../utils");
 dotenv_1.default.config();
 const isAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const authHeader = req.get("Authorization");
+    utils_1.utils.updateLoansAndBalances();
     if (!authHeader) {
         return res.status(401).json({
             message: enum_1.MessageResponse.Error,

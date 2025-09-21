@@ -11,7 +11,7 @@ const loanSchema: Schema = new Schema(
       required: true,
       ref: "User",
     },
-    loanDuraion: {
+    loanDuration: {
       type: String,
       required: true,
       enum: Object.values(LoanDuration),
@@ -21,7 +21,11 @@ const loanSchema: Schema = new Schema(
       default: LoanStatus.PENDING,
       enum: Object.values(LoanStatus),
     },
-    lastInterestUpateDate: {
+    lastInterestAppliedDate: {
+      type: Date,
+      default: null
+    },
+    activationDate: {
       type: Date,
       default: null
     },

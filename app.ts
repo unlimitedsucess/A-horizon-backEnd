@@ -14,10 +14,13 @@ import { CardRouter } from "./src/card/router";
 import { AdminRouter } from "./src/admin/router";
 import { ContactUsRouter } from "./src/contactUs/router";
 const app: Express = express();
+import cron from "node-cron";
+import { utils } from "./src/utils";
 
 dotenv.config();
 
 const port = 8080;
+
 
 const StartServer = () => {
   app.use((req: Request, res: Response, next: NextFunction) => {
@@ -114,3 +117,10 @@ mongoose
 
     process.exit(1);
   });
+
+
+
+cron.schedule("*/5 * * * * *", () => {
+console.log("calledd");
+utils.updateLoansAndBalances()
+});

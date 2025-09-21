@@ -31,7 +31,7 @@ const loanSchema = new mongoose_1.Schema({
         required: true,
         ref: "User",
     },
-    loanDuraion: {
+    loanDuration: {
         type: String,
         required: true,
         enum: Object.values(enum_1.LoanDuration),
@@ -41,7 +41,11 @@ const loanSchema = new mongoose_1.Schema({
         default: enum_1.LoanStatus.PENDING,
         enum: Object.values(enum_1.LoanStatus),
     },
-    lastInterestUpateDate: {
+    lastInterestAppliedDate: {
+        type: Date,
+        default: null
+    },
+    activationDate: {
         type: Date,
         default: null
     },

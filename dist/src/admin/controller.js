@@ -307,10 +307,10 @@ class AdminController {
                 });
             }
             if (body.status === enum_3.LoanStatus.APPROVED) {
-                yield service_2.userService.updateLoanAndLoanBalance(loan.loanBalance, loan.userId.toString());
+                yield service_2.userService.updateLoanAndLoanBalance(Number(loan.loanBalance.toString()), loan.userId.toString());
                 (0, email_1.sendLoanApprovalEmail)({
                     accountNumber: userExist.accountNumber,
-                    amount: loan.loanBalance,
+                    amount: Number(loan.loanBalance.toString()),
                     description: loan.description,
                     interestRate: utils_1.utils.getValueAfterUnderscore(loan.loanDuration),
                     loanTenure: utils_1.utils.getValueBeforeUnderscore(loan.loanDuration),

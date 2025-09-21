@@ -37,6 +37,10 @@ import {
 import { loanService } from "../loan/service";
 import { LoanStatus } from "../loan/enum";
 import { AccountStatus } from "../user/enum";
+import Loan from "../loan/entity";
+import User from "../user/entity";
+import Decimal from "decimal.js";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -376,14 +380,13 @@ class AdminController {
 
     if (body.status === LoanStatus.APPROVED) {
       await userService.updateLoanAndLoanBalance(
-        loan.loanBalance,
+        Number(loan.loanBalance.toString()),
         loan.userId.toString(),
-       // utils.toNumber(utils.getValueAfterUnderscore(loan.loanDuration!)!)!
       );
 
       sendLoanApprovalEmail({
         accountNumber: userExist.accountNumber!,
-        amount: loan.loanBalance,
+        amount: Number(loan.loanBalance.toString()),
         description: loan.description,
         interestRate: utils.getValueAfterUnderscore(loan.loanDuration!)!,
         loanTenure: utils.getValueBeforeUnderscore(loan.loanDuration)!,
@@ -404,201 +407,9 @@ class AdminController {
       description: `Loan updated successfully!`,
       data: null,
     });
+    
   }
-  //   public async approveUserAccount(req: Request, res: Response) {
-  //     const { id } = req.params;
 
-  //     const user = await userService.findUserById(id);
-
-  //     if (!user) {
-  //       return res.status(404).json({
-  //         message: MessageResponse.Success,
-  //         description: "User not found!",
-  //         data: null,
-  //       });
-  //     }
-
-  //     await adminService.approveUser(id);
-
-  //     const acctApproved: AccountApproved = {
-  //       receiverEmail: user.email,
-  //       fullName: `${user.firstName} ${user.lastName}`,
-  //     };
-
-  //     sendAccountApprovedEmailToUser(acctApproved);
-
-  //     return res.status(200).json({
-  //       message: MessageResponse.Success,
-  //       description: "User has been approved!",
-  //       data: null,
-  //     });
-  //   }
-
-  //   public async fetchTransferById(req: Request, res: Response) {
-  //     const { id } = req.params;
-
-  //     const transfer = await transferService.findTransferById(id);
-
-  //     if (!transfer) {
-  //       return res.status(404).json({
-  //         message: MessageResponse.Success,
-  //         description: "Transfer not found!",
-  //         data: null,
-  //       });
-  //     }
-
-  //     return res.status(200).json({
-  //       message: MessageResponse.Success,
-  //       description: "Transfer fetched duccessfully!",
-  //       data: transfer,
-  //     });
-  //   }
-
-  //   public async fetchTransferByUserId(req: Request, res: Response) {
-  //     const { id } = req.params;
-
-  //     const transfer = await transferService.fetchUserTransferByUserId(id);
-
-  //     if (!transfer) {
-  //       return res.status(404).json({
-  //         message: MessageResponse.Success,
-  //         description: "Transfer not found!",
-  //         data: null,
-  //       });
-  //     }
-
-  //     return res.status(200).json({
-  //       message: MessageResponse.Success,
-  //       description: "User transfer fetched duccessfully!",
-  //       data: transfer,
-  //     });
-  //   }
-
-  //   public async updateUserTransfer(req: Request, res: Response) {
-  //     const { id } = req.params;
-
-  //     const body: ITransferInput = req.body;
-
-  //     const transfer = await transferService.findTransferById(id);
-
-  //     if (!transfer) {
-  //       return res.status(404).json({
-  //         message: MessageResponse.Success,
-  //         description: "Transfer not found!",
-  //         data: null,
-  //       });
-  //     }
-
-  //     await transferService.updateTransfer(body, id);
-
-  //     return res.status(200).json({
-  //       message: MessageResponse.Success,
-  //       description: "Transfer details updated successfully!",
-  //       data: null,
-  //     });
-  //   }
-
-  //   public async createTransferWithAdmin(req: Request, res: Response) {
-  //     const { userId } = req as CustomRequest;
-  //     const body: ITransferInput = req.body;
-
-  //     const userExist = await userService.findUserByIdWithoutPassword(
-  //       body.userId
-  //     );
-
-  //     if (!userExist) {
-  //       return res.status(404).json({
-  //         message: MessageResponse.Error,
-  //         description: "This user does not exist!",
-  //         data: null,
-  //       });
-  //     }
-
-  //     if (userExist.status != AccountStatus.Active) {
-  //       return res.status(400).json({
-  //         message: MessageResponse.Error,
-  //         description: "This user is not active!",
-  //         data: null,
-  //       });
-  //     }
-
-  //     const isTodayTransfer = (dateString: string): boolean => {
-  //       const transferDate = DateTime.fromISO(dateString, {
-  //         zone: "utc",
-  //       }).toUTC();
-  //       const today = DateTime.now().toUTC();
-
-  //       return (
-  //         transferDate.year === today.year &&
-  //         transferDate.month === today.month &&
-  //         transferDate.day === today.day
-  //       );
-  //     };
-
-  //     console.log(
-  //       `isTodayTransfer(body.transferDate.toString()) ==> ${isTodayTransfer(
-  //         body.transferDate.toString()
-  //       )}`
-  //     );
-
-  //     if (
-  //       isTodayTransfer(body.transferDate.toString()) &&
-  //       body.transactionType == TransactionType.Debit
-  //     ) {
-  //       const userBalance = parseFloat(userExist.initialDeposit);
-
-  //       const transferAmount = parseFloat(body.amount);
-
-  //       if (transferAmount > userBalance) {
-  //         return res.status(400).json({
-  //           message: MessageResponse.Error,
-  //           description: "Insufficient balance!",
-  //           data: null,
-  //         });
-  //       }
-  //     }
-
-  //     const createdTransfer = await transferService.createTransfer(body, body.transferDate);
-
-  //     const transferAmount = parseFloat(body.amount);
-
-  //     const txAlert: TransactionAlert = {
-  //       accountNumber: userExist.accountNo,
-  //       amount: transferAmount,
-  //       date: createdTransfer.createdAt,
-  //       senderEmail: userExist.email,
-  //       receiverFullName: body.beneficiaryName,
-  //       senderFullName: `${userExist.firstName} ${userExist.lastName}`,
-  //       transactionNumber: createdTransfer.transactionId,
-  //       transactionDate: createdTransfer.createdAt.toString(),
-  //       paymentMethod: createdTransfer.transferType
-  //     };
-
-  //     console.log(
-  //       `transferDate ${body.transferDate.toString()} created At date ${createdTransfer.createdAt.toString()}`
-  //     );
-
-  //     if (isTodayTransfer(body.transferDate.toString())) {
-
-  //       if (body.transactionType == TransactionType.Debit) {
-  //         await userService.debitUser(transferAmount, userExist._id);
-
-  //         sendDebitAlert(txAlert);
-  //       }
-
-  //       if (body.transactionType == TransactionType.Credit) {
-  //         await userService.creditUser(transferAmount, userExist._id);
-
-  //         sendCreditAlert(txAlert);
-  //       }
-  //     }
-
-  //     return res.status(201).json({
-  //       message: MessageResponse.Success,
-  //       description: "Transfer created successfully",
-  //       data: null,
-  //     });
-  //   }
 }
 
 export const adminController = new AdminController();

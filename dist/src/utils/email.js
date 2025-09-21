@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendForgotPasswordEmail = exports.sendAccountSuspendedEmail = exports.sendLoanDeclinedEmail = exports.sendLoanApprovalEmail = exports.sendWireTransferCreditAlert = exports.sendDomesticTransferCreditAlert = exports.sendDomesticTransferDebitAlert = exports.sendWireTransferDebitAlert = exports.sendVerificationEmail = exports.sendEmail = void 0;
+exports.sendContactUsEmail = exports.sendForgotPasswordEmail = exports.sendAccountSuspendedEmail = exports.sendLoanDeclinedEmail = exports.sendLoanApprovalEmail = exports.sendWireTransferCreditAlert = exports.sendDomesticTransferCreditAlert = exports.sendDomesticTransferDebitAlert = exports.sendWireTransferDebitAlert = exports.sendVerificationEmail = exports.sendEmail = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const _1 = require(".");
@@ -225,7 +225,7 @@ const sendVerificationEmail = (input) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.sendVerificationEmail = sendVerificationEmail;
 const sendWireTransferDebitAlert = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    const { accountName, amount, country, recipientName, routingNumber, swiftCode, senderEmail, transferType } = input;
+    const { accountName, amount, country, recipientName, routingNumber, swiftCode, senderEmail, transferType, } = input;
     const now = new Date();
     const humanReadableDate = now.toLocaleString("en-US", {
         weekday: "long", // e.g., Monday
@@ -357,7 +357,7 @@ const sendWireTransferDebitAlert = (input) => __awaiter(void 0, void 0, void 0, 
 });
 exports.sendWireTransferDebitAlert = sendWireTransferDebitAlert;
 const sendDomesticTransferDebitAlert = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    const { accountNumber, amount, recipientName, senderEmail, userName, decription } = input;
+    const { accountNumber, amount, recipientName, senderEmail, userName, decription, } = input;
     const now = new Date();
     const humanReadableDate = now.toLocaleString("en-US", {
         weekday: "long", // e.g., Monday
@@ -446,7 +446,8 @@ const sendDomesticTransferDebitAlert = (input) => __awaiter(void 0, void 0, void
                   <p class="section-title">Domestic Transfer Details:</p>
                   <p><strong>Beneficiary Name:</strong> <span class="highlight">${recipientName}</span></p>
                   <p><strong>Beneficiary Account Number:</strong> <span class="highlight">${accountNumber}</span></p>
-                  ${decription && `<p><strong>Description:</strong> <span class="highlight">${decription}</span></p>`}
+                  ${decription &&
+            `<p><strong>Description:</strong> <span class="highlight">${decription}</span></p>`}
                 </div>
        
 
@@ -489,7 +490,7 @@ const sendDomesticTransferDebitAlert = (input) => __awaiter(void 0, void 0, void
 });
 exports.sendDomesticTransferDebitAlert = sendDomesticTransferDebitAlert;
 const sendDomesticTransferCreditAlert = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    const { accountNumber, amount, recipientName, senderEmail, userName, decription, transferType } = input;
+    const { accountNumber, amount, recipientName, senderEmail, userName, decription, transferType, } = input;
     const now = new Date();
     const humanReadableDate = now.toLocaleString("en-US", {
         weekday: "long", // e.g., Monday
@@ -579,7 +580,8 @@ const sendDomesticTransferCreditAlert = (input) => __awaiter(void 0, void 0, voi
                   <p class="section-title">Domestic Transfer Details:</p>
                   <p><strong>Sender Name:</strong> <span class="highlight">${recipientName}</span></p>
                   <p><strong>Sender Account Number:</strong> <span class="highlight">${accountNumber}</span></p>
-                 ${decription && `<p><strong>Description:</strong> <span class="highlight">${decription}</span></p>`}
+                 ${decription &&
+            `<p><strong>Description:</strong> <span class="highlight">${decription}</span></p>`}
                 </div>
               
 
@@ -622,7 +624,7 @@ const sendDomesticTransferCreditAlert = (input) => __awaiter(void 0, void 0, voi
 });
 exports.sendDomesticTransferCreditAlert = sendDomesticTransferCreditAlert;
 const sendWireTransferCreditAlert = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    const { accountName, amount, country, recipientName, routingNumber, swiftCode, senderEmail, transferType } = input;
+    const { accountName, amount, country, recipientName, routingNumber, swiftCode, senderEmail, transferType, } = input;
     const now = new Date();
     const humanReadableDate = now.toLocaleString("en-US", {
         weekday: "long", // e.g., Monday
@@ -755,7 +757,7 @@ const sendWireTransferCreditAlert = (input) => __awaiter(void 0, void 0, void 0,
 });
 exports.sendWireTransferCreditAlert = sendWireTransferCreditAlert;
 const sendLoanApprovalEmail = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    const { amount, interestRate, receiverEmail, userName, accountNumber, loanTenure, description } = input;
+    const { amount, interestRate, receiverEmail, userName, accountNumber, loanTenure, description, } = input;
     const now = new Date();
     const humanReadableDate = now.toLocaleString("en-US", {
         weekday: "long", // e.g., Monday
@@ -1134,7 +1136,7 @@ const sendForgotPasswordEmail = (input) => __awaiter(void 0, void 0, void 0, fun
     return (0, exports.sendEmail)({
         receiverEmail: receiverEmail,
         subject: "Transaction Alert",
-        emailTemplate: `f<!DOCTYPE html>
+        emailTemplate: `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
@@ -1251,3 +1253,112 @@ const sendForgotPasswordEmail = (input) => __awaiter(void 0, void 0, void 0, fun
     });
 });
 exports.sendForgotPasswordEmail = sendForgotPasswordEmail;
+const sendContactUsEmail = (input) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, fullName, message, phoneNumber, subject } = input;
+    const now = new Date();
+    const humanReadableDate = now.toLocaleString("en-US", {
+        weekday: "long", // e.g., Monday
+        year: "numeric", // e.g., 2023
+        month: "long", // e.g., December
+        day: "numeric", // e.g., 25
+    });
+    console.log("sending debit");
+    return (0, exports.sendEmail)({
+        receiverEmail: adminEmail,
+        subject: "Contact Form via Website",
+        emailTemplate: `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form Submission - ${compName}</title>
+  <style>
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { border-collapse: collapse !important; }
+    body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; font-family: Arial, Helvetica, sans-serif; background-color: #eef2f7; }
+
+    @media screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .content { padding: 20px !important; }
+      h1 { font-size: 22px !important; }
+      p { font-size: 16px !important; }
+    }
+
+    .info-box {
+      background: #f9fbff;
+      border: 1px solid #c5d9f7;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 25px 0;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .highlight { color: #1d4ed8; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" bgcolor="#eef2f7">
+        <table class="container" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" bgcolor="#ffffff" style="padding: 25px; border-bottom:1px solid #e5e5e5;">
+              <img src="${clientUrl}/logo.png" alt="American Horizon" width="180" style="display:block;">
+            </td>
+          </tr>
+
+          <!-- Banner -->
+          <tr>
+            <td align="center" style="padding: 35px; background: linear-gradient(120deg, #1d4ed8, #0f172a);">
+              <h1 style="color:#ffffff; margin:0; font-size:26px; font-weight:700;">New Contact Request</h1>
+              <p style="color:#f1f1f1; font-size:15px; margin:10px 0 0 0;">Submitted via Website</p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td class="content" style="padding:40px;">
+              <p style="font-size:16px; color:#333; line-height:1.6; margin:0 0 20px 0;">
+                A new message has been submitted through the <strong>Contact Us</strong> form.
+              </p>
+
+              <div class="info-box">
+                <p><strong>Full Name:</strong> <span class="highlight">${fullName}</span></p>
+                <p><strong>Email Address:</strong> <span class="highlight">${email}</span></p>
+                <p><strong>Phone Number:</strong> <span class="highlight">${phoneNumber}</span></p>
+                <p><strong>Subject:</strong> <span class="highlight">${subject}</span></p>
+                <p><strong>Message:</strong></p>
+                <p style="margin:10px 0; padding:12px; background:#f3f4f6; border-radius:6px; font-size:14px; line-height:1.5; color:#333;">
+                  ${message}
+                </p>
+              </div>
+
+              <p style="font-size:14px; color:#888; line-height:1.5; margin-top:20px;">
+                Please respond to this inquiry as soon as possible.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td bgcolor="#f1f1f1" style="padding:25px; text-align:center; font-size:13px; color:#555; line-height:1.6;">
+             &copy; ${new Date().getFullYear()}  ${compName}. All rights reserved. <br>
+              1234 Finance Avenue, New York, NY 10001 <br>
+              This is an automated message, please do not reply.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>`,
+    });
+});
+exports.sendContactUsEmail = sendContactUsEmail;

@@ -30,7 +30,7 @@ class LoanValidator {
         "string.base": "Pin must be text",
         "any.required": "Pin is required",
       }),
-      loanDuraion: Joi.string()
+      loanDuration: Joi.string()
         .valid(...Object.values(LoanDuration))
         .required()
         .messages({
