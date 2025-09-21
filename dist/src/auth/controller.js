@@ -264,10 +264,11 @@ class AuthController {
                         data: null,
                     });
                 }
-                // sendForgotPasswordEmail({
-                //   email,
-                //   otp,
-                // });
+                (0, email_1.sendForgotPasswordEmail)({
+                    otp,
+                    receiverEmail: userExist.email,
+                    userName: userExist.userName
+                });
                 return res.status(201).json({
                     message: enum_1.MessageResponse.Success,
                     description: "An OTP has been sent to your email address",

@@ -24,6 +24,7 @@ const enum_2 = require("../transaction/enum");
 const email_1 = require("../utils/email");
 const service_3 = require("../loan/service");
 const enum_3 = require("../loan/enum");
+const enum_4 = require("../user/enum");
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET || "";
 class AdminController {
@@ -100,6 +101,12 @@ class AdminController {
                     message: enum_1.MessageResponse.Error,
                     description: "User does not exist!",
                     data: null,
+                });
+            }
+            if (body.status === enum_4.AccountStatus.SUSPENDED) {
+                (0, email_1.sendAccountSuspendedEmail)({
+                    receiverEmail: userExist.email,
+                    userName: userExist.userName,
                 });
             }
             return res.status(200).json({
@@ -300,10 +307,11 @@ class AdminController {
                 });
             }
             if (body.status === enum_3.LoanStatus.APPROVED) {
-                yield service_2.userService.updateLoanAndLoanBalance(loan.loanAmount, loan.userId.toString());
+                yield service_2.userService.updateLoanAndLoanBalance(loan.loanBalance, loan.userId.toString());
                 (0, email_1.sendLoanApprovalEmail)({
                     accountNumber: userExist.accountNumber,
-                    amount: loan.loanAmount,
+                    amount: loan.loanBalance,
+                    description: loan.description,
                     interestRate: utils_1.utils.getValueAfterUnderscore(loan.loanDuration),
                     loanTenure: utils_1.utils.getValueBeforeUnderscore(loan.loanDuration),
                     receiverEmail: userExist.email,

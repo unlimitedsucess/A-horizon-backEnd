@@ -41,6 +41,19 @@ const loanSchema = new mongoose_1.Schema({
         default: enum_1.LoanStatus.PENDING,
         enum: Object.values(enum_1.LoanStatus),
     },
+    lastInterestUpateDate: {
+        type: Date,
+        default: null
+    },
+    loanBalance: {
+        type: mongoose_1.default.Schema.Types.Decimal128,
+        default: mongoose_1.default.Types.Decimal128.fromString("0.00"),
+        min: mongoose_1.default.Types.Decimal128.fromString("0.00"),
+        // When retrieving from DB, convert Decimal128 to number
+        get: (v) => v ? parseFloat(v.toString()) : 0,
+        // When saving to DB, convert number or string to Decimal128
+        set: (v) => mongoose_1.default.Types.Decimal128.fromString(v.toString()),
+    },
     loanAmount: {
         type: mongoose_1.default.Schema.Types.Decimal128,
         default: mongoose_1.default.Types.Decimal128.fromString("0.00"),

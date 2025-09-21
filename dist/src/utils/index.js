@@ -92,5 +92,12 @@ class Utils {
         const parts = input.split("_");
         return parts.length > 1 ? parts[0] : null;
     }
+    toNumber(value) {
+        const num = Number(value);
+        return isNaN(num) ? null : num;
+    }
+    getPercentage(percentage, value) {
+        return (percentage / 100) * value;
+    }
 }
 exports.utils = new Utils();

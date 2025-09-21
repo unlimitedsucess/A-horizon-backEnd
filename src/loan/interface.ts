@@ -8,6 +8,8 @@ export interface ILoan extends Document {
   status: LoanStatus;
   description: string;
   loanAmount: number;
+  loanBalance: number;
+  lastInterestUpateDate: Date;
   createdAt: Date;
   updatedAt: Date;
 }

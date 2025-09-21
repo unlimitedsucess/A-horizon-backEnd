@@ -14,10 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loanService = void 0;
 const entity_1 = __importDefault(require("./entity"));
+const utils_1 = require("../utils");
 class LoanService {
     applyLoan(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            let newLoan = new entity_1.default(Object.assign({}, input));
+            const loanPercentage = utils_1.utils.toNumber(utils_1.utils.getValueAfterUnderscore(input.loanDuration));
+            let newLoan = new entity_1.default(Object.assign(Object.assign({}, input), { loanBalance: utils_1.utils.getPercentage(loanPercentage, input.loanAmount) }));
             yield newLoan.save();
             return;
         });

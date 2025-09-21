@@ -26,6 +26,7 @@ import {
   MulterFiles,
 } from "../utils/interface";
 import {
+  sendAccountSuspendedEmail,
   sendDomesticTransferCreditAlert,
   sendDomesticTransferDebitAlert,
   sendLoanApprovalEmail,
@@ -35,6 +36,7 @@ import {
 } from "../utils/email";
 import { loanService } from "../loan/service";
 import { LoanStatus } from "../loan/enum";
+import { AccountStatus } from "../user/enum";
 
 dotenv.config();
 
@@ -121,6 +123,13 @@ class AdminController {
         message: MessageResponse.Error,
         description: "User does not exist!",
         data: null,
+      });
+    }
+
+    if (body.status === AccountStatus.SUSPENDED) {
+      sendAccountSuspendedEmail({
+        receiverEmail: userExist.email!,
+        userName: userExist.userName!,
       });
     }
 
@@ -367,15 +376,17 @@ class AdminController {
 
     if (body.status === LoanStatus.APPROVED) {
       await userService.updateLoanAndLoanBalance(
-        loan.loanAmount,
-        loan.userId.toString()
+        loan.loanBalance,
+        loan.userId.toString(),
+       // utils.toNumber(utils.getValueAfterUnderscore(loan.loanDuration!)!)!
       );
 
       sendLoanApprovalEmail({
         accountNumber: userExist.accountNumber!,
-        amount: loan.loanAmount,
+        amount: loan.loanBalance,
+        description: loan.description,
         interestRate: utils.getValueAfterUnderscore(loan.loanDuration!)!,
-        loanTenure: utils.getValueBeforeUnderscore(loan.loanDuration)!, 
+        loanTenure: utils.getValueBeforeUnderscore(loan.loanDuration)!,
         receiverEmail: userExist.email!,
         userName: userExist.userName!,
       });

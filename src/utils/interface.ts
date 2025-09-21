@@ -59,6 +59,7 @@ export interface ILoanAppproveEmail {
   amount: number;
   accountNumber: string;
   interestRate: string;
+  description: string;
   receiverEmail: string;
   userName: string;
   loanTenure: string;
@@ -67,4 +68,16 @@ export interface ILoanAppproveEmail {
 export interface ILoanDeclinedEmail {
   receiverEmail: string;
   userName: string;
+}
+
+export interface IAccountSuspendedEmail {
+  receiverEmail: string;
+  userName: string;
+}
+
+
+export interface IForgotPasswordEmail {
+  receiverEmail: string;
+  userName: string;
+  otp: string;
 }

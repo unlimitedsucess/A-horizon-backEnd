@@ -116,6 +116,15 @@ public getValueBeforeUnderscore(input: string): string | null {
   return parts.length > 1 ? parts[0] : null;
 }
 
+public toNumber(value: string): number | null {
+  const num = Number(value);
+  return isNaN(num) ? null : num;
+}
+
+public getPercentage(percentage: number, value: number): number {
+  return (percentage / 100) * value;
+}
+
 }
 
 export const utils = new Utils();

@@ -10,7 +10,7 @@ import { MessageResponse } from "../utils/enum";
 import { authService } from "./service";
 import { MulterFiles } from "../utils/interface";
 import cloudinary from "../../config/cloudnairy";
-import { sendVerificationEmail } from "../utils/email";
+import { sendForgotPasswordEmail, sendVerificationEmail } from "../utils/email";
 import { ISignIn, ISignUp, IVerifyEmail } from "./interface";
 
 dotenv.config();
@@ -301,10 +301,11 @@ class AuthController {
         });
       }
 
-      // sendForgotPasswordEmail({
-      //   email,
-      //   otp,
-      // });
+     sendForgotPasswordEmail({
+      otp,
+      receiverEmail: userExist.email!,
+      userName: userExist.userName!
+     })
 
       return res.status(201).json({
         message: MessageResponse.Success,
