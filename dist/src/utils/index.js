@@ -202,6 +202,7 @@ class Utils {
                     const newLoanBalance = currentLoanBalance.plus(interestAmount);
                     loan.loanBalance = mongoose_1.default.Types.Decimal128.fromString(newLoanBalance.toString());
                     loan.lastInterestAppliedDate = now;
+                    loan.interestAmount = mongoose_1.default.Types.Decimal128.fromString(interestAmount.toString());
                     yield loan.save();
                     // 7. Update user's loan balance
                     const user = yield entity_2.default.findOne({

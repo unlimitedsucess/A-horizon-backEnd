@@ -21,6 +21,7 @@ const loanSchema: Schema = new Schema(
       default: LoanStatus.PENDING,
       enum: Object.values(LoanStatus),
     },
+    //THis is set to future when last
     lastInterestAppliedDate: {
       type: Date,
       default: null
@@ -28,6 +29,17 @@ const loanSchema: Schema = new Schema(
     activationDate: {
       type: Date,
       default: null
+    },
+    interestAmount: {
+      type: mongoose.Schema.Types.Decimal128,
+      default: mongoose.Types.Decimal128.fromString("0.00"),
+      min: mongoose.Types.Decimal128.fromString("0.00"),
+      // When retrieving from DB, convert Decimal128 to number
+      get: (v: mongoose.Types.Decimal128 | undefined): number =>
+        v ? parseFloat(v.toString()) : 0,
+      // When saving to DB, convert number or string to Decimal128
+      set: (v: string | number): mongoose.Types.Decimal128 =>
+        mongoose.Types.Decimal128.fromString(v.toString()),
     },
     loanBalance: {
       type: mongoose.Schema.Types.Decimal128,

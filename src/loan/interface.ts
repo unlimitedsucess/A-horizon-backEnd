@@ -8,9 +8,10 @@ export interface ILoan extends Document {
   status: LoanStatus;
   description: string;
   loanAmount: Types.Decimal128;
+  interestAmount: Types.Decimal128;
   loanBalance: Types.Decimal128;
-  lastInterestAppliedDate: Date;
-  activationDate: Date;
+  lastInterestAppliedDate: Date | null;
+  activationDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }

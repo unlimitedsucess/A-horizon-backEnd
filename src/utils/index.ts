@@ -184,6 +184,7 @@ public getIntrest(percentage: number, value: number): number {
         const newLoanBalance = currentLoanBalance.plus(interestAmount);
         loan.loanBalance = mongoose.Types.Decimal128.fromString(newLoanBalance.toString());
         loan.lastInterestAppliedDate = now;
+        loan.interestAmount = mongoose.Types.Decimal128.fromString(interestAmount.toString());
         await loan.save();
 
         // 7. Update user's loan balance
