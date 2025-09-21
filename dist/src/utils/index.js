@@ -74,12 +74,15 @@ class Utils {
         const lower = str.toLowerCase().trim();
         return lower.charAt(0).toUpperCase() + lower.slice(1);
     }
-    isToday(dateString) {
-        const inputDate = new Date(dateString);
+    isToday(dateInput) {
+        const inputDate = new Date(dateInput);
+        if (isNaN(inputDate.getTime())) {
+            throw new Error("Invalid date format");
+        }
         const today = new Date();
-        return (inputDate.getUTCFullYear() === today.getUTCFullYear() &&
-            inputDate.getUTCMonth() === today.getUTCMonth() &&
-            inputDate.getUTCDate() === today.getUTCDate());
+        return (inputDate.getFullYear() === today.getFullYear() &&
+            inputDate.getMonth() === today.getMonth() &&
+            inputDate.getDate() === today.getDate());
     }
 }
 exports.utils = new Utils();

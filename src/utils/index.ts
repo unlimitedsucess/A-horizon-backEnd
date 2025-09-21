@@ -91,14 +91,18 @@ public generateCardPin = (): string => {
   return Array.from({ length: 4 }, () => Crypto.randomInt(0, 10)).join('');
 };
 
-public isToday(dateString: string) {
-  const inputDate = new Date(dateString);
+public isToday(dateInput: string) {
+  const inputDate = new Date(dateInput);
+  if (isNaN(inputDate.getTime())) {
+    throw new Error("Invalid date format");
+  }
+
   const today = new Date();
 
   return (
-    inputDate.getUTCFullYear() === today.getUTCFullYear() &&
-    inputDate.getUTCMonth() === today.getUTCMonth() &&
-    inputDate.getUTCDate() === today.getUTCDate()
+    inputDate.getFullYear() === today.getFullYear() &&
+    inputDate.getMonth() === today.getMonth() &&
+    inputDate.getDate() === today.getDate()
   );
 }
 
