@@ -34,7 +34,7 @@ export interface IEmailVerification {
   email: string;
 }
 
-export interface IWireTransferDebitEmail {
+export interface IWireTransferEmail {
   recipientName: string;
   accountName: string;
   country: string;
@@ -45,7 +45,7 @@ export interface IWireTransferDebitEmail {
   transferType: TransferType
 }
 
-export interface IDomesticTransferDebitEmail {
+export interface IDomesticTransferEmail {
   userName: string;
   recipientName: string;
   accountNumber: string;

@@ -91,6 +91,17 @@ public generateCardPin = (): string => {
   return Array.from({ length: 4 }, () => Crypto.randomInt(0, 10)).join('');
 };
 
+public isToday(dateString: string) {
+  const inputDate = new Date(dateString);
+  const today = new Date();
+
+  return (
+    inputDate.getUTCFullYear() === today.getUTCFullYear() &&
+    inputDate.getUTCMonth() === today.getUTCMonth() &&
+    inputDate.getUTCDate() === today.getUTCDate()
+  );
+}
+
 }
 
 export const utils = new Utils();

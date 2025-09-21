@@ -55,7 +55,7 @@ export interface IAdminCreateWireTransferInput {
   amount: number; 
   transferType: TransferType;
   status: TransactionStatus;
-  transactionDate: Date;
+  transactionDate: string;
 }
 
 
@@ -68,7 +68,7 @@ export interface IAdminCreateDomesticTransferUserInput {
   accountNumber: string;
   description?: string | null;
   amount: number; 
-  transactionDate: Date;
+  transactionDate: string;
   transactionType: TransactionType;
   transactionDirection: TransactionDirection;
   transferType: TransferType;

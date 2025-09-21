@@ -14,8 +14,22 @@ import { tokenExpiry } from "../utils/global";
 import jwt from "jsonwebtoken";
 import { ISignUp } from "../auth/interface";
 import { userService } from "../user/service";
-import { TransactionType, TransferType } from "../transaction/enum";
-import { MulterFiles } from "../utils/interface";
+import {
+  TransactionDirection,
+  TransactionType,
+  TransferType,
+} from "../transaction/enum";
+import {
+  IDomesticTransferEmail,
+  IWireTransferEmail,
+  MulterFiles,
+} from "../utils/interface";
+import {
+  sendDomesticTransferCreditAlert,
+  sendDomesticTransferDebitAlert,
+  sendWireTransferCreditAlert,
+  sendWireTransferDebitAlert,
+} from "../utils/email";
 
 dotenv.config();
 
@@ -232,9 +246,9 @@ class AdminController {
   public async adminCreateWireTransferHistory(req: Request, res: Response) {
     const body: IAdminCreateWireTransferInput = req.body;
 
-    const user = await userService.findUserById(body.userId);
+    const userExist = await userService.findUserById(body.userId);
 
-    if (!user) {
+    if (!userExist) {
       return res.status(404).json({
         message: MessageResponse.Success,
         description: "User not found!",
@@ -249,6 +263,25 @@ class AdminController {
 
     await adminService.adminCreateWireTransfer(txHis);
 
+    if (utils.isToday(body.transactionDate)) {
+      const alertEmail: IWireTransferEmail = {
+        recipientName: body.recipientName,
+        accountName: `${userExist.firstName} ${userExist.lastName}`!,
+        country: body.country,
+        swiftCode: body.swiftCode!,
+        routingNumber: body.routingNumber!,
+        amount: body.amount!,
+        senderEmail: userExist.email!,
+        transferType: TransferType.WIRE,
+      };
+
+      if (body.transactionDirection === TransactionDirection.CREDIT) {
+        sendWireTransferCreditAlert(alertEmail);
+      } else {
+        sendWireTransferDebitAlert(alertEmail);
+      }
+    }
+
     return res.status(201).json({
       message: MessageResponse.Success,
       description: "Transaction created successfully!",
@@ -259,9 +292,9 @@ class AdminController {
   public async adminCreateDomesticTransferHistory(req: Request, res: Response) {
     const body: IAdminCreateDomesticTransferUserInput = req.body;
 
-    const user = await userService.findUserById(body.userId);
+    const userExist = await userService.findUserById(body.userId);
 
-    if (!user) {
+    if (!userExist) {
       return res.status(404).json({
         message: MessageResponse.Error,
         description: "User not found!",
@@ -275,6 +308,24 @@ class AdminController {
     };
 
     await adminService.adminCreateDomesticTransfer(txHis);
+
+    if (utils.isToday(body.transactionDate)) {
+      // 📩 Send debit alert
+      const alertEmail: IDomesticTransferEmail = {
+        recipientName: body.recipientName,
+        userName: userExist.userName!,
+        accountNumber: body.accountNumber,
+        amount: body.amount!,
+        senderEmail: userExist.email!,
+        transferType: TransferType.WIRE,
+      };
+
+      if (body.transactionDirection === TransactionDirection.CREDIT) {
+        sendDomesticTransferCreditAlert(alertEmail);
+      } else {
+        sendDomesticTransferDebitAlert(alertEmail);
+      }
+    }
 
     return res.status(201).json({
       message: MessageResponse.Success,

@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import { MessageResponse } from "../utils/enum";
 import {
   CustomRequest,
-  IDomesticTransferDebitEmail,
-  IWireTransferDebitEmail,
+  IDomesticTransferEmail,
+  IWireTransferEmail,
 } from "../utils/interface";
 import { userService } from "../user/service";
 import { transactionService } from "./service";
@@ -81,7 +81,7 @@ class TransactionController {
     await transactionService.debitUser(transferAmount, userExist._id.toString());
 
     // 📩 Send debit alert
-    const debitAlert: IWireTransferDebitEmail = {
+    const debitAlert: IWireTransferEmail = {
       recipientName: body.recipientName,
       accountName: `${userExist.firstName} ${userExist.lastName}`!,
       country: body.country,
@@ -159,7 +159,7 @@ class TransactionController {
     await transactionService.debitUser(transferAmount, userExist._id.toString());
 
     // 📩 Send debit alert
-    const debitAlert: IDomesticTransferDebitEmail = {
+    const debitAlert: IDomesticTransferEmail = {
       recipientName: body.recipientName,
       userName: userExist.userName!,
       accountNumber: body.accountNumber,

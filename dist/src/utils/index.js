@@ -74,5 +74,12 @@ class Utils {
         const lower = str.toLowerCase().trim();
         return lower.charAt(0).toUpperCase() + lower.slice(1);
     }
+    isToday(dateString) {
+        const inputDate = new Date(dateString);
+        const today = new Date();
+        return (inputDate.getUTCFullYear() === today.getUTCFullYear() &&
+            inputDate.getUTCMonth() === today.getUTCMonth() &&
+            inputDate.getUTCDate() === today.getUTCDate());
+    }
 }
 exports.utils = new Utils();

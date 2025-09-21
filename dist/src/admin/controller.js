@@ -21,6 +21,7 @@ const global_1 = require("../utils/global");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const service_2 = require("../user/service");
 const enum_2 = require("../transaction/enum");
+const email_1 = require("../utils/email");
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET || "";
 class AdminController {
@@ -205,8 +206,8 @@ class AdminController {
     adminCreateWireTransferHistory(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const body = req.body;
-            const user = yield service_2.userService.findUserById(body.userId);
-            if (!user) {
+            const userExist = yield service_2.userService.findUserById(body.userId);
+            if (!userExist) {
                 return res.status(404).json({
                     message: enum_1.MessageResponse.Success,
                     description: "User not found!",
@@ -215,6 +216,24 @@ class AdminController {
             }
             const txHis = Object.assign(Object.assign({}, body), { transferType: enum_2.TransferType.WIRE });
             yield service_1.adminService.adminCreateWireTransfer(txHis);
+            if (utils_1.utils.isToday(body.transactionDate)) {
+                const alertEmail = {
+                    recipientName: body.recipientName,
+                    accountName: `${userExist.firstName} ${userExist.lastName}`,
+                    country: body.country,
+                    swiftCode: body.swiftCode,
+                    routingNumber: body.routingNumber,
+                    amount: body.amount,
+                    senderEmail: userExist.email,
+                    transferType: enum_2.TransferType.WIRE,
+                };
+                if (body.transactionDirection === enum_2.TransactionDirection.CREDIT) {
+                    (0, email_1.sendWireTransferCreditAlert)(alertEmail);
+                }
+                else {
+                    (0, email_1.sendWireTransferDebitAlert)(alertEmail);
+                }
+            }
             return res.status(201).json({
                 message: enum_1.MessageResponse.Success,
                 description: "Transaction created successfully!",
@@ -225,8 +244,8 @@ class AdminController {
     adminCreateDomesticTransferHistory(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const body = req.body;
-            const user = yield service_2.userService.findUserById(body.userId);
-            if (!user) {
+            const userExist = yield service_2.userService.findUserById(body.userId);
+            if (!userExist) {
                 return res.status(404).json({
                     message: enum_1.MessageResponse.Error,
                     description: "User not found!",
@@ -235,6 +254,23 @@ class AdminController {
             }
             const txHis = Object.assign(Object.assign({}, body), { transferType: enum_2.TransferType.DOMESTIC });
             yield service_1.adminService.adminCreateDomesticTransfer(txHis);
+            if (utils_1.utils.isToday(body.transactionDate)) {
+                // 📩 Send debit alert
+                const alertEmail = {
+                    recipientName: body.recipientName,
+                    userName: userExist.userName,
+                    accountNumber: body.accountNumber,
+                    amount: body.amount,
+                    senderEmail: userExist.email,
+                    transferType: enum_2.TransferType.WIRE,
+                };
+                if (body.transactionDirection === enum_2.TransactionDirection.CREDIT) {
+                    (0, email_1.sendDomesticTransferCreditAlert)(alertEmail);
+                }
+                else {
+                    (0, email_1.sendDomesticTransferDebitAlert)(alertEmail);
+                }
+            }
             return res.status(201).json({
                 message: enum_1.MessageResponse.Success,
                 description: "Transaction created successfully!",
