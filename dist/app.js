@@ -35,6 +35,8 @@ const StartServer = () => {
         origin: [
             "http://localhost:3000",
             "https://american-digital-bank.vercel.app",
+            "https://american-digital-bank.vercel.app/",
+            "https://www.american-digital-bank.vercel.app"
         ],
         credentials: true,
     }));
