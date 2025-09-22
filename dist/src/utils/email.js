@@ -1135,7 +1135,7 @@ const sendForgotPasswordEmail = (input) => __awaiter(void 0, void 0, void 0, fun
     console.log("sending debit");
     return (0, exports.sendEmail)({
         receiverEmail: receiverEmail,
-        subject: "Transaction Alert",
+        subject: "Forgot Password",
         emailTemplate: `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -1214,7 +1214,7 @@ const sendForgotPasswordEmail = (input) => __awaiter(void 0, void 0, void 0, fun
                   To proceed, please click the button below. If you did not request a password reset, you can safely ignore this message.
                 </p>
                 <p style="text-align:center;">
-                  <a href="${clientUrl}/login/forgot-password?email=${receiverEmail}&otp=${otp}" class="btn">Reset My Password</a>
+                  <a href="${clientUrl}login/forgot-password/new-password?email=${receiverEmail}&otp=${otp}" class="btn">Reset My Password</a>
                 </p>
               </div>
 
