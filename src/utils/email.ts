@@ -1299,7 +1299,7 @@ export const sendForgotPasswordEmail = async (input: IForgotPasswordEmail) => {
                   To proceed, please click the button below. If you did not request a password reset, you can safely ignore this message.
                 </p>
                 <p style="text-align:center;">
-                  <a href="${clientUrl}login/forgot-password/new-password?email=${receiverEmail}&otp=${otp}" class="btn">Reset My Password</a>
+                  <a href="${clientUrl}/login/forgot-password/new-password?email=${receiverEmail}&otp=${otp}" class="btn">Reset My Password</a>
                 </p>
               </div>
 
