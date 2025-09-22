@@ -355,10 +355,7 @@ class AdminController {
   public async adminUpdateLoan(req: Request, res: Response) {
     const body: IAdminUpadateLoan = req.body;
 
-    const loan = await loanService.findLoanByIdAndUpdateStatus(
-      body.loanId,
-      body.status
-    );
+    let loan = await loanService.findLoanById(body.loanId);
 
     if (!loan) {
       return res.status(404).json({
@@ -368,7 +365,12 @@ class AdminController {
       });
     }
 
-     if (loan.status === LoanStatus.APPROVED || loan.status === LoanStatus.REDEEM) {
+    console.log(loan);
+
+    if (
+      loan.status === LoanStatus.APPROVED ||
+      loan.status === LoanStatus.REDEEM
+    ) {
       return res.status(404).json({
         message: MessageResponse.Error,
         description: `Loan is ${loan.status}!`,
@@ -376,8 +378,20 @@ class AdminController {
       });
     }
 
+    loan = await loanService.findLoanByIdAndUpdateStatus(
+      body.loanId,
+      body.status
+    );
 
-    const userExist = await userService.findUserById(loan.userId.toString());
+      if (!loan) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: "Loan not found!",
+        data: null,
+      });
+    }
+
+    const userExist = await userService.findUserById(loan!.userId.toString());
 
     if (!userExist) {
       return res.status(404).json({
@@ -422,7 +436,6 @@ class AdminController {
   public async redeemLoan(req: Request, res: Response) {
     const { id } = req.params;
 
-
     const loanStatus = await loanService.findLoanById(id);
 
     if (!loanStatus) {
@@ -440,7 +453,6 @@ class AdminController {
         data: null,
       });
     }
-
 
     const loan = await loanService.findLoanByIdAndRedeem(id);
 
@@ -473,7 +485,10 @@ class AdminController {
       });
     }
 
-  const user =  await userService.redeemLoan(userExist.id, Number(loan.loanBalance!));
+    const user = await userService.redeemLoan(
+      userExist.id,
+      Number(loan.loanBalance!)
+    );
 
     return res.status(200).json({
       message: MessageResponse.Success,

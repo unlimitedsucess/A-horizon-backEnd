@@ -290,7 +290,7 @@ class AdminController {
     adminUpdateLoan(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const body = req.body;
-            const loan = yield service_3.loanService.findLoanByIdAndUpdateStatus(body.loanId, body.status);
+            let loan = yield service_3.loanService.findLoanById(body.loanId);
             if (!loan) {
                 return res.status(404).json({
                     message: enum_1.MessageResponse.Error,
@@ -298,10 +298,20 @@ class AdminController {
                     data: null,
                 });
             }
-            if (loan.status === enum_3.LoanStatus.APPROVED || loan.status === enum_3.LoanStatus.REDEEM) {
+            console.log(loan);
+            if (loan.status === enum_3.LoanStatus.APPROVED ||
+                loan.status === enum_3.LoanStatus.REDEEM) {
                 return res.status(404).json({
                     message: enum_1.MessageResponse.Error,
                     description: `Loan is ${loan.status}!`,
+                    data: null,
+                });
+            }
+            loan = yield service_3.loanService.findLoanByIdAndUpdateStatus(body.loanId, body.status);
+            if (!loan) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "Loan not found!",
                     data: null,
                 });
             }

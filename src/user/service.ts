@@ -62,6 +62,8 @@ class UserService {
         newAccBalance.toFixed(2)
       );
 
+      console.log("here")
+
       await user.save();
 
       return user;

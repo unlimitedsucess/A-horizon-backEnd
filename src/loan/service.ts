@@ -63,6 +63,7 @@ class LoanService {
       loan.status = status;
       loan.activationDate = activationDate;
       loan.lastInterestAppliedDate = lastInterestAppliedDate;
+      loan.interestAmount = mongoose.Types.Decimal128.fromString(interestAmount.toFixed());
       loan.loanBalance = mongoose.Types.Decimal128.fromString(
         newLoanBalance.toString()
       );

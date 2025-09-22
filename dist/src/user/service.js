@@ -61,6 +61,7 @@ class UserService {
                 user.loan = mongoose_1.default.Types.Decimal128.fromString(newLoan.toFixed(2));
                 user.loanBalance = mongoose_1.default.Types.Decimal128.fromString(newLoanBalance.toFixed(2));
                 user.initialDeposit = mongoose_1.default.Types.Decimal128.fromString(newAccBalance.toFixed(2));
+                console.log("here");
                 yield user.save();
                 return user;
             }
