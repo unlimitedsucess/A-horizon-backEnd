@@ -36,8 +36,8 @@ class LoanService {
             const loan = yield entity_1.default.findById(id);
             if (!loan)
                 return null;
-            if (loan.status === enum_1.LoanStatus.APPROVED) {
-                return;
+            if (loan.status === enum_1.LoanStatus.APPROVED || loan.status === enum_1.LoanStatus.REDEEM) {
+                return loan;
             }
             if (status === enum_1.LoanStatus.APPROVED) {
                 const activationDate = new Date();
@@ -67,6 +67,49 @@ class LoanService {
             loan.activationDate = null;
             loan.lastInterestAppliedDate = null;
             yield loan.save();
+            return loan;
+        });
+    }
+    // public async findLoanByIdAndUpdateStatus(id: string, status: LoanStatus) {
+    //   // Parse loan to get monthPart
+    //   const loan = await Loan.findById(id);
+    //   if (!loan) return null;
+    //   let activationDate: Date | null = null;
+    //   let lastInterestAppliedDate: Date | null = null;
+    //   if (status === LoanStatus.APPROVED) {
+    //     activationDate = new Date();
+    //     // Example: "1_month_5"
+    //     const [monthPart, percentagePart] = loan.loanDuration.split("_");
+    //     const months = parseInt(monthPart, 10);
+    //     lastInterestAppliedDate = new Date(activationDate);
+    //     lastInterestAppliedDate.setMonth(lastInterestAppliedDate.getMonth() + months);
+    //   }
+    //   const updatedLoan = await Loan.findOneAndUpdate(
+    //     { _id: id },
+    //     {
+    //       $set: {
+    //         status,
+    //         activationDate,
+    //         lastInterestAppliedDate,
+    //       },
+    //     },
+    //     { new: true }
+    //   );
+    //   return updatedLoan;
+    // }
+    findLoanByIdAndRedeem(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const updatedLoan = yield entity_1.default.findOneAndUpdate({ _id: id, status: enum_1.LoanStatus.APPROVED }, {
+                $set: {
+                    status: enum_1.LoanStatus.REDEEM,
+                },
+            }, { new: true });
+            return updatedLoan;
+        });
+    }
+    findLoanById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const loan = yield entity_1.default.findById(id);
             return loan;
         });
     }

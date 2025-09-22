@@ -84,7 +84,11 @@ AdminRouter.patch(
   utils.wrapAsync(adminController.adminUpdateLoan)
 );
 
-
+AdminRouter.patch(
+  "/redeem/loan/:id",
+  [isAuth, GeneralMiddleware.isAdmin, adminValidator.validateParams],
+  utils.wrapAsync(adminController.redeemLoan)
+);
 
 // //create transfer with admin
 // AdminRouter.post(

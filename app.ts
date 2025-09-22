@@ -120,7 +120,7 @@ mongoose
 
 
 
-cron.schedule("*/5 * * * * *", () => {
-console.log("calledd");
-utils.updateLoansAndBalances()
-});
+// cron.schedule("*/5 * * * * *", () => {
+// console.log("calledd");
+// utils.updateLoansAndBalances()
+// });

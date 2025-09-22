@@ -17,8 +17,6 @@ const router_5 = require("./src/card/router");
 const router_6 = require("./src/admin/router");
 const router_7 = require("./src/contactUs/router");
 const app = (0, express_1.default)();
-const node_cron_1 = __importDefault(require("node-cron"));
-const utils_1 = require("./src/utils");
 dotenv_1.default.config();
 const port = 8080;
 const StartServer = () => {
@@ -90,7 +88,7 @@ mongoose_1.default
     loggin_1.default.error(_error);
     process.exit(1);
 });
-node_cron_1.default.schedule("*/5 * * * * *", () => {
-    console.log("calledd");
-    utils_1.utils.updateLoansAndBalances();
-});
+// cron.schedule("*/5 * * * * *", () => {
+// console.log("calledd");
+// utils.updateLoansAndBalances()
+// });

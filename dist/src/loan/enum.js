@@ -15,4 +15,5 @@ var LoanStatus;
     LoanStatus["OVERDUE"] = "overdue";
     LoanStatus["REJECTED"] = "rejected";
     LoanStatus["APPROVED"] = "approved";
+    LoanStatus["REDEEM"] = "redeem";
 })(LoanStatus || (exports.LoanStatus = LoanStatus = {}));

@@ -45,7 +45,7 @@ class UserService {
             return user;
         });
     }
-    updateLoanAndLoanBalance(amount, userId) {
+    updateLoanAndLoanBalance(loanAmountWithIntrest, loanAmount, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;
             const user = yield entity_1.default.findById(userId);
@@ -53,13 +53,31 @@ class UserService {
                 const currentLoan = new decimal_js_1.default(((_a = user.loan) === null || _a === void 0 ? void 0 : _a.toString()) || "0");
                 const currentLoanBalance = new decimal_js_1.default(((_b = user.loanBalance) === null || _b === void 0 ? void 0 : _b.toString()) || "0");
                 const accBalance = new decimal_js_1.default(((_c = user.initialDeposit) === null || _c === void 0 ? void 0 : _c.toString()) || "0");
-                const amountToAdd = new decimal_js_1.default(amount);
-                const newLoan = currentLoan.plus(amountToAdd);
-                const newLoanBalance = currentLoanBalance.plus(amountToAdd);
-                const newAccBalance = accBalance.plus(amountToAdd);
+                const amountToAddWithInrest = new decimal_js_1.default(loanAmountWithIntrest);
+                const loanAmountToAdd = new decimal_js_1.default(loanAmount);
+                const newLoan = currentLoan.plus(loanAmountToAdd);
+                const newLoanBalance = currentLoanBalance.plus(amountToAddWithInrest);
+                const newAccBalance = accBalance.plus(amountToAddWithInrest);
                 user.loan = mongoose_1.default.Types.Decimal128.fromString(newLoan.toFixed(2));
                 user.loanBalance = mongoose_1.default.Types.Decimal128.fromString(newLoanBalance.toFixed(2));
                 user.initialDeposit = mongoose_1.default.Types.Decimal128.fromString(newAccBalance.toFixed(2));
+                yield user.save();
+                return user;
+            }
+            return user;
+        });
+    }
+    redeemLoan(id, amount) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            console.log(amount);
+            const user = yield entity_1.default.findById(id);
+            if (user) {
+                user.loanBalance = mongoose_1.default.Types.Decimal128.fromString("0.00");
+                const currentBalance = new decimal_js_1.default(((_a = user.initialDeposit) === null || _a === void 0 ? void 0 : _a.toString()) || "0");
+                const amountToMinus = new decimal_js_1.default(amount);
+                const newBalance = currentBalance.minus(amountToMinus);
+                user.initialDeposit = mongoose_1.default.Types.Decimal128.fromString(newBalance.toFixed(2));
                 yield user.save();
                 return user;
             }

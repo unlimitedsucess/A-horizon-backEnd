@@ -298,6 +298,13 @@ class AdminController {
                     data: null,
                 });
             }
+            if (loan.status === enum_3.LoanStatus.APPROVED || loan.status === enum_3.LoanStatus.REDEEM) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: `Loan is ${loan.status}!`,
+                    data: null,
+                });
+            }
             const userExist = yield service_2.userService.findUserById(loan.userId.toString());
             if (!userExist) {
                 return res.status(404).json({
@@ -307,7 +314,7 @@ class AdminController {
                 });
             }
             if (body.status === enum_3.LoanStatus.APPROVED) {
-                yield service_2.userService.updateLoanAndLoanBalance(Number(loan.loanBalance.toString()), loan.userId.toString());
+                yield service_2.userService.updateLoanAndLoanBalance(Number(loan.loanBalance.toString()), Number(loan.loanAmount.toString()), loan.userId.toString());
                 (0, email_1.sendLoanApprovalEmail)({
                     accountNumber: userExist.accountNumber,
                     amount: Number(loan.loanBalance.toString()),
@@ -327,6 +334,57 @@ class AdminController {
             return res.status(200).json({
                 message: enum_1.MessageResponse.Success,
                 description: `Loan updated successfully!`,
+                data: null,
+            });
+        });
+    }
+    redeemLoan(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const loanStatus = yield service_3.loanService.findLoanById(id);
+            if (!loanStatus) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "Loan not found!",
+                    data: null,
+                });
+            }
+            if (loanStatus.status !== enum_3.LoanStatus.APPROVED) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: `Loan is ${loanStatus.status}!`,
+                    data: null,
+                });
+            }
+            const loan = yield service_3.loanService.findLoanByIdAndRedeem(id);
+            if (!loan) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "Loan not found or has already been red!",
+                    data: null,
+                });
+            }
+            const userExist = yield service_2.userService.findUserById(loan.userId.toString());
+            if (!userExist) {
+                return res.status(404).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "User not found!",
+                    data: null,
+                });
+            }
+            const userBalance = parseFloat(userExist.initialDeposit.toString());
+            const loanBalance = parseFloat(userExist.loanBalance.toString());
+            if (loanBalance > userBalance) {
+                return res.status(400).json({
+                    message: enum_1.MessageResponse.Error,
+                    description: "Insufficient balance!",
+                    data: null,
+                });
+            }
+            const user = yield service_2.userService.redeemLoan(userExist.id, Number(loan.loanBalance));
+            return res.status(200).json({
+                message: enum_1.MessageResponse.Success,
+                description: `Loan redeemed successfully!`,
                 data: null,
             });
         });

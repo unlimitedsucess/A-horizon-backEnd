@@ -368,6 +368,15 @@ class AdminController {
       });
     }
 
+     if (loan.status === LoanStatus.APPROVED || loan.status === LoanStatus.REDEEM) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: `Loan is ${loan.status}!`,
+        data: null,
+      });
+    }
+
+
     const userExist = await userService.findUserById(loan.userId.toString());
 
     if (!userExist) {
@@ -381,7 +390,8 @@ class AdminController {
     if (body.status === LoanStatus.APPROVED) {
       await userService.updateLoanAndLoanBalance(
         Number(loan.loanBalance.toString()),
-        loan.userId.toString(),
+        Number(loan.loanAmount.toString()),
+        loan.userId.toString()
       );
 
       sendLoanApprovalEmail({
@@ -407,9 +417,70 @@ class AdminController {
       description: `Loan updated successfully!`,
       data: null,
     });
-    
   }
 
+  public async redeemLoan(req: Request, res: Response) {
+    const { id } = req.params;
+
+
+    const loanStatus = await loanService.findLoanById(id);
+
+    if (!loanStatus) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: "Loan not found!",
+        data: null,
+      });
+    }
+
+    if (loanStatus.status !== LoanStatus.APPROVED) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: `Loan is ${loanStatus.status}!`,
+        data: null,
+      });
+    }
+
+
+    const loan = await loanService.findLoanByIdAndRedeem(id);
+
+    if (!loan) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: "Loan not found or has already been red!",
+        data: null,
+      });
+    }
+
+    const userExist = await userService.findUserById(loan.userId.toString());
+
+    if (!userExist) {
+      return res.status(404).json({
+        message: MessageResponse.Error,
+        description: "User not found!",
+        data: null,
+      });
+    }
+
+    const userBalance = parseFloat(userExist.initialDeposit!.toString());
+    const loanBalance = parseFloat(userExist.loanBalance!.toString());
+
+    if (loanBalance > userBalance) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Insufficient balance!",
+        data: null,
+      });
+    }
+
+  const user =  await userService.redeemLoan(userExist.id, Number(loan.loanBalance!));
+
+    return res.status(200).json({
+      message: MessageResponse.Success,
+      description: `Loan redeemed successfully!`,
+      data: null,
+    });
+  }
 }
 
 export const adminController = new AdminController();
