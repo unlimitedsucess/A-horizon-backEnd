@@ -82,6 +82,7 @@ class TransactionController {
 
     // 📩 Send debit alert
     const debitAlert: IWireTransferEmail = {
+      userName: userExist.userName!,
       recipientName: body.recipientName,
       accountName: `${userExist.firstName} ${userExist.lastName}`!,
       country: body.country,

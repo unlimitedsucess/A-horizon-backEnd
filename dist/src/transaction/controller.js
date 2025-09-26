@@ -61,6 +61,7 @@ class TransactionController {
             yield service_2.transactionService.debitUser(transferAmount, userExist._id.toString());
             // 📩 Send debit alert
             const debitAlert = {
+                userName: userExist.userName,
                 recipientName: body.recipientName,
                 accountName: `${userExist.firstName} ${userExist.lastName}`,
                 country: body.country,

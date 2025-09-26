@@ -244,7 +244,7 @@ const sendVerificationEmail = (input) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.sendVerificationEmail = sendVerificationEmail;
 const sendWireTransferDebitAlert = (input) => __awaiter(void 0, void 0, void 0, function* () {
-    const { accountName, amount, country, recipientName, routingNumber, swiftCode, senderEmail, transferType, } = input;
+    const { accountName, userName, amount, country, recipientName, routingNumber, swiftCode, senderEmail, transferType, } = input;
     const now = new Date();
     const humanReadableDate = now.toLocaleString("en-US", {
         weekday: "long", // e.g., Monday
@@ -315,7 +315,7 @@ const sendWireTransferDebitAlert = (input) => __awaiter(void 0, void 0, void 0, 
           <tr>
             <td class="content" style="padding:40px;">
               <p style="font-size:16px; color:#333; line-height:1.6; margin:0 0 20px 0;">
-                Dear <span class="highlight">{{username}}</span>,
+                Dear <span class="highlight">${userName}</span>,
               </p>
               <p style="font-size:16px; color:#555; line-height:1.6; margin:0 0 25px 0;">
                 A debit transaction has been made from your account with <strong>${compName}</strong>.  

@@ -227,6 +227,7 @@ class AdminController {
             yield service_1.adminService.adminCreateWireTransfer(txHis);
             if (utils_1.utils.isToday(body.transactionDate)) {
                 const alertEmail = {
+                    userName: userExist.userName,
                     recipientName: body.recipientName,
                     accountName: `${userExist.firstName} ${userExist.lastName}`,
                     country: body.country,

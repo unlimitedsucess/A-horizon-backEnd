@@ -35,6 +35,7 @@ export interface IEmailVerification {
 }
 
 export interface IWireTransferEmail {
+  userName: string;
   recipientName: string;
   accountName: string;
   country: string;

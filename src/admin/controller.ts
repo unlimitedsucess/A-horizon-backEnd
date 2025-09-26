@@ -283,6 +283,7 @@ class AdminController {
 
     if (utils.isToday(body.transactionDate)) {
       const alertEmail: IWireTransferEmail = {
+        userName: userExist.userName!,
         recipientName: body.recipientName,
         accountName: `${userExist.firstName} ${userExist.lastName}`!,
         country: body.country,
