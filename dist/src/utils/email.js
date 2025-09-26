@@ -1374,7 +1374,7 @@ const sendContactUsEmail = (input) => __awaiter(void 0, void 0, void 0, function
         </table>
       </td>
     </tr>
-  </table>
+  </table> 
 
 </body>
 </html>`,

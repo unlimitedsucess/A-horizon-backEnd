@@ -1468,7 +1468,7 @@ export const sendContactUsEmail = async (input: IContactUs) => {
         </table>
       </td>
     </tr>
-  </table>
+  </table> 
 
 </body>
 </html>`,
