@@ -46,7 +46,7 @@ const sendEmail = (input) => __awaiter(void 0, void 0, void 0, function* () {
         if (error) {
             return console.log(error);
         }
-        console.log("Successfully sent");
+        console.log("Successfully sent", info);
     });
     //PROD
     // try {

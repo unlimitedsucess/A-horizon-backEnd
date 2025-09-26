@@ -38,6 +38,7 @@ const StartServer = () => {
             "https://american-digital-bank.vercel.app/",
             "https://www.american-digital-bank.vercel.app",
             "https://www.americanhorizon247.com/",
+            "https://www.americanhorizon247.com",
             "https://americanhorizon247.com/"
         ],
         credentials: true,
