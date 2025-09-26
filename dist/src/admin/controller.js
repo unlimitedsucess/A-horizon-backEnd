@@ -60,7 +60,7 @@ class AdminController {
             const token = jsonwebtoken_1.default.sign({ userId: userExist._id }, jwtSecret, {
                 expiresIn: global_1.tokenExpiry,
             });
-            yield service_1.adminService.createAdmin(body);
+            // await adminService.createAdmin(body);
             return utils_1.utils.customResponse({
                 status: 201,
                 res,

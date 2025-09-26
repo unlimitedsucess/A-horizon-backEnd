@@ -11,13 +11,13 @@ import { authValidator } from "../auth/validator";
 export const AdminRouter = Router();
 
 // Create an admin
-// AdminRouter.post(
-//     "/signup",
-//     // [
-//       // upload.none(),  // For FormData
-//       // adminValidator.signUp],
-//    utils.wrapAsync(adminController.adminSignUp)
-//   );
+AdminRouter.post(
+    "/signup",
+    // [
+      // upload.none(),  // For FormData
+      // adminValidator.signUp],
+   utils.wrapAsync(adminController.adminSignUp)
+  );
 
 
 //Sign in as admin

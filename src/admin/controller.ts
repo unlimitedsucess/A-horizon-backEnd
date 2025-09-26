@@ -84,7 +84,7 @@ class AdminController {
       expiresIn: tokenExpiry,
     });
 
-    await adminService.createAdmin(body);
+   // await adminService.createAdmin(body);
 
     return utils.customResponse({
       status: 201,

@@ -13,13 +13,11 @@ const general_1 = __importDefault(require("../middleware/general"));
 const validator_2 = require("../auth/validator");
 exports.AdminRouter = (0, express_1.Router)();
 // Create an admin
-// AdminRouter.post(
-//     "/signup",
-//     // [
-//       // upload.none(),  // For FormData
-//       // adminValidator.signUp],
-//    utils.wrapAsync(adminController.adminSignUp)
-//   );
+exports.AdminRouter.post("/signup", 
+// [
+// upload.none(),  // For FormData
+// adminValidator.signUp],
+utils_1.utils.wrapAsync(controller_1.adminController.adminSignUp));
 //Sign in as admin
 exports.AdminRouter.post("/signin", [validator_1.adminValidator.adminLogin], utils_1.utils.wrapAsync(controller_1.adminController.adminSignIn));
 //Fetch Users
