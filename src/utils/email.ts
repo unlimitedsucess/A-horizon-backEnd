@@ -30,6 +30,7 @@ export const sendEmail = async (input: ISendEmail) => {
   var transport = nodemailer.createTransport({
     host: "smtp.zeptomail.com",
     port: 587,
+     secure: false,
     auth: {
       user: smtpSender,
       pass: smtpPassword,
@@ -43,6 +44,14 @@ export const sendEmail = async (input: ISendEmail) => {
     subject: input.subject,
     html: input.emailTemplate,
   };
+
+  transport.verify(function (error, success) {
+  if (error) {
+    console.error("SMTP verification error:", error);
+  } else {
+    console.log("SMTP connection is good");
+  }
+});
 
   transport.sendMail(mailOptions, (error, info) => {
     if (error) {
