@@ -27,71 +27,71 @@ dotenv.config();
 
 export const sendEmail = async (input: ISendEmail) => {
   //PROD
-  // var transport = nodemailer.createTransport({
-  //   host: "smtp.zeptomail.com",
-  //   port: 587,
-  //   auth: {
-  //     user: smtpSender,
-  //     pass: smtpPassword,
-  //   },
-  // });
+  var transport = nodemailer.createTransport({
+    host: "smtp.zeptomail.com",
+    port: 587,
+    auth: {
+      user: smtpSender,
+      pass: smtpPassword,
+    },
+  });
 
-  // var mailOptions = {
-  //   from: `"Alphacourier Team" <${smtpEmailFrom}>`,
-  //   to: input.receiverEmail,
-  //   replyTo: smtpEmailFrom,
-  //   subject: input.subject,
-  //   html: input.emailTemplate,
-  // };
+  var mailOptions = {
+    from: `"${compName} Team" <${smtpEmailFrom}>`,
+    to: input.receiverEmail,
+    replyTo: smtpEmailFrom,
+    subject: input.subject,
+    html: input.emailTemplate,
+  };
 
-  // transport.sendMail(mailOptions, (error, info) => {
-  //   if (error) {
-  //     return console.log(error);
-  //   }
-  //   console.log("Successfully sent");
-  // });
+  transport.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log("Successfully sent");
+  });
   //PROD
 
-  try {
-    // const transporter = nodemailer.createTransport({
-    //   host: 'smtp-relay.sendinblue.com',
-    //   port: 587,
-    //   secure: false,
-    //   auth: {
-    //     user: smtpSender,
-    //     pass: smtpPassword,
-    //   },
-    // });
+  // try {
+  //   // const transporter = nodemailer.createTransport({
+  //   //   host: 'smtp-relay.sendinblue.com',
+  //   //   port: 587,
+  //   //   secure: false,
+  //   //   auth: {
+  //   //     user: smtpSender,
+  //   //     pass: smtpPassword,
+  //   //   },
+  //   // });
 
-    // const mailOptions = {
-    //   from: `Alphacourier <${smtpEmailFrom}>`,
-    //   to: input.receiverEmail,
-    //   subject: input.subject,
-    //   html: input.emailTemplate,
-    // };
+  //   // const mailOptions = {
+  //   //   from: `Alphacourier <${smtpEmailFrom}>`,
+  //   //   to: input.receiverEmail,
+  //   //   subject: input.subject,
+  //   //   html: input.emailTemplate,
+  //   // };
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: smtpSender,
-        pass: smtpPassword,
-      },
-    });
+  //   const transporter = nodemailer.createTransport({
+  //     service: "gmail",
+  //     auth: {
+  //       user: smtpSender,
+  //       pass: smtpPassword,
+  //     },
+  //   });
 
-    const mailOptions = {
-      from: `${compName} <${smtpEmailFrom}>`,
-      to: input.receiverEmail,
-      subject: input.subject,
-      html: input.emailTemplate,
-    };
+  //   const mailOptions = {
+  //     from: `${compName} <${smtpEmailFrom}>`,
+  //     to: input.receiverEmail,
+  //     subject: input.subject,
+  //     html: input.emailTemplate,
+  //   };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.error("email=sent", info);
-    return info.response;
-  } catch (error) {
-    console.error("Email sending error:", error);
-    // throw error;
-  }
+  //   const info = await transporter.sendMail(mailOptions);
+  //   console.error("email=sent", info);
+  //   return info.response;
+  // } catch (error) {
+  //   console.error("Email sending error:", error);
+  //   // throw error;
+  // }
 };
 
 export const sendVerificationEmail = async (input: IEmailVerification) => {
