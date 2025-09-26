@@ -15,8 +15,8 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendContactUsEmail = exports.sendForgotPasswordEmail = exports.sendAccountSuspendedEmail = exports.sendLoanDeclinedEmail = exports.sendLoanApprovalEmail = exports.sendWireTransferCreditAlert = exports.sendDomesticTransferCreditAlert = exports.sendDomesticTransferDebitAlert = exports.sendWireTransferDebitAlert = exports.sendVerificationEmail = exports.sendEmail = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
-const nodemailer_1 = __importDefault(require("nodemailer"));
 const _1 = require(".");
+const axios_1 = __importDefault(require("axios"));
 dotenv_1.default.config();
 const smtpSender = process.env.EMAILSENDER;
 const smtpPassword = process.env.EMAILSENDERPASSWORD;
@@ -27,36 +27,47 @@ const compName = (_b = process.env.COMP_NAME) !== null && _b !== void 0 ? _b : "
 dotenv_1.default.config();
 const sendEmail = (input) => __awaiter(void 0, void 0, void 0, function* () {
     //PROD
-    var transport = nodemailer_1.default.createTransport({
-        host: "smtp.zeptomail.com",
-        port: 587,
-        secure: false,
-        auth: {
-            user: smtpSender,
-            pass: smtpPassword,
+    const resp = yield axios_1.default.post("https://api.zeptomail.com/v1.1/email", {
+        from: { address: smtpEmailFrom },
+        to: [{ email_address: { address: input.receiverEmail } }],
+        subject: input.subject,
+        htmlbody: input.emailTemplate,
+    }, {
+        headers: {
+            "Authorization": `Zoho-enczapikey ${process.env.ZEPTO_API_KEY}`,
+            "Content-Type": "application/json",
         },
     });
-    var mailOptions = {
-        from: `"${compName} Team" <${smtpEmailFrom}>`,
-        to: input.receiverEmail,
-        replyTo: smtpEmailFrom,
-        subject: input.subject,
-        html: input.emailTemplate,
-    };
-    transport.verify(function (error, success) {
-        if (error) {
-            console.error("SMTP verification error:", error);
-        }
-        else {
-            console.log("SMTP connection is good");
-        }
-    });
-    transport.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-        console.log("Successfully sent", info);
-    });
+    console.log(resp.data);
+    //   var transport = nodemailer.createTransport({
+    //     host: "smtp.zeptomail.com",
+    //     port: 587,
+    //      secure: false,
+    //     auth: {
+    //       user: smtpSender,
+    //       pass: smtpPassword,
+    //     },
+    //   });
+    //   var mailOptions = {
+    //     from: `"${compName} Team" <${smtpEmailFrom}>`,
+    //     to: input.receiverEmail,
+    //     replyTo: smtpEmailFrom,
+    //     subject: input.subject,
+    //     html: input.emailTemplate,
+    //   };
+    //   transport.verify(function (error, success) {
+    //   if (error) {
+    //     console.error("SMTP verification error:", error);
+    //   } else {
+    //     console.log("SMTP connection is good");
+    //   }
+    // });
+    //   transport.sendMail(mailOptions, (error, info) => {
+    //     if (error) {
+    //       return console.log(error);
+    //     }
+    //     console.log("Successfully sent", info);
+    //   });
     //PROD
     // try {
     //   // const transporter = nodemailer.createTransport({

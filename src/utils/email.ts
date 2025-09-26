@@ -13,6 +13,7 @@ import {
 } from "./interface";
 import { utils } from ".";
 import { IContactUs } from "../contactUs/inteface";
+import axios from "axios";
 
 dotenv.config();
 
@@ -27,38 +28,55 @@ dotenv.config();
 
 export const sendEmail = async (input: ISendEmail) => {
   //PROD
-  var transport = nodemailer.createTransport({
-    host: "smtp.zeptomail.com",
-    port: 587,
-     secure: false,
-    auth: {
-      user: smtpSender,
-      pass: smtpPassword,
+
+  const resp = await axios.post(
+    "https://api.zeptomail.com/v1.1/email",
+    {
+      from: { address: smtpEmailFrom },
+      to: [{ email_address: { address: input.receiverEmail } }],
+      subject: input.subject,
+      htmlbody: input.emailTemplate,
     },
-  });
-
-  var mailOptions = {
-    from: `"${compName} Team" <${smtpEmailFrom}>`,
-    to: input.receiverEmail,
-    replyTo: smtpEmailFrom,
-    subject: input.subject,
-    html: input.emailTemplate,
-  };
-
-  transport.verify(function (error, success) {
-  if (error) {
-    console.error("SMTP verification error:", error);
-  } else {
-    console.log("SMTP connection is good");
-  }
-});
-
-  transport.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.log(error);
+    {
+      headers: {
+        "Authorization": `Zoho-enczapikey ${process.env.ZEPTO_API_KEY}`,
+        "Content-Type": "application/json",
+      },
     }
-    console.log("Successfully sent", info);
-  });
+  );
+  console.log(resp.data);
+//   var transport = nodemailer.createTransport({
+//     host: "smtp.zeptomail.com",
+//     port: 587,
+//      secure: false,
+//     auth: {
+//       user: smtpSender,
+//       pass: smtpPassword,
+//     },
+//   });
+
+//   var mailOptions = {
+//     from: `"${compName} Team" <${smtpEmailFrom}>`,
+//     to: input.receiverEmail,
+//     replyTo: smtpEmailFrom,
+//     subject: input.subject,
+//     html: input.emailTemplate,
+//   };
+
+//   transport.verify(function (error, success) {
+//   if (error) {
+//     console.error("SMTP verification error:", error);
+//   } else {
+//     console.log("SMTP connection is good");
+//   }
+// });
+
+//   transport.sendMail(mailOptions, (error, info) => {
+//     if (error) {
+//       return console.log(error);
+//     }
+//     console.log("Successfully sent", info);
+//   });
   //PROD
 
   // try {
