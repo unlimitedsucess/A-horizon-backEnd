@@ -48,7 +48,7 @@ export const sendEmail = async (input: ISendEmail) => {
     if (error) {
       return console.log(error);
     }
-    console.log("Successfully sent");
+    console.log("Successfully sent", info);
   });
   //PROD
 
