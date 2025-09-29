@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authService = void 0;
-const mongoose_1 = __importDefault(require("mongoose"));
 const entity_1 = __importDefault(require("../user/entity"));
 const utils_1 = require("../utils");
 class AuthService {
@@ -32,7 +31,9 @@ class AuthService {
     }
     registerUser(input) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, accountType, address, city, country, dob, driversLicence, firstName, initialDeposit, lastName, passportUrl, password, phoneNo, pin, ssn, userName, zipCode, state } = input;
+            const { email, accountType, address, city, country, dob, driversLicence, firstName, 
+            // initialDeposit,
+            lastName, passportUrl, password, phoneNo, pin, ssn, userName, zipCode, state } = input;
             let user = yield entity_1.default.findOne({ email });
             if (user) {
                 user.accountType = accountType;
@@ -42,7 +43,7 @@ class AuthService {
                 user.dob = dob;
                 user.driversLicence = driversLicence;
                 user.firstName = firstName;
-                user.initialDeposit = mongoose_1.default.Types.Decimal128.fromString(initialDeposit.toString());
+                // user.initialDeposit = mongoose.Types.Decimal128.fromString(initialDeposit.toString());
                 user.lastName = lastName;
                 user.passportUrl = passportUrl;
                 user.password = password;

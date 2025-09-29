@@ -93,11 +93,11 @@ class AuthValidator {
                     "string.pattern.base": "SSN must be a valid 9-digit number (e.g., 123-45-6789)",
                     "any.required": "SSN is required",
                 }),
-                initialDeposit: joi_1.default.number().min(0).required().messages({
-                    "number.base": "Initial deposit must be a number",
-                    "number.min": "Initial deposit cannot be less than 0",
-                    "any.required": "Initial deposit is required",
-                }),
+                // initialDeposit: Joi.number().min(0).required().messages({
+                //   "number.base": "Initial deposit must be a number",
+                //   "number.min": "Initial deposit cannot be less than 0",
+                //   "any.required": "Initial deposit is required",
+                // }),
                 address: joi_1.default.string().required().messages({
                     "string.base": "Address must be text",
                     "any.required": "Address is required",

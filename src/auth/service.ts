@@ -29,7 +29,7 @@ class AuthService {
       dob,
       driversLicence,
       firstName,
-      initialDeposit,
+     // initialDeposit,
       lastName,
       passportUrl,
       password,
@@ -50,7 +50,7 @@ class AuthService {
       user.dob = dob;
       user.driversLicence = driversLicence;
       user.firstName = firstName;
-     user.initialDeposit = mongoose.Types.Decimal128.fromString(initialDeposit.toString());
+    // user.initialDeposit = mongoose.Types.Decimal128.fromString(initialDeposit.toString());
       user.lastName = lastName;
       user.passportUrl = passportUrl;
       user.password = password;

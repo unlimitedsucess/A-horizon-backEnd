@@ -16,7 +16,7 @@ export interface ISignUp {
   phoneNo: string;
   dob: string;
   ssn: string;
-  initialDeposit: number;
+ // initialDeposit: number;
   address: string;
   country: string;
   city: string;
