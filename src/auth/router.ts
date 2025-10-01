@@ -14,7 +14,7 @@ export const AuthRouter = Router();
 // );
 
 //Create account
-AuthRouter.patch(
+AuthRouter.post(
   "/signup",
   [authValidator.handleFileUpload, authValidator.registerUser],
   utils.wrapAsync(authController.registerUser)

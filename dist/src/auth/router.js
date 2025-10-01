@@ -13,7 +13,7 @@ exports.AuthRouter = (0, express_1.Router)();
 //   utils.wrapAsync(authController.createAccount)
 // );
 //Create account
-exports.AuthRouter.patch("/signup", [validator_1.authValidator.handleFileUpload, validator_1.authValidator.registerUser], utils_1.utils.wrapAsync(controller_1.authController.registerUser));
+exports.AuthRouter.post("/signup", [validator_1.authValidator.handleFileUpload, validator_1.authValidator.registerUser], utils_1.utils.wrapAsync(controller_1.authController.registerUser));
 // Verify Email
 exports.AuthRouter.post("/verify/email", [validator_1.authValidator.emailVerifyOtp], utils_1.utils.wrapAsync(controller_1.authController.emailVerifyOtp));
 //Resend email verification otp
