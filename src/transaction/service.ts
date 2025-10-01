@@ -48,6 +48,29 @@ class TransactionService {
     return user;
   }
 
+
+    public async creditUser(amount: number, userId: string) {
+    const user = await User.findById(userId);
+
+    if (user) {
+      const currentBalance = new Decimal(
+        user.initialDeposit?.toString() || "0"
+      );
+      const amountToMinus = new Decimal(amount);
+      const newBalance = currentBalance.add(amountToMinus);
+
+      user.initialDeposit = mongoose.Types.Decimal128.fromString(
+        newBalance.toFixed(2)
+      );
+
+      await user.save();
+
+      return user;
+    }
+
+    return user;
+  }
+
   // public async fetchUserTransactionHistoryByUserId(id: string) {
   //   const transfer = Transaction.find({ userId: id });
 

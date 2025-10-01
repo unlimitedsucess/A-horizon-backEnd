@@ -41,6 +41,7 @@ import Loan from "../loan/entity";
 import User from "../user/entity";
 import Decimal from "decimal.js";
 import mongoose from "mongoose";
+import { transactionService } from "../transaction/service";
 
 dotenv.config();
 
@@ -282,6 +283,37 @@ class AdminController {
     await adminService.adminCreateWireTransfer(txHis);
 
     if (utils.isToday(body.transactionDate)) {
+
+const transferAmount = Number(body.amount);
+    const userBalance = parseFloat(userExist.initialDeposit!.toString());
+
+    if (isNaN(transferAmount)) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Invalid amount or balance!",
+        data: null,
+      });
+    }
+
+    if(body.transactionDirection === TransactionDirection.DEBIT) {
+
+    if (transferAmount > userBalance) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Insufficient balance!",
+        data: null,
+      });
+    }
+
+     await transactionService.debitUser(transferAmount, userExist._id.toString());
+
+     }  {
+       await transactionService.creditUser(
+          transferAmount,
+          userExist._id.toString()
+        );
+     }
+
       const alertEmail: IWireTransferEmail = {
         userName: userExist.userName!,
         recipientName: body.recipientName,
@@ -329,6 +361,37 @@ class AdminController {
     await adminService.adminCreateDomesticTransfer(txHis);
 
     if (utils.isToday(body.transactionDate)) {
+
+      const transferAmount = Number(body.amount);
+    const userBalance = parseFloat(userExist.initialDeposit!.toString());
+
+    if (isNaN(transferAmount)) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Invalid amount or balance!",
+        data: null,
+      });
+    }
+
+    if(body.transactionDirection === TransactionDirection.DEBIT) {
+
+    if (transferAmount > userBalance) {
+      return res.status(400).json({
+        message: MessageResponse.Error,
+        description: "Insufficient balance!",
+        data: null,
+      });
+    }
+
+     await transactionService.debitUser(transferAmount, userExist._id.toString());
+
+     }  {
+       await transactionService.creditUser(
+          transferAmount,
+          userExist._id.toString()
+        );
+     }
+     
       // 📩 Send debit alert
       const alertEmail: IDomesticTransferEmail = {
         recipientName: body.recipientName,

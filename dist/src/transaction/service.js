@@ -47,6 +47,21 @@ class TransactionService {
             return user;
         });
     }
+    creditUser(amount, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            const user = yield entity_1.default.findById(userId);
+            if (user) {
+                const currentBalance = new decimal_js_1.default(((_a = user.initialDeposit) === null || _a === void 0 ? void 0 : _a.toString()) || "0");
+                const amountToMinus = new decimal_js_1.default(amount);
+                const newBalance = currentBalance.add(amountToMinus);
+                user.initialDeposit = mongoose_1.default.Types.Decimal128.fromString(newBalance.toFixed(2));
+                yield user.save();
+                return user;
+            }
+            return user;
+        });
+    }
     // public async fetchUserTransactionHistoryByUserId(id: string) {
     //   const transfer = Transaction.find({ userId: id });
     //   return transfer;

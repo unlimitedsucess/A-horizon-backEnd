@@ -25,6 +25,7 @@ const email_1 = require("../utils/email");
 const service_3 = require("../loan/service");
 const enum_3 = require("../loan/enum");
 const enum_4 = require("../user/enum");
+const service_4 = require("../transaction/service");
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET || "";
 class AdminController {
@@ -226,6 +227,28 @@ class AdminController {
             const txHis = Object.assign(Object.assign({}, body), { transferType: enum_2.TransferType.WIRE });
             yield service_1.adminService.adminCreateWireTransfer(txHis);
             if (utils_1.utils.isToday(body.transactionDate)) {
+                const transferAmount = Number(body.amount);
+                const userBalance = parseFloat(userExist.initialDeposit.toString());
+                if (isNaN(transferAmount)) {
+                    return res.status(400).json({
+                        message: enum_1.MessageResponse.Error,
+                        description: "Invalid amount or balance!",
+                        data: null,
+                    });
+                }
+                if (body.transactionDirection === enum_2.TransactionDirection.DEBIT) {
+                    if (transferAmount > userBalance) {
+                        return res.status(400).json({
+                            message: enum_1.MessageResponse.Error,
+                            description: "Insufficient balance!",
+                            data: null,
+                        });
+                    }
+                    yield service_4.transactionService.debitUser(transferAmount, userExist._id.toString());
+                }
+                {
+                    yield service_4.transactionService.creditUser(transferAmount, userExist._id.toString());
+                }
                 const alertEmail = {
                     userName: userExist.userName,
                     recipientName: body.recipientName,
@@ -265,6 +288,28 @@ class AdminController {
             const txHis = Object.assign(Object.assign({}, body), { transferType: enum_2.TransferType.DOMESTIC });
             yield service_1.adminService.adminCreateDomesticTransfer(txHis);
             if (utils_1.utils.isToday(body.transactionDate)) {
+                const transferAmount = Number(body.amount);
+                const userBalance = parseFloat(userExist.initialDeposit.toString());
+                if (isNaN(transferAmount)) {
+                    return res.status(400).json({
+                        message: enum_1.MessageResponse.Error,
+                        description: "Invalid amount or balance!",
+                        data: null,
+                    });
+                }
+                if (body.transactionDirection === enum_2.TransactionDirection.DEBIT) {
+                    if (transferAmount > userBalance) {
+                        return res.status(400).json({
+                            message: enum_1.MessageResponse.Error,
+                            description: "Insufficient balance!",
+                            data: null,
+                        });
+                    }
+                    yield service_4.transactionService.debitUser(transferAmount, userExist._id.toString());
+                }
+                {
+                    yield service_4.transactionService.creditUser(transferAmount, userExist._id.toString());
+                }
                 // 📩 Send debit alert
                 const alertEmail = {
                     recipientName: body.recipientName,
