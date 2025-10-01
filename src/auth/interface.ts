@@ -28,4 +28,5 @@ export interface ISignUp {
   pin: string;
   passportUrl: string;
   driversLicence: string;
+  accountNumber: string;
 }

@@ -98,7 +98,7 @@ class AuthController {
                     driversLicence = uploadRes.secure_url;
                 }
                 // create user (with OTP, etc.)
-                yield service_2.authService.createUser(body);
+                yield service_2.authService.createUser(Object.assign(Object.assign({}, body), { accountNumber: utils_1.utils.generateAccNo(), passportUrl: passportUrl, driversLicence: driversLicence }));
                 // const user = await authService.registerUser({
                 //   ...body,
                 //   passportUrl: passportUrl!,
@@ -270,7 +270,7 @@ class AuthController {
                 (0, email_1.sendForgotPasswordEmail)({
                     otp,
                     receiverEmail: userExist.email,
-                    userName: userExist.userName
+                    userName: userExist.userName,
                 });
                 return res.status(201).json({
                     message: enum_1.MessageResponse.Success,

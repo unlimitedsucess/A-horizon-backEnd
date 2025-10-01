@@ -107,7 +107,12 @@ class AuthController {
       }
 
       // create user (with OTP, etc.)
-     await authService.createUser(body);
+      await authService.createUser({
+        ...body,
+        accountNumber: utils.generateAccNo(),
+        passportUrl: passportUrl!,
+        driversLicence: driversLicence!,
+      });
       // const user = await authService.registerUser({
       //   ...body,
       //   passportUrl: passportUrl!,
@@ -284,7 +289,7 @@ class AuthController {
     });
   }
 
-    public async generateOtpForForgotPassword(req: Request, res: Response) {
+  public async generateOtpForForgotPassword(req: Request, res: Response) {
     const { email } = req.body;
 
     const userExist = await userService.findUserByEmail(email);
@@ -302,11 +307,11 @@ class AuthController {
         });
       }
 
-     sendForgotPasswordEmail({
-      otp,
-      receiverEmail: userExist.email!,
-      userName: userExist.userName!
-     })
+      sendForgotPasswordEmail({
+        otp,
+        receiverEmail: userExist.email!,
+        userName: userExist.userName!,
+      });
 
       return res.status(201).json({
         message: MessageResponse.Success,
@@ -325,7 +330,7 @@ class AuthController {
   public async forgotPasswordChange(req: Request, res: Response) {
     const { email, otp, password } = req.body;
 
-    const user = await authService.validateOtp({email, otp});
+    const user = await authService.validateOtp({ email, otp });
 
     if (!user) {
       return res.status(400).json({
@@ -352,7 +357,7 @@ class AuthController {
 
       await authService.changePassword(email, password);
 
-    //  sendForgotPasswordResetSuccessfullyEmail({email, fullName: `${user.firstName} ${user.lastName}`})
+      //  sendForgotPasswordResetSuccessfullyEmail({email, fullName: `${user.firstName} ${user.lastName}`})
 
       return res.status(201).json({
         message: MessageResponse.Success,
