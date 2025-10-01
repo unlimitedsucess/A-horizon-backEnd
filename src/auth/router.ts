@@ -7,11 +7,11 @@ import { utils } from "../utils";
 export const AuthRouter = Router();
 
 //Send Email Registration OTP
-AuthRouter.post(
-  "/send/email/otp",
-  [authValidator.validateEmail],
-  utils.wrapAsync(authController.createAccount)
-);
+// AuthRouter.post(
+//   "/send/email/otp",
+//   [authValidator.validateEmail],
+//   utils.wrapAsync(authController.createAccount)
+// );
 
 //Create account
 AuthRouter.patch(

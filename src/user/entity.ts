@@ -129,7 +129,7 @@ const userSchema: Schema = new Schema(
     },
     emailVerified: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     emailVerificationOtp: {
       type: String,

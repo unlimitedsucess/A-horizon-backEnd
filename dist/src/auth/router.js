@@ -7,7 +7,11 @@ const validator_1 = require("./validator");
 const utils_1 = require("../utils");
 exports.AuthRouter = (0, express_1.Router)();
 //Send Email Registration OTP
-exports.AuthRouter.post("/send/email/otp", [validator_1.authValidator.validateEmail], utils_1.utils.wrapAsync(controller_1.authController.createAccount));
+// AuthRouter.post(
+//   "/send/email/otp",
+//   [authValidator.validateEmail],
+//   utils.wrapAsync(authController.createAccount)
+// );
 //Create account
 exports.AuthRouter.patch("/signup", [validator_1.authValidator.handleFileUpload, validator_1.authValidator.registerUser], utils_1.utils.wrapAsync(controller_1.authController.registerUser));
 // Verify Email

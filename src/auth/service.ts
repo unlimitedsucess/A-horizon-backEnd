@@ -4,68 +4,64 @@ import { utils } from "../utils";
 import { ISignUp, IVerifyEmail } from "./interface";
 
 class AuthService {
-  public async createUser(email: string) {
-    const otp = utils.generateOtp();
+  public async createUser(input: ISignUp) {
 
     const user = new User({
-      email,
-      emailVerificationOtp: otp,
-      //3600000 is in milisecs and this is 1hr, so the token is valid for 1 hour
-      emailVerificationOtpExpiration: new Date(Date.now() + 3600000),
+    ...input
     });
 
     await user.save();
 
-    return otp;
-  }
-
-  public async registerUser(input: ISignUp) {
-    const {
-      email,
-      accountType,
-      address,
-      city,
-      country,
-      dob,
-      driversLicence,
-      firstName,
-     // initialDeposit,
-      lastName,
-      passportUrl,
-      password,
-      phoneNo,
-      pin,
-      ssn,
-      userName,
-      zipCode,
-      state
-    } = input;
-    let user = await User.findOne({ email });
-
-    if (user) {
-      user.accountType = accountType;
-      user.address = address;
-      user.city = city;
-      user.country = country;
-      user.dob = dob;
-      user.driversLicence = driversLicence;
-      user.firstName = firstName;
-    // user.initialDeposit = mongoose.Types.Decimal128.fromString(initialDeposit.toString());
-      user.lastName = lastName;
-      user.passportUrl = passportUrl;
-      user.password = password;
-      user.phoneNo = phoneNo;
-      user.pin = pin;
-      user.ssn = ssn;
-      user.userName = userName;
-      user.zipCode = zipCode;
-      user.state = state;
-      user.accountNumber = utils.generateAccNo()
-     user = await user.save();
-    }
-
     return user;
   }
+
+  // public async registerUser(input: ISignUp) {
+  //   const {
+  //     email,
+  //     accountType,
+  //     address,
+  //     city,
+  //     country,
+  //     dob,
+  //     driversLicence,
+  //     firstName,
+  //    // initialDeposit,
+  //     lastName,
+  //     passportUrl,
+  //     password,
+  //     phoneNo,
+  //     pin,
+  //     ssn,
+  //     userName,
+  //     zipCode,
+  //     state
+  //   } = input;
+  //   let user = await User.findOne({ email });
+
+  //   if (user) {
+  //     user.accountType = accountType;
+  //     user.address = address;
+  //     user.city = city;
+  //     user.country = country;
+  //     user.dob = dob;
+  //     user.driversLicence = driversLicence;
+  //     user.firstName = firstName;
+  //   // user.initialDeposit = mongoose.Types.Decimal128.fromString(initialDeposit.toString());
+  //     user.lastName = lastName;
+  //     user.passportUrl = passportUrl;
+  //     user.password = password;
+  //     user.phoneNo = phoneNo;
+  //     user.pin = pin;
+  //     user.ssn = ssn;
+  //     user.userName = userName;
+  //     user.zipCode = zipCode;
+  //     user.state = state;
+  //     user.accountNumber = utils.generateAccNo()
+  //    user = await user.save();
+  //   }
+
+  //   return user;
+  // }
 
   public async validateOtp({ email, otp }: IVerifyEmail) {
     const otpValidity = await User.findOne({

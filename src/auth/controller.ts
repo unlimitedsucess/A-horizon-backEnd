@@ -18,33 +18,33 @@ dotenv.config();
 const jwtSecret = process.env.JWT_SECRET || "";
 
 class AuthController {
-  public async createAccount(req: Request, res: Response) {
-    const email = req.body.email;
+  // public async createAccount(req: Request, res: Response) {
+  //   const email = req.body.email;
 
-    const emailExists = await userService.findUserByEmail(email);
+  //   const emailExists = await userService.findUserByEmail(email);
 
-    if (emailExists) {
-      return utils.customResponse({
-        status: 400,
-        res,
-        message: MessageResponse.Error,
-        description: "Email already exist!",
-        data: null,
-      });
-    }
+  //   if (emailExists) {
+  //     return utils.customResponse({
+  //       status: 400,
+  //       res,
+  //       message: MessageResponse.Error,
+  //       description: "Email already exist!",
+  //       data: null,
+  //     });
+  //   }
 
-    const otp = await authService.createUser(email);
+  //   const otp = await authService.createUser(email);
 
-    sendVerificationEmail({ email, otp });
+  //   sendVerificationEmail({ email, otp });
 
-    return utils.customResponse({
-      status: 200,
-      res,
-      message: MessageResponse.Success,
-      description: "Verification OTP resent!",
-      data: null,
-    });
-  }
+  //   return utils.customResponse({
+  //     status: 200,
+  //     res,
+  //     message: MessageResponse.Success,
+  //     description: "Verification OTP resent!",
+  //     data: null,
+  //   });
+  // }
 
   public async registerUser(req: Request, res: Response) {
     try {
@@ -60,20 +60,20 @@ class AuthController {
           status: 404,
           res,
           message: MessageResponse.Error,
-          description: "User not found!",
+          description: "Email taken!",
           data: null,
         });
       }
 
-      if(!emailExists.emailVerified) {
-        return utils.customResponse({
-          status: 400,
-          res,
-          message: MessageResponse.Error,
-          description: "Email not verified!",
-          data: null,
-        });
-      }
+      // if(!emailExists.emailVerified) {
+      //   return utils.customResponse({
+      //     status: 400,
+      //     res,
+      //     message: MessageResponse.Error,
+      //     description: "Email not verified!",
+      //     data: null,
+      //   });
+      // }
 
       // check if username exists
       const userNameExists = await userService.findUserByUserName(userName);
@@ -107,27 +107,28 @@ class AuthController {
       }
 
       // create user (with OTP, etc.)
-      const user = await authService.registerUser({
-        ...body,
-        passportUrl: passportUrl!,
-        driversLicence: driversLicence!,
-      });
+     await authService.createUser(body);
+      // const user = await authService.registerUser({
+      //   ...body,
+      //   passportUrl: passportUrl!,
+      //   driversLicence: driversLicence!,
+      // });
 
-      if (!user) {
-        return utils.customResponse({
-          status: 404,
-          res,
-          message: MessageResponse.Error,
-          description: "User not found!",
-          data: null,
-        });
-      }
+      // if (!user) {
+      //   return utils.customResponse({
+      //     status: 404,
+      //     res,
+      //     message: MessageResponse.Error,
+      //     description: "User not found!",
+      //     data: null,
+      //   });
+      // }
 
       return utils.customResponse({
         status: 201,
         res,
         message: MessageResponse.Success,
-        description: "User creation completed, verify email!",
+        description: "User creation completed!",
         data: null,
       });
     } catch (error: any) {
