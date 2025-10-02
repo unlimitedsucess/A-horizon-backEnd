@@ -54,7 +54,7 @@ class AuthController {
                 const userName = body.userName;
                 const files = req.files;
                 const emailExists = yield service_1.userService.findUserByEmail(email);
-                if (!emailExists) {
+                if (emailExists) {
                     return utils_1.utils.customResponse({
                         status: 404,
                         res,

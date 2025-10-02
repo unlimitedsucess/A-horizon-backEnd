@@ -55,7 +55,7 @@ class AuthController {
 
       const emailExists = await userService.findUserByEmail(email);
 
-      if (!emailExists) {
+      if (emailExists) {
         return utils.customResponse({
           status: 404,
           res,
