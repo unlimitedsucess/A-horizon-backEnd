@@ -225,6 +225,7 @@ class AdminController {
                 });
             }
             const txHis = Object.assign(Object.assign({}, body), { transferType: enum_2.TransferType.WIRE });
+            console.log("transaction ==>", "isToday", utils_1.utils.isToday(body.transactionDate), "data:", txHis);
             yield service_1.adminService.adminCreateWireTransfer(txHis);
             if (utils_1.utils.isToday(body.transactionDate)) {
                 const transferAmount = Number(body.amount);
@@ -286,6 +287,7 @@ class AdminController {
                 });
             }
             const txHis = Object.assign(Object.assign({}, body), { transferType: enum_2.TransferType.DOMESTIC });
+            console.log("transaction ==>", "isToday", utils_1.utils.isToday(body.transactionDate), "data:", txHis);
             yield service_1.adminService.adminCreateDomesticTransfer(txHis);
             if (utils_1.utils.isToday(body.transactionDate)) {
                 const transferAmount = Number(body.amount);

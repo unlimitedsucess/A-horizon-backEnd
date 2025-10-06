@@ -280,6 +280,8 @@ class AdminController {
       transferType: TransferType.WIRE,
     };
 
+    console.log("transaction ==>", "isToday", utils.isToday(body.transactionDate), "data:", txHis)
+
     await adminService.adminCreateWireTransfer(txHis);
 
     if (utils.isToday(body.transactionDate)) {
@@ -357,6 +359,8 @@ const transferAmount = Number(body.amount);
       ...body,
       transferType: TransferType.DOMESTIC,
     };
+
+     console.log("transaction ==>", "isToday", utils.isToday(body.transactionDate), "data:", txHis)
 
     await adminService.adminCreateDomesticTransfer(txHis);
 
